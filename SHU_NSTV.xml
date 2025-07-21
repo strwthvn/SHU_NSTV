@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-21T15:06:25.8095761" />
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-21T15:28:26.3788827" />
   <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-21T15:06:01.0136324" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
@@ -11145,6 +11145,52 @@ END_VAR
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> ЧРП Резерв</xhtml>
                       </documentation>
                     </variable>
+                    <variable name="rtrig_puCmd_xStart">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> **Process_PU_Commands**</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="rtrig_puCmd_xStop">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_puCmd_xReset">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_puCmd_xChange_VFDtoBP">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_puCmd_xChange_BPtoVFD">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_vfdCmd_xStart">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> **Process_VFD_Commands**</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="rtrig_vfdCmd_xStop">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_vfdCmd_xReset">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
                     <variable name="in_0303_05_1_ixSection1_OverheatAlarm">
                       <type>
                         <derived name="INPUT_OUTPUT" />
@@ -11604,6 +11650,19 @@ VAR
 	 // ЧРП Резерв
 	VFD_RESERVE : FB_VFD_CTRL;
 	
+		// **Process_PU_Commands**
+	rtrig_puCmd_xStart 				: R_TRIG;
+	rtrig_puCmd_xStop               : R_TRIG;
+	rtrig_puCmd_xReset              : R_TRIG;
+	rtrig_puCmd_xChange_VFDtoBP     : R_TRIG;
+	rtrig_puCmd_xChange_BPtoVFD     : R_TRIG;
+	
+	// **Process_VFD_Commands**
+	rtrig_vfdCmd_xStart				: R_TRIG;
+	rtrig_vfdCmd_xStop              : R_TRIG;
+	rtrig_vfdCmd_xReset             : R_TRIG;
+	
+	
 	in_0303_05_1_ixSection1_OverheatAlarm          : INPUT_OUTPUT;
 	in_0303_05_1_ixSection1_OverheatWarning        : INPUT_OUTPUT;
 	in_0303_05_1_ixVFD_Failure                     : INPUT_OUTPUT;
@@ -11695,7 +11754,23 @@ END_VAR
                 <body>
                   <ST>
                     <xhtml xmlns="http://www.w3.org/1999/xhtml">Initialization();
-Process_VFD_qFreq();</xhtml>
+
+Process_VFD_qFreq();
+Process_VFD_Commands(
+	rtrig_vfdCmd_xStart.Q,
+	rtrig_vfdCmd_xStop.Q,
+	rtrig_vfdCmd_xReset.Q
+);
+Process_VFD_Signals();
+
+Process_PU_Commands(
+	rtrig_puCmd_xStart.Q,
+	rtrig_puCmd_xStop.Q,
+	rtrig_puCmd_xReset.Q,
+	rtrig_puCmd_xChange_VFDtoBP.Q,
+	rtrig_puCmd_xChange_BPtoVFD.Q
+);
+Process_PU_Signals();</xhtml>
                   </ST>
                 </body>
                 <addData>
@@ -12379,7 +12454,8 @@ END_VAR
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">Init_VFD_Main();
 Init_VFD_Reserve();
-Init_RattlingKM();</xhtml>
+Init_RattlingKM();
+Init_triggers();</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -14329,6 +14405,32 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Init_triggers" ObjectId="66107d74-46df-4b4c-ad68-b703ea95f1eb">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">rtrig_puCmd_xStart(CLK:= , Q=&gt; );
+rtrig_puCmd_xStop(CLK:= , Q=&gt; );
+rtrig_puCmd_xReset(CLK:= , Q=&gt; );
+rtrig_puCmd_xChange_VFDtoBP(CLK:= , Q=&gt; );
+rtrig_puCmd_xChange_BPtoVFD(CLK:= , Q=&gt; );
+
+rtrig_vfdCmd_xStart(CLK:= , Q=&gt; );
+rtrig_vfdCmd_xStop(CLK:= , Q=&gt; );
+rtrig_vfdCmd_xReset(CLK:= , Q=&gt; );</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Init_triggers
+VAR_INPUT
+END_VAR
+VAR
+END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM NEW_MAIN
@@ -14381,6 +14483,19 @@ VAR
 	VFD_MAIN : FB_VFD_CTRL;
 	 // ЧРП Резерв
 	VFD_RESERVE : FB_VFD_CTRL;
+	
+		// **Process_PU_Commands**
+	rtrig_puCmd_xStart 				: R_TRIG;
+	rtrig_puCmd_xStop               : R_TRIG;
+	rtrig_puCmd_xReset              : R_TRIG;
+	rtrig_puCmd_xChange_VFDtoBP     : R_TRIG;
+	rtrig_puCmd_xChange_BPtoVFD     : R_TRIG;
+	
+	// **Process_VFD_Commands**
+	rtrig_vfdCmd_xStart				: R_TRIG;
+	rtrig_vfdCmd_xStop              : R_TRIG;
+	rtrig_vfdCmd_xReset             : R_TRIG;
+	
 	
 	in_0303_05_1_ixSection1_OverheatAlarm          : INPUT_OUTPUT;
 	in_0303_05_1_ixSection1_OverheatWarning        : INPUT_OUTPUT;
@@ -21654,6 +21769,7 @@ END_TYPE
                     </Folder>
                   </Folder>
                   <Object Name="Initialization" ObjectId="f4644fa3-1459-4b92-a214-cdeea4166daa" />
+                  <Object Name="Init_triggers" ObjectId="66107d74-46df-4b4c-ad68-b703ea95f1eb" />
                 </Folder>
                 <Folder Name="Состояния">
                   <Folder Name="Насосы">
