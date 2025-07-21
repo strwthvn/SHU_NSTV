@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-21T15:28:26.3788827" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-21T15:06:01.0136324" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-21T15:55:32.9146494" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-21T15:55:20.5650037" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -33,7 +33,7 @@
       <configuration name="Device">
         <resource name="Application">
           <task name="MainTask" interval="PT0.01S" priority="1">
-            <pouInstance name="MAIN" typeName="">
+            <pouInstance name="LEGACY_MAIN" typeName="">
               <documentation>
                 <xhtml xmlns="http://www.w3.org/1999/xhtml" />
               </documentation>
@@ -6418,7 +6418,7 @@ END_VAR
               </pou>
             </data>
             <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
-              <pou name="MAIN" pouType="program">
+              <pou name="LEGACY_MAIN" pouType="program">
                 <interface>
                   <localVars>
                     <variable name="PLC_Mode">
@@ -6956,7 +6956,7 @@ END_VAR
                     <addData>
                       <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                         <InterfaceAsPlainText>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM LEGACY_MAIN
 VAR
 	// 	== ДЛЯ ТЕСТА, ПОТОМ УДАЛИТЬ ==
 
@@ -7504,7 +7504,7 @@ _0303_05_PU05_ixKM_Frq_StatusOn_Rattling(
                 <addData>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
-                      <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM LEGACY_MAIN
 VAR
 	// 	== ДЛЯ ТЕСТА, ПОТОМ УДАЛИТЬ ==
 
@@ -10857,7 +10857,7 @@ END_VAR
               </pou>
             </data>
             <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
-              <pou name="NEW_MAIN" pouType="program">
+              <pou name="MAIN" pouType="program">
                 <interface>
                   <localVars>
                     <variable name="PLC_Mode">
@@ -11144,6 +11144,49 @@ END_VAR
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> ЧРП Резерв</xhtml>
                       </documentation>
+                    </variable>
+                    <variable name="xPU_Start">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> init_ServiceAutoSignals (команды режима сервис и авто)</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="xPU_Stop">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xPU_Reset">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xPU_Change_VFDtoBP">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xPU_Change_BPtoVFD">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xVFD_Start">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xVFD_Stop">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xVFD_Reset">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
                     </variable>
                     <variable name="rtrig_puCmd_xStart">
                       <type>
@@ -11599,7 +11642,7 @@ END_VAR
                     <addData>
                       <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                         <InterfaceAsPlainText>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM NEW_MAIN
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
 VAR
 	// 	== ДЛЯ ТЕСТА, ПОТОМ УДАЛИТЬ ==
 
@@ -11650,7 +11693,18 @@ VAR
 	 // ЧРП Резерв
 	VFD_RESERVE : FB_VFD_CTRL;
 	
-		// **Process_PU_Commands**
+	// init_ServiceAutoSignals (команды режима сервис и авто)
+	xPU_Start 			: FB_SignalSplit;
+	xPU_Stop 			: FB_SignalSplit;
+	xPU_Reset 			: FB_SignalSplit;
+	xPU_Change_VFDtoBP	: FB_SignalSplit;
+	xPU_Change_BPtoVFD	: FB_SignalSplit;
+
+	xVFD_Start          : FB_SignalSplit;
+	xVFD_Stop           : FB_SignalSplit;
+	xVFD_Reset			: FB_SignalSplit;
+	
+	// **Process_PU_Commands**
 	rtrig_puCmd_xStart 				: R_TRIG;
 	rtrig_puCmd_xStop               : R_TRIG;
 	rtrig_puCmd_xReset              : R_TRIG;
@@ -14410,15 +14464,15 @@ END_VAR
                       <interface />
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">rtrig_puCmd_xStart(CLK:= , Q=&gt; );
-rtrig_puCmd_xStop(CLK:= , Q=&gt; );
-rtrig_puCmd_xReset(CLK:= , Q=&gt; );
-rtrig_puCmd_xChange_VFDtoBP(CLK:= , Q=&gt; );
-rtrig_puCmd_xChange_BPtoVFD(CLK:= , Q=&gt; );
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">rtrig_puCmd_xStart(CLK:= xPU_Start.qxSignal, Q=&gt; );
+rtrig_puCmd_xStop(CLK:= xPU_Stop.qxSignal, Q=&gt; );
+rtrig_puCmd_xReset(CLK:= xPU_Reset.qxSignal, Q=&gt; );
+rtrig_puCmd_xChange_VFDtoBP(CLK:= xPU_Change_VFDtoBP.qxSignal, Q=&gt; );
+rtrig_puCmd_xChange_BPtoVFD(CLK:= xPU_Change_BPtoVFD.qxSignal, Q=&gt; );
 
-rtrig_vfdCmd_xStart(CLK:= , Q=&gt; );
-rtrig_vfdCmd_xStop(CLK:= , Q=&gt; );
-rtrig_vfdCmd_xReset(CLK:= , Q=&gt; );</xhtml>
+rtrig_vfdCmd_xStart(CLK:= xVFD_Start.qxSignal, Q=&gt; );
+rtrig_vfdCmd_xStop(CLK:= xVFD_Stop.qxSignal, Q=&gt; );
+rtrig_vfdCmd_xReset(CLK:= xVFD_Reset.qxSignal, Q=&gt; );</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -14431,9 +14485,77 @@ END_VAR</xhtml>
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Init_ServiceAutoSignals" ObjectId="7924a63c-bf0f-48d2-8ee4-49ad3af72a5e">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// КОМАНДЫ - НАСОС
+xPU_Start(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+xPU_Stop(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+xPU_Reset(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+xPU_Change_VFDtoBP(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+xPU_Change_BPtoVFD(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+	
+// КОМАНДЫ - ЧРП
+	
+xVFD_Start(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+xVFD_Stop(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+xVFD_Reset(
+	ixAutoSignal:= , 
+	ixServiceSignal:= , 
+	iiPLCMode:= , 
+	qxSignal=&gt; );
+
+</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Init_ServiceAutoSignals
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
-                      <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM NEW_MAIN
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
 VAR
 	// 	== ДЛЯ ТЕСТА, ПОТОМ УДАЛИТЬ ==
 
@@ -14484,7 +14606,18 @@ VAR
 	 // ЧРП Резерв
 	VFD_RESERVE : FB_VFD_CTRL;
 	
-		// **Process_PU_Commands**
+	// init_ServiceAutoSignals (команды режима сервис и авто)
+	xPU_Start 			: FB_SignalSplit;
+	xPU_Stop 			: FB_SignalSplit;
+	xPU_Reset 			: FB_SignalSplit;
+	xPU_Change_VFDtoBP	: FB_SignalSplit;
+	xPU_Change_BPtoVFD	: FB_SignalSplit;
+
+	xVFD_Start          : FB_SignalSplit;
+	xVFD_Stop           : FB_SignalSplit;
+	xVFD_Reset			: FB_SignalSplit;
+	
+	// **Process_PU_Commands**
 	rtrig_puCmd_xStart 				: R_TRIG;
 	rtrig_puCmd_xStop               : R_TRIG;
 	rtrig_puCmd_xReset              : R_TRIG;
@@ -14584,6 +14717,101 @@ END_VAR
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
                     <ObjectId>6b8ea933-ec4d-4f0a-84f9-4050390b67c9</ObjectId>
+                  </data>
+                </addData>
+              </pou>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+              <pou name="FB_SignalSplit" pouType="functionBlock">
+                <interface>
+                  <inputVars>
+                    <variable name="ixAutoSignal">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="ixServiceSignal">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="iiPLCMode">
+                      <type>
+                        <INT />
+                      </type>
+                    </variable>
+                    <addData>
+                      <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                        <InterfaceAsPlainText>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK FB_SignalSplit
+VAR_INPUT
+	ixAutoSignal : BOOL;
+	ixServiceSignal : BOOL;
+	iiPLCMode : INT;
+END_VAR
+VAR_OUTPUT
+	qxSignal : BOOL;
+END_VAR
+VAR
+END_VAR
+</xhtml>
+                        </InterfaceAsPlainText>
+                      </data>
+                    </addData>
+                  </inputVars>
+                  <outputVars>
+                    <variable name="qxSignal">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <addData>
+                      <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                        <InterfaceAsPlainText>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK FB_SignalSplit
+VAR_INPUT
+	ixAutoSignal : BOOL;
+	ixServiceSignal : BOOL;
+	iiPLCMode : INT;
+END_VAR
+VAR_OUTPUT
+	qxSignal : BOOL;
+END_VAR
+VAR
+END_VAR
+</xhtml>
+                        </InterfaceAsPlainText>
+                      </data>
+                    </addData>
+                  </outputVars>
+                </interface>
+                <body>
+                  <ST>
+                    <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE iiPLCMode OF
+	0: qxSignal := ixAutoSignal;
+	2: qxSignal := ixServiceSignal;
+END_CASE;</xhtml>
+                  </ST>
+                </body>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                    <InterfaceAsPlainText>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK FB_SignalSplit
+VAR_INPUT
+	ixAutoSignal : BOOL;
+	ixServiceSignal : BOOL;
+	iiPLCMode : INT;
+END_VAR
+VAR_OUTPUT
+	qxSignal : BOOL;
+END_VAR
+VAR
+END_VAR
+</xhtml>
+                    </InterfaceAsPlainText>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>dfec1159-2787-4f9f-9f39-52cd4cdcc62e</ObjectId>
                   </data>
                 </addData>
               </pou>
@@ -21717,6 +21945,7 @@ END_TYPE
                   <Object Name="DEBUG_RATTLING" ObjectId="530e4fc0-1264-445a-be35-bcd577fe34a8" />
                   <Object Name="RATTLING_FUN" ObjectId="f06a1cf3-475f-4aea-9cfd-2581857d11a9" />
                 </Folder>
+                <Object Name="FB_SignalSplit" ObjectId="dfec1159-2787-4f9f-9f39-52cd4cdcc62e" />
               </Folder>
               <Folder Name="FB_VFD_CTRL">
                 <Folder Name="Debug">
@@ -21756,8 +21985,8 @@ END_TYPE
                   </Folder>
                 </Object>
               </Folder>
-              <Object Name="MAIN" ObjectId="75f05418-0aea-41d1-b976-8cdf7a8420f2" />
-              <Object Name="NEW_MAIN" ObjectId="6b8ea933-ec4d-4f0a-84f9-4050390b67c9">
+              <Object Name="LEGACY_MAIN" ObjectId="75f05418-0aea-41d1-b976-8cdf7a8420f2" />
+              <Object Name="MAIN" ObjectId="6b8ea933-ec4d-4f0a-84f9-4050390b67c9">
                 <Folder Name="Инициализация">
                   <Folder Name="VFD">
                     <Object Name="Init_VFD_Main" ObjectId="e2a8f4f2-a750-4e3f-a907-c15dc5015782" />
@@ -21770,6 +21999,7 @@ END_TYPE
                   </Folder>
                   <Object Name="Initialization" ObjectId="f4644fa3-1459-4b92-a214-cdeea4166daa" />
                   <Object Name="Init_triggers" ObjectId="66107d74-46df-4b4c-ad68-b703ea95f1eb" />
+                  <Object Name="Init_ServiceAutoSignals" ObjectId="7924a63c-bf0f-48d2-8ee4-49ad3af72a5e" />
                 </Folder>
                 <Folder Name="Состояния">
                   <Folder Name="Насосы">
