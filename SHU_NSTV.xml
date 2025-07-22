@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-22T10:54:49.0295732" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-22T10:54:06.626672" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-22T11:38:50.933586" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-22T11:38:28.7406667" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -14938,15 +14938,15 @@ END_VAR
                       <body>
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">BY1(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
+	ixOpenCmd:= rtrig_byCmd_xOpen.Q AND by_iChange = 1, 
+	ixCloseCmd:= rtrig_byCmd_xClose.Q AND by_iChange = 1, 
+	ixStopCmd:= rtrig_byCmd_xStop.Q AND by_iChange = 1, 
+	ixResetCmd:= rtrig_byCmd_xReset AND by_iChange =1, 
+	ixReadyStatus:= GetStatus_BY_Ready(1), 
+	ixErrorCommonStatus:= GetStatus_BY_Error(1), 
 	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
+	ixOpenStatus:= GetStatus_BY_Open(1), 
+	ixClosedStatus:= GetStatus_BY_Closed(1), 
 	qxOpen=&gt; , 
 	qxClose=&gt; , 
 	qxErrorCommonStatus=&gt; , 
@@ -14956,126 +14956,126 @@ END_VAR
 	qxCloseProcessStatus=&gt; , 
 	qxOpenStatus=&gt; , 
 	qxClosedStatus=&gt; );
-	
+
 BY2(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
-	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
-	qxOpen=&gt; , 
-	qxClose=&gt; , 
-	qxErrorCommonStatus=&gt; , 
-	qxManualStatus=&gt; , 
-	qxStoppedStatus=&gt; , 
-	qxOpenProcessStatus=&gt; , 
-	qxCloseProcessStatus=&gt; , 
-	qxOpenStatus=&gt; , 
-	qxClosedStatus=&gt; );
-	
+	ixOpenCmd := rtrig_byCmd_xOpen.Q AND by_iChange = 2,
+	ixCloseCmd := rtrig_byCmd_xClose.Q AND by_iChange = 2,
+	ixStopCmd := rtrig_byCmd_xStop.Q AND by_iChange = 2,
+	ixResetCmd := rtrig_byCmd_xReset AND by_iChange = 2,
+	ixReadyStatus := GetStatus_BY_Ready(2),
+	ixErrorCommonStatus := GetStatus_BY_Error(2),
+	ixManualStatus := ,
+	ixOpenStatus := GetStatus_BY_Open(2),
+	ixClosedStatus := GetStatus_BY_Closed(2),
+	qxOpen =&gt; ,
+	qxClose =&gt; ,
+	qxErrorCommonStatus =&gt; ,
+	qxManualStatus =&gt; ,
+	qxStoppedStatus =&gt; ,
+	qxOpenProcessStatus =&gt; ,
+	qxCloseProcessStatus =&gt; ,
+	qxOpenStatus =&gt; ,
+	qxClosedStatus =&gt; );
+
 BY3(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
-	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
-	qxOpen=&gt; , 
-	qxClose=&gt; , 
-	qxErrorCommonStatus=&gt; , 
-	qxManualStatus=&gt; , 
-	qxStoppedStatus=&gt; , 
-	qxOpenProcessStatus=&gt; , 
-	qxCloseProcessStatus=&gt; , 
-	qxOpenStatus=&gt; , 
-	qxClosedStatus=&gt; );
-	
+	ixOpenCmd := rtrig_byCmd_xOpen.Q AND by_iChange = 3,
+	ixCloseCmd := rtrig_byCmd_xClose.Q AND by_iChange = 3,
+	ixStopCmd := rtrig_byCmd_xStop.Q AND by_iChange = 3,
+	ixResetCmd := rtrig_byCmd_xReset AND by_iChange = 3,
+	ixReadyStatus := GetStatus_BY_Ready(3),
+	ixErrorCommonStatus := GetStatus_BY_Error(3),
+	ixManualStatus := ,
+	ixOpenStatus := GetStatus_BY_Open(3),
+	ixClosedStatus := GetStatus_BY_Closed(3),
+	qxOpen =&gt; ,
+	qxClose =&gt; ,
+	qxErrorCommonStatus =&gt; ,
+	qxManualStatus =&gt; ,
+	qxStoppedStatus =&gt; ,
+	qxOpenProcessStatus =&gt; ,
+	qxCloseProcessStatus =&gt; ,
+	qxOpenStatus =&gt; ,
+	qxClosedStatus =&gt; );
+
 BY4(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
-	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
-	qxOpen=&gt; , 
-	qxClose=&gt; , 
-	qxErrorCommonStatus=&gt; , 
-	qxManualStatus=&gt; , 
-	qxStoppedStatus=&gt; , 
-	qxOpenProcessStatus=&gt; , 
-	qxCloseProcessStatus=&gt; , 
-	qxOpenStatus=&gt; , 
-	qxClosedStatus=&gt; );
-	
+	ixOpenCmd := rtrig_byCmd_xOpen.Q AND by_iChange = 4,
+	ixCloseCmd := rtrig_byCmd_xClose.Q AND by_iChange = 4,
+	ixStopCmd := rtrig_byCmd_xStop.Q AND by_iChange = 4,
+	ixResetCmd := rtrig_byCmd_xReset AND by_iChange = 4,
+	ixReadyStatus := GetStatus_BY_Ready(4),
+	ixErrorCommonStatus := GetStatus_BY_Error(4),
+	ixManualStatus := ,
+	ixOpenStatus := GetStatus_BY_Open(4),
+	ixClosedStatus := GetStatus_BY_Closed(4),
+	qxOpen =&gt; ,
+	qxClose =&gt; ,
+	qxErrorCommonStatus =&gt; ,
+	qxManualStatus =&gt; ,
+	qxStoppedStatus =&gt; ,
+	qxOpenProcessStatus =&gt; ,
+	qxCloseProcessStatus =&gt; ,
+	qxOpenStatus =&gt; ,
+	qxClosedStatus =&gt; );
+
 BY5(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
-	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
-	qxOpen=&gt; , 
-	qxClose=&gt; , 
-	qxErrorCommonStatus=&gt; , 
-	qxManualStatus=&gt; , 
-	qxStoppedStatus=&gt; , 
-	qxOpenProcessStatus=&gt; , 
-	qxCloseProcessStatus=&gt; , 
-	qxOpenStatus=&gt; , 
-	qxClosedStatus=&gt; );
-	
+	ixOpenCmd := rtrig_byCmd_xOpen.Q AND by_iChange = 5,
+	ixCloseCmd := rtrig_byCmd_xClose.Q AND by_iChange = 5,
+	ixStopCmd := rtrig_byCmd_xStop.Q AND by_iChange = 5,
+	ixResetCmd := rtrig_byCmd_xReset AND by_iChange = 5,
+	ixReadyStatus := GetStatus_BY_Ready(5),
+	ixErrorCommonStatus := GetStatus_BY_Error(5),
+	ixManualStatus := ,
+	ixOpenStatus := GetStatus_BY_Open(5),
+	ixClosedStatus := GetStatus_BY_Closed(5),
+	qxOpen =&gt; ,
+	qxClose =&gt; ,
+	qxErrorCommonStatus =&gt; ,
+	qxManualStatus =&gt; ,
+	qxStoppedStatus =&gt; ,
+	qxOpenProcessStatus =&gt; ,
+	qxCloseProcessStatus =&gt; ,
+	qxOpenStatus =&gt; ,
+	qxClosedStatus =&gt; );
+
 BY7(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
-	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
-	qxOpen=&gt; , 
-	qxClose=&gt; , 
-	qxErrorCommonStatus=&gt; , 
-	qxManualStatus=&gt; , 
-	qxStoppedStatus=&gt; , 
-	qxOpenProcessStatus=&gt; , 
-	qxCloseProcessStatus=&gt; , 
-	qxOpenStatus=&gt; , 
-	qxClosedStatus=&gt; );
-	
+	ixOpenCmd := rtrig_byCmd_xOpen.Q AND by_iChange = 7,
+	ixCloseCmd := rtrig_byCmd_xClose.Q AND by_iChange = 7,
+	ixStopCmd := rtrig_byCmd_xStop.Q AND by_iChange = 7,
+	ixResetCmd := rtrig_byCmd_xReset AND by_iChange = 7,
+	ixReadyStatus := GetStatus_BY_Ready(7),
+	ixErrorCommonStatus := GetStatus_BY_Error(7),
+	ixManualStatus := ,
+	ixOpenStatus := GetStatus_BY_Open(7),
+	ixClosedStatus := GetStatus_BY_Closed(7),
+	qxOpen =&gt; ,
+	qxClose =&gt; ,
+	qxErrorCommonStatus =&gt; ,
+	qxManualStatus =&gt; ,
+	qxStoppedStatus =&gt; ,
+	qxOpenProcessStatus =&gt; ,
+	qxCloseProcessStatus =&gt; ,
+	qxOpenStatus =&gt; ,
+	qxClosedStatus =&gt; );
+
 BY8(
-	ixOpenCmd:= , 
-	ixCloseCmd:= , 
-	ixStopCmd:= , 
-	ixResetCmd:= , 
-	ixReadyStatus:= , 
-	ixErrorCommonStatus:= , 
-	ixManualStatus:= , 
-	ixOpenStatus:= , 
-	ixClosedStatus:= , 
-	qxOpen=&gt; , 
-	qxClose=&gt; , 
-	qxErrorCommonStatus=&gt; , 
-	qxManualStatus=&gt; , 
-	qxStoppedStatus=&gt; , 
-	qxOpenProcessStatus=&gt; , 
-	qxCloseProcessStatus=&gt; , 
-	qxOpenStatus=&gt; , 
-	qxClosedStatus=&gt; );
+	ixOpenCmd := rtrig_byCmd_xOpen.Q AND by_iChange = 8,
+	ixCloseCmd := rtrig_byCmd_xClose.Q AND by_iChange = 8,
+	ixStopCmd := rtrig_byCmd_xStop.Q AND by_iChange = 8,
+	ixResetCmd := rtrig_byCmd_xReset AND by_iChange = 8,
+	ixReadyStatus := GetStatus_BY_Ready(8),
+	ixErrorCommonStatus := GetStatus_BY_Error(8),
+	ixManualStatus := ,
+	ixOpenStatus := GetStatus_BY_Open(8),
+	ixClosedStatus := GetStatus_BY_Closed(8),
+	qxOpen =&gt; ,
+	qxClose =&gt; ,
+	qxErrorCommonStatus =&gt; ,
+	qxManualStatus =&gt; ,
+	qxStoppedStatus =&gt; ,
+	qxOpenProcessStatus =&gt; ,
+	qxCloseProcessStatus =&gt; ,
+	qxOpenStatus =&gt; ,
+	qxClosedStatus =&gt; );
 </xhtml>
                         </ST>
                       </body>
@@ -15098,6 +15098,27 @@ END_VAR
                       </body>
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_BY_Signals
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetValue_BY_Change" ObjectId="79f06c38-f544-47d8-a7d2-36d066d49d1f">
+                      <interface>
+                        <returnType>
+                          <INT />
+                        </returnType>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">GetValue_BY_Change := by_iChange;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_BY_Change : INT
 VAR_INPUT
 END_VAR
 </xhtml>
@@ -23454,6 +23475,7 @@ END_TYPE
                     <Object Name="GetStatus_BY_Closed" ObjectId="fae82a9b-8377-4180-9426-a28de5858ffe" />
                     <Object Name="GetStatus_BY_Ready" ObjectId="1fff74a8-3f0a-42fa-8243-3e95104b5b77" />
                     <Object Name="GetStatus_BY_Error" ObjectId="baf0f37e-c6d5-4963-968d-29890a637bf3" />
+                    <Object Name="GetValue_BY_Change" ObjectId="79f06c38-f544-47d8-a7d2-36d066d49d1f" />
                   </Folder>
                   <Folder Name="ЧРП">
                     <Object Name="GetStatus_VFD_Error" ObjectId="7fc05031-5c5c-484c-b30f-05c4a23051d5" />
