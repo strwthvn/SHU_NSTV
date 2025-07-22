@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-22T11:38:50.933586" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-22T11:38:28.7406667" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-22T11:52:36.8009012" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-22T11:52:26.6994759" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -15093,7 +15093,9 @@ END_VAR
                       <interface />
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Set_BY_Open(1, BY1.qxOpen);
+Set_BY_Close(1, BY1.qxClose);
+</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -15120,6 +15122,53 @@ END_VAR
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_BY_Change : INT
 VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Set_BY_Stop" ObjectId="f11a3f84-865c-4f13-83c4-9ffed32f88b5">
+                      <interface>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <variable name="x">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Set_BY_Stop
+VAR_INPUT
+	i : INT;
+	x : BOOL;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IF x THEN
+	Set_BY_Close(i, FALSE);
+	Set_BY_Open(i, FALSE);
+END_IF;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Set_BY_Stop
+VAR_INPUT
+	i : INT;
+	x : BOOL;
 END_VAR
 </xhtml>
                       </InterfaceAsPlainText>
@@ -16174,9 +16223,7 @@ END_VAR
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">qxErrorCommonStatus := FALSE;
-
-  </xhtml>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">qxErrorCommonStatus := FALSE;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -23496,6 +23543,7 @@ END_TYPE
                   <Folder Name="Затворы">
                     <Object Name="Set_BY_Open" ObjectId="84a61b43-cf87-4321-ab6a-975ce963c34d" />
                     <Object Name="Set_BY_Close" ObjectId="0e79a580-523d-45ff-a85e-ecf24bb33d7d" />
+                    <Object Name="Set_BY_Stop" ObjectId="f11a3f84-865c-4f13-83c4-9ffed32f88b5" />
                   </Folder>
                   <Folder Name="Насосы">
                     <Object Name="Set_PU_VFD" ObjectId="65b9cb51-63af-4941-a6ae-446f33aca842" />
@@ -23580,6 +23628,21 @@ END_TYPE
                     <Object Name="cmdStop" ObjectId="691ea9be-6856-4718-abb4-20598de111fd" />
                   </Folder>
                 </Object>
+                <Folder Name="Interface">
+                  <Object Name="IShutterCommands" ObjectId="49231667-75a8-47c8-aed0-0f7e084bec2a">
+                    <Object Name="cmdOpen" ObjectId="9c6559db-4966-4a05-aaa1-51e90a5f2515" />
+                    <Object Name="cmdClose" ObjectId="67d298a4-0050-4904-a207-2f201aef7e5a" />
+                    <Object Name="cmdStop" ObjectId="15118eb0-2593-4881-b8ba-d63b088b4526" />
+                    <Object Name="cmdReset" ObjectId="53f8ff67-9b91-4d3e-ad2f-d74c68899684" />
+                  </Object>
+                  <Object Name="IShutterFeedback" ObjectId="3b0c9b29-15a9-4a4a-92f7-39824ae690be">
+                    <Object Name="GetStatusReady" ObjectId="cb78aff4-a620-47d7-bca9-8b8eaffcf26b" />
+                    <Object Name="GetStatusClosed" ObjectId="cf8f1dd4-74f7-4f61-b624-18e502036d36" />
+                    <Object Name="GetStatusOpen" ObjectId="58648427-f166-47d4-a98f-3eaf151b3247" />
+                    <Object Name="GetStatusManual" ObjectId="0fe3994e-0386-41de-899a-88d347069541" />
+                    <Object Name="GetStatusCommonError" ObjectId="36d29bc5-910b-47f4-b69d-d7f9ff456ba6" />
+                  </Object>
+                </Folder>
               </Folder>
             </Folder>
             <Object Name="MainTask" ObjectId="6e35004b-8872-4a8a-999d-c759191cd90a" />
@@ -23640,21 +23703,6 @@ END_TYPE
                 </Object>
               </Folder>
               <Folder Name="Shutter">
-                <Folder Name="Interface">
-                  <Object Name="IShutterCommands" ObjectId="49231667-75a8-47c8-aed0-0f7e084bec2a">
-                    <Object Name="cmdOpen" ObjectId="9c6559db-4966-4a05-aaa1-51e90a5f2515" />
-                    <Object Name="cmdClose" ObjectId="67d298a4-0050-4904-a207-2f201aef7e5a" />
-                    <Object Name="cmdStop" ObjectId="15118eb0-2593-4881-b8ba-d63b088b4526" />
-                    <Object Name="cmdReset" ObjectId="53f8ff67-9b91-4d3e-ad2f-d74c68899684" />
-                  </Object>
-                  <Object Name="IShutterFeedback" ObjectId="3b0c9b29-15a9-4a4a-92f7-39824ae690be">
-                    <Object Name="GetStatusReady" ObjectId="cb78aff4-a620-47d7-bca9-8b8eaffcf26b" />
-                    <Object Name="GetStatusClosed" ObjectId="cf8f1dd4-74f7-4f61-b624-18e502036d36" />
-                    <Object Name="GetStatusOpen" ObjectId="58648427-f166-47d4-a98f-3eaf151b3247" />
-                    <Object Name="GetStatusManual" ObjectId="0fe3994e-0386-41de-899a-88d347069541" />
-                    <Object Name="GetStatusCommonError" ObjectId="36d29bc5-910b-47f4-b69d-d7f9ff456ba6" />
-                  </Object>
-                </Folder>
                 <Folder Name="FB">
                   <Object Name="FB_Shutter_Test" ObjectId="3c40c5b8-383b-4ed5-bdff-aac302d226d9">
                     <Folder Name="Основные">
