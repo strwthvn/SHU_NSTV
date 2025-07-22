@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-22T11:52:36.8009012" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-22T11:52:26.6994759" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-22T12:00:36.9424136" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-22T12:00:25.3757324" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -15095,6 +15095,24 @@ END_VAR
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">Set_BY_Open(1, BY1.qxOpen);
 Set_BY_Close(1, BY1.qxClose);
+
+Set_BY_Open(2, BY2.qxOpen);
+Set_BY_Close(2, BY2.qxClose);
+
+Set_BY_Open(3, BY3.qxOpen);
+Set_BY_Close(3, BY3.qxClose);
+
+Set_BY_Open(4, BY4.qxOpen);
+Set_BY_Close(4, BY4.qxClose);
+
+Set_BY_Open(5, BY5.qxOpen);
+Set_BY_Close(5, BY5.qxClose);
+
+Set_BY_Open(7, BY7.qxOpen);
+Set_BY_Close(7, BY7.qxClose);
+
+Set_BY_Open(8, BY8.qxOpen);
+Set_BY_Close(8, BY8.qxClose);
 </xhtml>
                         </ST>
                       </body>
