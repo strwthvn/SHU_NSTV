@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-23T14:49:53.8458415" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-23T14:49:24.5359044" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-23T16:01:24.0256864" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-23T16:01:03.3264825" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -10659,6 +10659,7 @@ END_VAR
 VAR
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
+	xReadyToCalculate : BOOL;
 	xPossibleInac : BOOL;
 	xErrorFixation : BOOL;
 	ton_stopWorkProcess : TON;
@@ -10802,6 +10803,7 @@ END_VAR
 VAR
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
+	xReadyToCalculate : BOOL;
 	xPossibleInac : BOOL;
 	xErrorFixation : BOOL;
 	ton_stopWorkProcess : TON;
@@ -10881,6 +10883,7 @@ END_VAR
 VAR
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
+	xReadyToCalculate : BOOL;
 	xPossibleInac : BOOL;
 	xErrorFixation : BOOL;
 	ton_stopWorkProcess : TON;
@@ -10910,6 +10913,11 @@ END_VAR
                       </type>
                     </variable>
                     <variable name="xWorkProcess">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xReadyToCalculate">
                       <type>
                         <BOOL />
                       </type>
@@ -11037,6 +11045,7 @@ END_VAR
 VAR
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
+	xReadyToCalculate : BOOL;
 	xPossibleInac : BOOL;
 	xErrorFixation : BOOL;
 	ton_stopWorkProcess : TON;
@@ -11073,7 +11082,7 @@ rtrig_ixStopped(CLK:= ixStopped, Q=&gt; );
 
 ProcessErrorHandling();
 ProcessFrequencyControl();
-ProcessSignal();
+// ProcessSignal();
 ProcessTimers();</xhtml>
                   </ST>
                 </body>
@@ -11446,11 +11455,14 @@ END_VAR
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">ShouldUpdateFrequency := iqrSetFreq &lt;&gt; qrFreq 
 	AND CheckFrequencyInaccuracy()
 	AND rtrig_updateCycle.Q
-	AND NOT xErrorFixation
-	AND ixDeviceReady
-	AND NOT qxEmergencyStopStatus
-	AND (iqrSetFreq &lt;= irMaxFreq) 
-	AND (iqrSetFreq &gt;= 0);</xhtml>
+	// AND NOT xErrorFixation
+	// AND ixDeviceReady
+	AND xReadyToCalculate
+	// AND xWorkProcess
+	// AND NOT qxEmergencyStopStatus
+	// AND (iqrSetFreq &lt;= irMaxFreq) 
+	// AND (iqrSetFreq &gt;= 0);
+	;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -11473,7 +11485,7 @@ END_VAR
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">// Таймер для цикла обновления
 blink_updateCycle(
-    ENABLE:= xWorkProcess, 
+    ENABLE:= xReadyToCalculate, 
     TIMELOW:= itUpdateCycle, 
     TIMEHIGH:= T#100MS
 );
@@ -11554,7 +11566,9 @@ IF iqrSetFreq &gt; irMaxFreq THEN iqrSetFreq := irMaxFreq; END_IF;
 IF iqrSetFreq &lt; 0 THEN iqrSetFreq := 0; END_IF;
 
 // Задание частоты на 0 при получении сигнала остановки
-IF rtrig_ixStop.Q AND NOT ixSmoothStop THEN qrFreq := 0; END_IF;</xhtml>
+IF rtrig_ixStop.Q AND NOT ixSmoothStop THEN qrFreq := 0; xReadyToCalculate := FALSE; END_IF;
+
+IF rtrig_ixStart.Q THEN xReadyToCalculate := TRUE; END_IF;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -11589,10 +11603,16 @@ IF rtrig_ixStarted.Q OR ton_StartDisable.Q THEN
 END_IF;
 
 // Отработка сигнала стоп
-IF rtrig_ixStop.Q THEN 
+IF rtrig_ixStop.Q AND ixSmoothStop THEN 
 	cmdStop(TRUE); 
 	cmdStart(FALSE); 
 	xWorkProcess := TRUE;
+END_IF;
+
+IF rtrig_ixStop.Q AND NOT ixSmoothStop THEN 
+	cmdStop(TRUE); 
+	cmdStart(FALSE); 
+	xWorkProcess := FALSE;
 END_IF;
 // Завершение сигнала стоп
 IF rtrig_ixStopped.Q OR ton_StopDisable.Q THEN 
@@ -11671,6 +11691,7 @@ END_VAR
 VAR
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
+	xReadyToCalculate : BOOL;
 	xPossibleInac : BOOL;
 	xErrorFixation : BOOL;
 	ton_stopWorkProcess : TON;
@@ -14494,6 +14515,7 @@ VAR_INPUT
 	xReset : BOOL;
 END_VAR
 VAR
+	ftrig_xStop : F_TRIG;
 	ftrig_xReset : F_TRIG;
 END_VAR</xhtml>
                               </InterfaceAsPlainText>
@@ -14501,6 +14523,11 @@ END_VAR</xhtml>
                           </addData>
                         </inputVars>
                         <localVars>
+                          <variable name="ftrig_xStop">
+                            <type>
+                              <derived name="F_TRIG" />
+                            </type>
+                          </variable>
                           <variable name="ftrig_xReset">
                             <type>
                               <derived name="F_TRIG" />
@@ -14517,6 +14544,7 @@ VAR_INPUT
 	xReset : BOOL;
 END_VAR
 VAR
+	ftrig_xStop : F_TRIG;
 	ftrig_xReset : F_TRIG;
 END_VAR</xhtml>
                               </InterfaceAsPlainText>
@@ -14535,6 +14563,13 @@ END_IF;
 // Аварийная остановка ЧРП
 IF xEmergencyStop THEN
 	Set_VFD_EmergencyStop(vfd_iChange, TRUE);
+END_IF;
+
+// Остановка ЧРП
+IF xStop AND GetStatus_PU_VFD(pu_iChange) THEN
+	Set_VFD_Stop(vfd_iChange, xStop);
+ELSE
+	Set_VFD_Stop(vfd_iChange, xStop);
 END_IF;
 
 // Работа сброса ошибок ФБ ЧРП
@@ -14556,6 +14591,7 @@ VAR_INPUT
 	xReset : BOOL;
 END_VAR
 VAR
+	ftrig_xStop : F_TRIG;
 	ftrig_xReset : F_TRIG;
 END_VAR</xhtml>
                       </InterfaceAsPlainText>
