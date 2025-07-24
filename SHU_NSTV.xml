@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-23T16:01:24.0256864" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-23T16:01:03.3264825" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-24T11:00:30.0914859" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-24T10:55:48.9550481" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -17,7 +17,7 @@
       <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
         <ProjectInformation>
           <property name="Company" type="string">Production association OWEN</property>
-          <property name="Project" type="string">KK_SHU_NSTV_V_011</property>
+          <property name="Project" type="string">KK_SHU_NSTV_V_012</property>
           <property name="Title" type="string">TemplatePLC210_01</property>
           <property name="Version" type="version">3.5.14.30</property>
         </ProjectInformation>
@@ -2935,6 +2935,11 @@ END_TYPE
                         <BOOL />
                       </type>
                     </variable>
+                    <variable name="EStop">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
                     <variable name="ChangeToVFD">
                       <type>
                         <BOOL />
@@ -2980,6 +2985,7 @@ STRUCT
 	StartVFD : BOOL;
 	StartBP : BOOL;
 	Stop : BOOL;
+	EStop : BOOL;
 	ChangeToVFD : BOOL;
 	ChangeToBP : BOOL;
 	
@@ -10657,6 +10663,8 @@ VAR_IN_OUT
 	iqrSetFreq : REAL;			// Задание частоты на вход
 END_VAR
 VAR
+	temp_iqrSetFreq : REAL;
+	xSmoothStopProcess : BOOL;
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
 	xReadyToCalculate : BOOL;
@@ -10665,8 +10673,9 @@ VAR
 	ton_stopWorkProcess : TON;
 	ton_StopDisable : TON;
 	ton_StartDisable : TON;
-	reserve_iqrSetFreq : REAL;
 	
+	
+	ftrig_xSmoothStopProcess : F_TRIG;
 	rtrig_updateCycle : R_TRIG;
 	rtrig_ixStart : R_TRIG;
 	rtrig_ixFastStart : R_TRIG;
@@ -10801,6 +10810,8 @@ VAR_IN_OUT
 	iqrSetFreq : REAL;			// Задание частоты на вход
 END_VAR
 VAR
+	temp_iqrSetFreq : REAL;
+	xSmoothStopProcess : BOOL;
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
 	xReadyToCalculate : BOOL;
@@ -10809,8 +10820,9 @@ VAR
 	ton_stopWorkProcess : TON;
 	ton_StopDisable : TON;
 	ton_StartDisable : TON;
-	reserve_iqrSetFreq : REAL;
 	
+	
+	ftrig_xSmoothStopProcess : F_TRIG;
 	rtrig_updateCycle : R_TRIG;
 	rtrig_ixStart : R_TRIG;
 	rtrig_ixFastStart : R_TRIG;
@@ -10881,6 +10893,8 @@ VAR_IN_OUT
 	iqrSetFreq : REAL;			// Задание частоты на вход
 END_VAR
 VAR
+	temp_iqrSetFreq : REAL;
+	xSmoothStopProcess : BOOL;
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
 	xReadyToCalculate : BOOL;
@@ -10889,8 +10903,9 @@ VAR
 	ton_stopWorkProcess : TON;
 	ton_StopDisable : TON;
 	ton_StartDisable : TON;
-	reserve_iqrSetFreq : REAL;
 	
+	
+	ftrig_xSmoothStopProcess : F_TRIG;
 	rtrig_updateCycle : R_TRIG;
 	rtrig_ixStart : R_TRIG;
 	rtrig_ixFastStart : R_TRIG;
@@ -10907,6 +10922,16 @@ END_VAR
                     </addData>
                   </inOutVars>
                   <localVars>
+                    <variable name="temp_iqrSetFreq">
+                      <type>
+                        <REAL />
+                      </type>
+                    </variable>
+                    <variable name="xSmoothStopProcess">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
                     <variable name="blink_updateCycle">
                       <type>
                         <derived name="BLINK" />
@@ -10947,9 +10972,9 @@ END_VAR
                         <derived name="TON" />
                       </type>
                     </variable>
-                    <variable name="reserve_iqrSetFreq">
+                    <variable name="ftrig_xSmoothStopProcess">
                       <type>
-                        <REAL />
+                        <derived name="F_TRIG" />
                       </type>
                     </variable>
                     <variable name="rtrig_updateCycle">
@@ -11043,6 +11068,8 @@ VAR_IN_OUT
 	iqrSetFreq : REAL;			// Задание частоты на вход
 END_VAR
 VAR
+	temp_iqrSetFreq : REAL;
+	xSmoothStopProcess : BOOL;
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
 	xReadyToCalculate : BOOL;
@@ -11051,8 +11078,9 @@ VAR
 	ton_stopWorkProcess : TON;
 	ton_StopDisable : TON;
 	ton_StartDisable : TON;
-	reserve_iqrSetFreq : REAL;
 	
+	
+	ftrig_xSmoothStopProcess : F_TRIG;
 	rtrig_updateCycle : R_TRIG;
 	rtrig_ixStart : R_TRIG;
 	rtrig_ixFastStart : R_TRIG;
@@ -11074,7 +11102,7 @@ END_VAR
                     <xhtml xmlns="http://www.w3.org/1999/xhtml">rtrig_ixStart(CLK:= ixStart, Q=&gt; );
 rtrig_ixFastStart(CLK:= ixFastStart, Q=&gt; );
 rtrig_ixStop(CLK:= ixStop, Q=&gt; );
-ftrig_StopWorkProcess(CLK:= qrFreq &gt; 0, Q=&gt; );
+// ftrig_StopWorkProcess(CLK:= qrFreq &gt; 0, Q=&gt; );
 rtrig_ixEmergencyStop(CLK:= ixEmergencyStop, Q=&gt; );
 rtrig_ixReset(CLK:= ixReset, Q=&gt; );
 rtrig_ixStarted(CLK:= ixStarted, Q=&gt; );
@@ -11370,7 +11398,7 @@ qxStopStatus := qxStop;
 IF rtrig_ixEmergencyStop.Q THEN qxEmergencyStopStatus := TRUE; END_IF;
 
 // Остановка рабочего процесса по сигналу заднего фронта qrFreq &gt; 0
-IF ftrig_StopWorkProcess.Q THEN xWorkProcess := FALSE; END_IF;
+// IF ftrig_StopWorkProcess.Q THEN xWorkProcess := FALSE; END_IF;
 
 // Остановка рабочего процесса xWorkProcess AND qrFreq = 0 по таймеру
 IF ton_stopWorkProcess.Q THEN xWorkProcess := FALSE; END_IF;</xhtml>
@@ -11490,7 +11518,7 @@ blink_updateCycle(
     TIMEHIGH:= T#100MS
 );
 rtrig_updateCycle(CLK:= blink_updateCycle.OUT, Q=&gt; );
-
+(*
 // Таймер остановки рабочего процесса
 ton_stopWorkProcess(
     IN:= xWorkProcess AND qrFreq = 0, 
@@ -11507,7 +11535,8 @@ ton_StartDisable(
 	IN:= qxStart, 
 	PT:= itStartStopDelay,
 	Q=&gt; , 
-	ET=&gt; );</xhtml>
+	ET=&gt; );
+	*)</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -11556,7 +11585,16 @@ END_VAR
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Плавное изменение частоты
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Работа старта
+IF rtrig_ixStart.Q THEN xReadyToCalculate := TRUE; END_IF;
+
+// Работа быстрого старта
+IF rtrig_ixFastStart.Q THEN 
+	xReadyToCalculate := TRUE;
+	qrFreq := iqrSetFreq;
+END_IF
+
+// Плавное изменение частоты
 IF ShouldUpdateFrequency() THEN
     qrFreq := CalculateNewFrequency();
 END_IF;
@@ -11566,9 +11604,16 @@ IF iqrSetFreq &gt; irMaxFreq THEN iqrSetFreq := irMaxFreq; END_IF;
 IF iqrSetFreq &lt; 0 THEN iqrSetFreq := 0; END_IF;
 
 // Задание частоты на 0 при получении сигнала остановки
-IF rtrig_ixStop.Q AND NOT ixSmoothStop THEN qrFreq := 0; xReadyToCalculate := FALSE; END_IF;
+IF rtrig_ixStop.Q AND NOT ixSmoothStop THEN 
+	qrFreq := 0; 
+	xReadyToCalculate := FALSE; 
+END_IF;
 
-IF rtrig_ixStart.Q THEN xReadyToCalculate := TRUE; END_IF;</xhtml>
+IF rtrig_ixStop.Q AND ixSmoothStop THEN
+	temp_iqrSetFreq := iqrSetFreq;
+	xSmoothStopProcess := TRUE;
+	iqrSetFreq := 0;
+END_IF</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -11635,6 +11680,9 @@ IF rtrig_ixFastStart.Q THEN
 END_IF;</xhtml>
                         </ST>
                       </body>
+                      <BuildProperties>
+                        <ExcludeFromBuild>true</ExcludeFromBuild>
+                      </BuildProperties>
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD ProcessSignal : BOOL
 VAR_INPUT
@@ -11689,6 +11737,8 @@ VAR_IN_OUT
 	iqrSetFreq : REAL;			// Задание частоты на вход
 END_VAR
 VAR
+	temp_iqrSetFreq : REAL;
+	xSmoothStopProcess : BOOL;
 	blink_updateCycle : BLINK;
 	xWorkProcess : BOOL;
 	xReadyToCalculate : BOOL;
@@ -11697,8 +11747,9 @@ VAR
 	ton_stopWorkProcess : TON;
 	ton_StopDisable : TON;
 	ton_StartDisable : TON;
-	reserve_iqrSetFreq : REAL;
 	
+	
+	ftrig_xSmoothStopProcess : F_TRIG;
 	rtrig_updateCycle : R_TRIG;
 	rtrig_ixStart : R_TRIG;
 	rtrig_ixFastStart : R_TRIG;
@@ -11801,6 +11852,22 @@ END_VAR
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Выбор затвора для исполнения команд</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="pu_xEmergencyStopCommon">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Обобщённый аварийный стоп</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="pu_xEmergencyStopCommonStatus">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Статус обобщённой аварийной остановки насосов </xhtml>
                       </documentation>
                     </variable>
                     <variable name="vfd_rMaxFreq">
@@ -12043,6 +12110,11 @@ END_VAR
                       </type>
                     </variable>
                     <variable name="rtrig_puCmd_xChange_VFD">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_pu_xEmergencyStopCommon">
                       <type>
                         <derived name="R_TRIG" />
                       </type>
@@ -12525,9 +12597,11 @@ VAR
 	
 	// Общие глобальные переменные
 	tRattlingDelay : TIME := T#100MS;			// Задержка получения сигнала входов (защита от дребезга)
-	vfd_iChange : INT := 1;							// Выбор работающего ЧРП
+	vfd_iChange : INT := 1;						// Выбор работающего ЧРП
 	pu_iChange : INT;							// Выбор насоса для исполнения команд
 	by_iChange : INT;							// Выбор затвора для исполнения команд
+	pu_xEmergencyStopCommon : BOOL;				// Обобщённый аварийный стоп
+	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	// VFD
 	// Конфигурация
 	vfd_rMaxFreq : REAL := 50;					// Максимальное задание частоты
@@ -12580,9 +12654,9 @@ VAR
 	rtrig_puCmd_xStartVFD			: R_TRIG;
 	rtrig_puCmd_xStop               : R_TRIG;
 	rtrig_puCmd_xReset              : R_TRIG;
-	rtrig_puCmd_xChange_toBP     : R_TRIG;
-	rtrig_puCmd_xChange_VFD     : R_TRIG;
-	
+	rtrig_puCmd_xChange_toBP     	: R_TRIG;
+	rtrig_puCmd_xChange_VFD     	: R_TRIG;
+	rtrig_pu_xEmergencyStopCommon	: R_TRIG;
 	// **Process_VFD_Commands**
 	rtrig_vfdCmd_xStart				: R_TRIG;
 	rtrig_vfdCmd_xStop              : R_TRIG;
@@ -14504,6 +14578,11 @@ END_VAR
                               <BOOL />
                             </type>
                           </variable>
+                          <variable name="xChangePUToVFD">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
                           <addData>
                             <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                               <InterfaceAsPlainText>
@@ -14513,6 +14592,7 @@ VAR_INPUT
 	xStop : BOOL;
 	xEmergencyStop : BOOL;
 	xReset : BOOL;
+	xChangePUToVFD : BOOL;
 END_VAR
 VAR
 	ftrig_xStop : F_TRIG;
@@ -14542,6 +14622,7 @@ VAR_INPUT
 	xStop : BOOL;
 	xEmergencyStop : BOOL;
 	xReset : BOOL;
+	xChangePUToVFD : BOOL;
 END_VAR
 VAR
 	ftrig_xStop : F_TRIG;
@@ -14558,7 +14639,15 @@ END_VAR</xhtml>
 IF xStart AND Condition_PU_toVFD(vfd_iChange, pu_iChange) THEN
 	Set_KM8(vfd_iChange, TRUE);
 	Set_VFD_Start(vfd_iChange, TRUE);
+ELSE
+	Set_VFD_Start(vfd_iChange, FALSE);
 END_IF;
+// Работа смены насоса с БП на ЧРП
+IF xChangePUToVFD AND GetStatus_VFD_Ready(pu_iChange) AND NOT GetStatus_PU_VFD_Common() THEN
+	Set_VFD_FastStart(vfd_iChange, TRUE);
+ELSE
+	Set_VFD_FastStart(vfd_iChange, FALSE);
+END_IF
 
 // Аварийная остановка ЧРП
 IF xEmergencyStop THEN
@@ -14589,6 +14678,7 @@ VAR_INPUT
 	xStop : BOOL;
 	xEmergencyStop : BOOL;
 	xReset : BOOL;
+	xChangePUToVFD : BOOL;
 END_VAR
 VAR
 	ftrig_xStop : F_TRIG;
@@ -15227,6 +15317,11 @@ END_VAR
                               <BOOL />
                             </type>
                           </variable>
+                          <variable name="xEStopCommmon">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
                           <variable name="xReset">
                             <type>
                               <BOOL />
@@ -15250,6 +15345,7 @@ VAR_INPUT
 	xStartBP : BOOL;
 	xStartVFD : BOOL;
 	xStop : BOOL;
+	xEStopCommmon : BOOL;
 	xReset : BOOL;
 	xChange_toVFD : BOOL;
 	xChange_toBP : BOOL;
@@ -15282,6 +15378,15 @@ IF xStop THEN
 	Set_PU_VFD(pu_iChange, FALSE);
 END_IF;
 
+IF xEStopCommmon THEN
+	Set_PU_BP(1, FALSE);
+	Set_PU_BP(2, FALSE);
+	Set_PU_BP(3, FALSE);
+	Set_PU_BP(4, FALSE);
+	Set_PU_BP(5, FALSE);
+	Set_PU_EmergencyStopCommon(TRUE);
+END_IF;
+
 // Работа смены ЧРП и БП
 IF xChange_toBP AND GetStatus_PU_VFD(pu_iChange) THEN
 	Set_PU_VFD(pu_iChange, FALSE);	
@@ -15290,7 +15395,7 @@ END_IF;
 
 IF xChange_toVFD AND NOT GetStatus_PU_VFD_Common() AND GetStatus_PU_BP(pu_iChange) THEN
 	Set_PU_BP(pu_iChange, FALSE);
-	Set_PU_VFD(pu_iChange, TRUE);	
+	Set_PU_VFD(pu_iChange, TRUE);
 END_IF;
 </xhtml>
                         </ST>
@@ -15301,6 +15406,7 @@ VAR_INPUT
 	xStartBP : BOOL;
 	xStartVFD : BOOL;
 	xStop : BOOL;
+	xEStopCommmon : BOOL;
 	xReset : BOOL;
 	xChange_toVFD : BOOL;
 	xChange_toBP : BOOL;
@@ -15378,7 +15484,8 @@ Process_PU_Signals();
 Process_PU_Commands(
 	xStartBP:= rtrig_puCmd_xStartBP.Q, 
 	xStartVFD:= rtrig_puCmd_xStartVFD.Q, 
-	xStop:= rtrig_puCmd_xStop.Q, 
+	xStop:= rtrig_puCmd_xStop.Q,
+	xEStopCommmon := rtrig_pu_xEmergencyStopCommon.Q, 
 	xReset:= rtrig_puCmd_xReset.Q, 
 	xChange_toVFD:= rtrig_puCmd_xChange_VFD.Q, 
 	xChange_toBP:= rtrig_puCmd_xChange_toBP.Q);</xhtml>
@@ -15424,6 +15531,7 @@ rtrig_puCmd_xStop(CLK:= xPU_Stop.qxSignal, Q=&gt; );
 rtrig_puCmd_xReset(CLK:= xPU_Reset.qxSignal, Q=&gt; );
 rtrig_puCmd_xChange_toBP(CLK:= xPU_Change_VFDtoBP.qxSignal, Q=&gt; );
 rtrig_puCmd_xChange_VFD(CLK:= xPU_Change_BPtoVFD.qxSignal, Q=&gt; );
+rtrig_pu_xEmergencyStopCommon(CLK:= pu_xEmergencyStopCommon);
 
 rtrig_vfdCmd_xStart(CLK:= xVFD_Start.qxSignal, Q=&gt; );
 // rtrig_vfdCmd_xEmergencyStop(CLK:= xVFD_Start.qxSignal, Q=&gt; );
@@ -15566,13 +15674,15 @@ END_VAR
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">Process_VFD_qFreq();
 Process_VFD_Commands(
-	rtrig_vfdCmd_xStart.Q,
-	rtrig_vfdCmd_xStop.Q,
-	rtrig_vfdCmd_xEmergencyStop.Q,
-	rtrig_vfdCmd_xReset.Q
-);
+	xStart:= rtrig_vfdCmd_xStart.Q, 
+	xStop:= rtrig_vfdCmd_xStop.Q, 
+	xEmergencyStop:= rtrig_vfdCmd_xEmergencyStop.Q, 
+	xReset:= rtrig_vfdCmd_xReset.Q, 
+	xChangePUToVFD:= rtrig_puCmd_xChange_VFD.Q);
 // Process_VFD_Signals();
-Process_VFD_Change();</xhtml>
+Process_VFD_Change();
+
+</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -16261,6 +16371,129 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus_PU_EmergencyStopCommon" ObjectId="8a1968cb-ad99-4fc2-a31e-d96ed8649b6f">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">GetStatus_PU_EmergencyStopCommon := pu_xEmergencyStopCommonStatus;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_PU_EmergencyStopCommon : BOOL
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Set_PU_EmergencyStopCommon" ObjectId="dc4b66ba-78b5-4a7a-a3c3-16b3adfd1cd0">
+                      <interface>
+                        <inputVars>
+                          <variable name="x">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Set_PU_EmergencyStopCommon
+VAR_INPUT
+	x : BOOL;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">pu_xEmergencyStopCommonStatus := x;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Set_PU_EmergencyStopCommon
+VAR_INPUT
+	x : BOOL;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Set_PU_EmergencyStop" ObjectId="22e89288-6088-4299-9bf2-09577bb6280f">
+                      <interface>
+                        <inputVars>
+                          <variable name="PU">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <variable name="x">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Set_PU_EmergencyStop
+VAR_INPUT
+	PU : INT;
+	x : BOOL;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Set_PU_EmergencyStop
+VAR_INPUT
+	PU : INT;
+	x : BOOL;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus_PU_EmergencyStop" ObjectId="25ecd605-82db-4cec-bfb4-550d402a8a21">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_PU_EmergencyStop : BOOL
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
@@ -16299,9 +16532,11 @@ VAR
 	
 	// Общие глобальные переменные
 	tRattlingDelay : TIME := T#100MS;			// Задержка получения сигнала входов (защита от дребезга)
-	vfd_iChange : INT := 1;							// Выбор работающего ЧРП
+	vfd_iChange : INT := 1;						// Выбор работающего ЧРП
 	pu_iChange : INT;							// Выбор насоса для исполнения команд
 	by_iChange : INT;							// Выбор затвора для исполнения команд
+	pu_xEmergencyStopCommon : BOOL;				// Обобщённый аварийный стоп
+	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	// VFD
 	// Конфигурация
 	vfd_rMaxFreq : REAL := 50;					// Максимальное задание частоты
@@ -16354,9 +16589,9 @@ VAR
 	rtrig_puCmd_xStartVFD			: R_TRIG;
 	rtrig_puCmd_xStop               : R_TRIG;
 	rtrig_puCmd_xReset              : R_TRIG;
-	rtrig_puCmd_xChange_toBP     : R_TRIG;
-	rtrig_puCmd_xChange_VFD     : R_TRIG;
-	
+	rtrig_puCmd_xChange_toBP     	: R_TRIG;
+	rtrig_puCmd_xChange_VFD     	: R_TRIG;
+	rtrig_pu_xEmergencyStopCommon	: R_TRIG;
 	// **Process_VFD_Commands**
 	rtrig_vfdCmd_xStart				: R_TRIG;
 	rtrig_vfdCmd_xStop              : R_TRIG;
@@ -24649,6 +24884,8 @@ END_TYPE
                     <Object Name="GetStatus_PU_VFD_ManualStart" ObjectId="1bcbe19e-5d4d-4f24-9674-ed6ee7fdb621" />
                     <Object Name="GetStatus_PU_VFD_ManualStop" ObjectId="b5e5ed25-d0d4-4167-9f74-b506119f61b2" />
                     <Object Name="GetStatus_PU_VFD_Common" ObjectId="c0613623-c6d4-4873-bf67-9d6c75968954" />
+                    <Object Name="GetStatus_PU_EmergencyStopCommon" ObjectId="8a1968cb-ad99-4fc2-a31e-d96ed8649b6f" />
+                    <Object Name="GetStatus_PU_EmergencyStop" ObjectId="25ecd605-82db-4cec-bfb4-550d402a8a21" />
                   </Folder>
                   <Folder Name="Затворы">
                     <Object Name="GetStatus_BY_Open" ObjectId="2f7b7588-1129-4e5a-a5de-5b15687eb96d" />
@@ -24684,6 +24921,8 @@ END_TYPE
                     <Object Name="Set_PU_BP" ObjectId="81093d04-aeb5-41c8-95b0-014d9cfa2aca" />
                     <Object Name="Set_PU_DryRun" ObjectId="7eb88dd1-8db4-419c-a8bc-00ccd645971c" />
                     <Object Name="Set_PU_Change" ObjectId="81a8c59d-a2bb-4ebc-8532-ad69bf28b933" />
+                    <Object Name="Set_PU_EmergencyStopCommon" ObjectId="dc4b66ba-78b5-4a7a-a3c3-16b3adfd1cd0" />
+                    <Object Name="Set_PU_EmergencyStop" ObjectId="22e89288-6088-4299-9bf2-09577bb6280f" />
                   </Folder>
                   <Folder Name="ЧРП">
                     <Object Name="Set_KM8" ObjectId="b34dbcda-ea51-4586-a932-34da89333ff7" />
