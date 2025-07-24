@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-24T15:19:48.5167871" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-24T15:19:37.6837713" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-24T16:22:44.2162643" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-24T16:22:26.7943771" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -12814,9 +12814,11 @@ END_VAR
                   <ST>
                     <xhtml xmlns="http://www.w3.org/1999/xhtml">Initialization();
 
+Process_PU();
+
 Process_VFD();
 
-Process_PU();
+
 
 // Process_BY();</xhtml>
                   </ST>
@@ -14645,90 +14647,15 @@ VAR_INPUT
 	xChangePUToBP : BOOL;
 END_VAR
 VAR
-	ftrig_xStart : F_TRIG;
-	ftrig_xStop : F_TRIG;
-	ftrig_xEmergencyStop : F_TRIG;
-	ftrig_xReset : F_TRIG;
-	ftrig_xChangePUToVFD : F_TRIG;
-	ftrig_xChangePUToBP : F_TRIG;
 END_VAR</xhtml>
                               </InterfaceAsPlainText>
                             </data>
                           </addData>
                         </inputVars>
-                        <localVars>
-                          <variable name="ftrig_xStart">
-                            <type>
-                              <derived name="F_TRIG" />
-                            </type>
-                          </variable>
-                          <variable name="ftrig_xStop">
-                            <type>
-                              <derived name="F_TRIG" />
-                            </type>
-                          </variable>
-                          <variable name="ftrig_xEmergencyStop">
-                            <type>
-                              <derived name="F_TRIG" />
-                            </type>
-                          </variable>
-                          <variable name="ftrig_xReset">
-                            <type>
-                              <derived name="F_TRIG" />
-                            </type>
-                          </variable>
-                          <variable name="ftrig_xChangePUToVFD">
-                            <type>
-                              <derived name="F_TRIG" />
-                            </type>
-                          </variable>
-                          <variable name="ftrig_xChangePUToBP">
-                            <type>
-                              <derived name="F_TRIG" />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Commands
-VAR_INPUT
-	xStart : BOOL;
-	xStop : BOOL;
-	xEmergencyStop : BOOL;
-	xReset : BOOL;
-	xChangePUToVFD : BOOL;
-	xChangePUToBP : BOOL;
-END_VAR
-VAR
-	ftrig_xStart : F_TRIG;
-	ftrig_xStop : F_TRIG;
-	ftrig_xEmergencyStop : F_TRIG;
-	ftrig_xReset : F_TRIG;
-	ftrig_xChangePUToVFD : F_TRIG;
-	ftrig_xChangePUToBP : F_TRIG;
-END_VAR</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </localVars>
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// ftrig_xStart(CLK:= xStart);
-// ftrig_xStop(CLK:= xStop, Q=&gt; );
-// ftrig_xEmergencyStop(CLK:= xEmergencyStop, Q=&gt; );
-// ftrig_xReset(CLK:= xReset, Q=&gt; );
-// ftrig_xChangePUToVFD(CLK:= xChangePUToVFD, Q=&gt; );
-// ftrig_xChangePUToBP(CLK:= xChangePUToBP, Q=&gt; );
-// 
-// IF ftrig_xStart.Q THEN Set_VFD_Start(vfd_iChange, FALSE); END_IF;
-// IF ftrig_xStop.Q THEN Set_VFD_Stop(vfd_iChange, FALSE); END_IF;
-// IF ftrig_xEmergencyStop.Q THEN Set_VFD_EmergencyStop(vfd_iChange, FALSE); END_IF;
-// IF ftrig_xReset.Q THEN Set_VFD_Reset(vfd_iChange, FALSE); END_IF;
-// IF ftrig_xChangePUToVFD.Q THEN Set_VFD_FastStart(vfd_iChange, FALSE); END_IF;
-// IF ftrig_xChangePUToBP.Q THEN Set_VFD_Stop(vfd_iChange, FALSE); END_IF;
-
-// Старт насоса от ЧРП
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Старт насоса от ЧРП
 IF xStart AND Condition_PU_VFD(vfd_iChange, pu_iChange) THEN
 	Set_KM8(vfd_iChange, TRUE);
 END_IF;
@@ -14744,11 +14671,9 @@ Set_VFD_EmergencyStop(vfd_iChange, xEmergencyStop);
 Set_VFD_Stop(vfd_iChange, (xStop OR xChangePUToBP) AND GetStatus_PU_VFD(pu_iChange));
 
 // Работа сброса ошибок ФБ ЧРП
-ftrig_xReset(CLK:= xReset, Q=&gt; );
 IF xReset THEN
 	Set_VFD_Reset(vfd_iChange, TRUE);
 END_IF;
-
 </xhtml>
                         </ST>
                       </body>
@@ -14763,12 +14688,6 @@ VAR_INPUT
 	xChangePUToBP : BOOL;
 END_VAR
 VAR
-	ftrig_xStart : F_TRIG;
-	ftrig_xStop : F_TRIG;
-	ftrig_xEmergencyStop : F_TRIG;
-	ftrig_xReset : F_TRIG;
-	ftrig_xChangePUToVFD : F_TRIG;
-	ftrig_xChangePUToBP : F_TRIG;
 END_VAR</xhtml>
                       </InterfaceAsPlainText>
                       <addData />
