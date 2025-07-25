@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-24T16:22:44.2162643" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-24T16:22:26.7943771" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T10:53:52.6058097" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T10:53:17.7530748" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -17,7 +17,7 @@
       <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
         <ProjectInformation>
           <property name="Company" type="string">Production association OWEN</property>
-          <property name="Project" type="string">KK_SHU_NSTV_V_012</property>
+          <property name="Project" type="string">KK_SHU_NSTV_V_013</property>
           <property name="Title" type="string">TemplatePLC210_01</property>
           <property name="Version" type="version">3.5.14.30</property>
         </ProjectInformation>
@@ -12034,6 +12034,11 @@ END_VAR
                         <derived name="FB_SignalSplit" />
                       </type>
                     </variable>
+                    <variable name="xPU_xEmergencyStopCommon">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
                     <variable name="xVFD_Start">
                       <type>
                         <derived name="FB_SignalSplit" />
@@ -12060,6 +12065,11 @@ END_VAR
                       </type>
                     </variable>
                     <variable name="xVFD_ChangeToReserve">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="xVFD_EmergencyStopCommon">
                       <type>
                         <derived name="FB_SignalSplit" />
                       </type>
@@ -12140,7 +12150,7 @@ END_VAR
                         <derived name="R_TRIG" />
                       </type>
                     </variable>
-                    <variable name="rtrig_pu_xEmergencyStopCommon">
+                    <variable name="rtrig_puCmd_xEmergencyStopCommon">
                       <type>
                         <derived name="R_TRIG" />
                       </type>
@@ -12159,6 +12169,11 @@ END_VAR
                       </type>
                     </variable>
                     <variable name="rtrig_vfdCmd_xEmergencyStop">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_vfdCmd_xEmergencyStopCommon">
                       <type>
                         <derived name="R_TRIG" />
                       </type>
@@ -12670,6 +12685,7 @@ VAR
 	xPU_Reset 			: FB_SignalSplit;
 	xPU_Change_VFDtoBP	: FB_SignalSplit;
 	xPU_Change_BPtoVFD	: FB_SignalSplit;
+	xPU_xEmergencyStopCommon : FB_SignalSplit;
 
 	xVFD_Start          : FB_SignalSplit;
 	xVFD_Stop           : FB_SignalSplit;
@@ -12677,6 +12693,7 @@ VAR
 	xVFD_Reset			: FB_SignalSplit;
 	xVFD_ChangeToMain	: FB_SignalSplit;
 	xVFD_ChangeToReserve : FB_SignalSplit;
+	xVFD_EmergencyStopCommon : FB_SignalSplit;
 	
 	xBY_Open			: FB_SignalSplit;
 	xBY_Close           : FB_SignalSplit;
@@ -12689,7 +12706,6 @@ VAR
 	rtrig_byCmd_xClose             	: R_TRIG;
 	rtrig_byCmd_xStop     			: R_TRIG;
 	rtrig_byCmd_xReset              : R_TRIG;
-	
 	// **Process_PU_Commands**
 	rtrig_puCmd_xStartBP 			: R_TRIG;
 	rtrig_puCmd_xStartVFD			: R_TRIG;
@@ -12697,11 +12713,12 @@ VAR
 	rtrig_puCmd_xReset              : R_TRIG;
 	rtrig_puCmd_xChange_toBP     	: R_TRIG;
 	rtrig_puCmd_xChange_VFD     	: R_TRIG;
-	rtrig_pu_xEmergencyStopCommon	: R_TRIG;
+	rtrig_puCmd_xEmergencyStopCommon : R_TRIG;
 	// **Process_VFD_Commands**
 	rtrig_vfdCmd_xStart				: R_TRIG;
 	rtrig_vfdCmd_xStop              : R_TRIG;
 	rtrig_vfdCmd_xEmergencyStop		: R_TRIG;
+	rtrig_vfdCmd_xEmergencyStopCommon : R_TRIG;
 	rtrig_vfdCmd_xReset             : R_TRIG;
 	rtrig_vfdCmd_xChangeToMain		: R_TRIG;
 	rtrig_vfdCmd_xChangeToReserve	: R_TRIG;
@@ -14430,7 +14447,10 @@ END_VAR
 Set_VFD_OutSignalToModule(
 	vfd_iChange,
 	GetValue_VFD_OutSignalConvertation(GetValue_VFD_qrFreq(vfd_iChange))
-);</xhtml>
+);
+
+IF GetStatus_VFD_Change(1) THEN Set_VFD_OutSignalToModule(2, 0); END_IF;
+IF GetStatus_VFD_Change(2) THEN Set_VFD_OutSignalToModule(1, 0); END_IF;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -14619,6 +14639,11 @@ END_VAR
                               <BOOL />
                             </type>
                           </variable>
+                          <variable name="xEmergencyStopCommon">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
                           <variable name="xReset">
                             <type>
                               <BOOL />
@@ -14642,6 +14667,7 @@ VAR_INPUT
 	xStart : BOOL;
 	xStop : BOOL;
 	xEmergencyStop : BOOL;
+	xEmergencyStopCommon : BOOL;
 	xReset : BOOL;
 	xChangePUToVFD : BOOL;
 	xChangePUToBP : BOOL;
@@ -14670,6 +14696,10 @@ Set_VFD_EmergencyStop(vfd_iChange, xEmergencyStop);
 // Работа остановки ЧРП и переключения на БП
 Set_VFD_Stop(vfd_iChange, (xStop OR xChangePUToBP) AND GetStatus_PU_VFD(pu_iChange));
 
+// Работа обобщённой аварийной остановки
+Set_VFD_EmergencyStop(vfd_iChange, xEmergencyStopCommon);
+
+
 // Работа сброса ошибок ФБ ЧРП
 IF xReset THEN
 	Set_VFD_Reset(vfd_iChange, TRUE);
@@ -14683,6 +14713,7 @@ VAR_INPUT
 	xStart : BOOL;
 	xStop : BOOL;
 	xEmergencyStop : BOOL;
+	xEmergencyStopCommon : BOOL;
 	xReset : BOOL;
 	xChangePUToVFD : BOOL;
 	xChangePUToBP : BOOL;
@@ -15392,10 +15423,15 @@ END_IF;
 
 IF xEStopCommmon THEN
 	Set_PU_BP(1, FALSE);
+	Set_PU_VFD (1, FALSE);
 	Set_PU_BP(2, FALSE);
+	Set_PU_VFD (2, FALSE);
 	Set_PU_BP(3, FALSE);
+	Set_PU_VFD (3, FALSE);
 	Set_PU_BP(4, FALSE);
+	Set_PU_VFD (4, FALSE);
 	Set_PU_BP(5, FALSE);
+	Set_PU_VFD (5, FALSE);
 	Set_PU_EmergencyStopCommon(TRUE);
 END_IF;
 
@@ -15497,7 +15533,7 @@ Process_PU_Commands(
 	xStartBP:= rtrig_puCmd_xStartBP.Q, 
 	xStartVFD:= rtrig_puCmd_xStartVFD.Q, 
 	xStop:= rtrig_puCmd_xStop.Q,
-	xEStopCommmon := rtrig_pu_xEmergencyStopCommon.Q, 
+	xEStopCommmon := rtrig_puCmd_xEmergencyStopCommon.Q, 
 	xReset:= rtrig_puCmd_xReset.Q, 
 	xChange_toVFD:= rtrig_puCmd_xChange_VFD.Q, 
 	xChange_toBP:= rtrig_puCmd_xChange_toBP.Q);</xhtml>
@@ -15517,7 +15553,10 @@ END_VAR
                       <interface />
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Set_KM8(vfd_iChange, GetStatus_PU_VFD_Common());
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Переключение контактора в соответствии с работающим частотником
+Set_KM8(vfd_iChange, GetStatus_PU_VFD_Common());
+
+// Отключение контакторов, не участвующих в работе действующего ЧРП
 CASE vfd_iChange OF
 	1: Set_KM8(2, FALSE);
 	2: Set_KM8(1, FALSE);
@@ -15546,7 +15585,7 @@ rtrig_puCmd_xStop(CLK:= xPU_Stop.qxSignal, Q=&gt; );
 rtrig_puCmd_xReset(CLK:= xPU_Reset.qxSignal, Q=&gt; );
 rtrig_puCmd_xChange_toBP(CLK:= xPU_Change_VFDtoBP.qxSignal, Q=&gt; );
 rtrig_puCmd_xChange_VFD(CLK:= xPU_Change_BPtoVFD.qxSignal, Q=&gt; );
-rtrig_pu_xEmergencyStopCommon(CLK:= pu_xEmergencyStopCommon);
+rtrig_puCmd_xEmergencyStopCommon(CLK:= xPU_xEmergencyStopCommon.qxSignal);
 
 rtrig_vfdCmd_xStart(CLK:= xVFD_Start.qxSignal, Q=&gt; );
 // rtrig_vfdCmd_xEmergencyStop(CLK:= xVFD_Start.qxSignal, Q=&gt; );
@@ -15554,6 +15593,7 @@ rtrig_vfdCmd_xStop(CLK:= xVFD_Stop.qxSignal, Q=&gt; );
 rtrig_vfdCmd_xReset(CLK:= xVFD_Reset.qxSignal, Q=&gt; );
 rtrig_vfdCmd_xChangeToMain(CLK := xVFD_ChangeToMain.qxSignal);
 rtrig_vfdCmd_xChangeToReserve(CLK := xVFD_ChangeToReserve.qxSignal);
+rtrig_vfdCmd_xEmergencyStopCommon(CLK:= xVFD_EmergencyStopCommon.qxSignal);
 
 rtrig_byCmd_xOpen(CLK:= xBY_Open.qxSignal, Q=&gt; );
 rtrig_byCmd_xClose(CLK:= xBY_Close.qxSignal, Q=&gt; );
@@ -15621,6 +15661,12 @@ xPU_Change_BPtoVFD(
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
 	
+xPU_xEmergencyStopCommon(
+	ixAutoSignal:= pu_xEmergencyStopCommon, 
+	ixServiceSignal:= , 
+	iiPLCMode:= PLC_Mode, 
+	qxSignal=&gt; );
+	
 // КОМАНДЫ - ЧРП
 	
 xVFD_Start(
@@ -15655,6 +15701,12 @@ xVFD_ChangeToMain(
 
 xVFD_ChangeToReserve(
 	ixAutoSignal:= vfd_xChangeToReserve, 
+	ixServiceSignal:= , 
+	iiPLCMode:= PLC_Mode, 
+	qxSignal=&gt; );
+
+xVFD_EmergencyStopCommon(
+	ixAutoSignal:= pu_xEmergencyStopCommon, 
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
@@ -15706,6 +15758,7 @@ Process_VFD_Commands(
 	xStart:= rtrig_vfdCmd_xStart.Q, 
 	xStop:= rtrig_vfdCmd_xStop.Q, 
 	xEmergencyStop:= rtrig_vfdCmd_xEmergencyStop.Q, 
+	xEmergencyStopCommon := rtrig_vfdCmd_xEmergencyStopCommon.Q,
 	xReset:= rtrig_vfdCmd_xReset.Q, 
 	xChangePUToVFD:= rtrig_puCmd_xChange_VFD.Q,
 	xChangePUToBP:= rtrig_puCmd_xChange_toBP.Q);
@@ -16196,10 +16249,18 @@ END_VAR
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">IF xChangeToMain AND Condition_VFD_ChangeToMain() THEN
 	Set_VFD_Change(1);
+	Set_VFD_Stop(2, TRUE);
+	IF GetStatus_PU_VFD(pu_iChange) THEN
+		Set_VFD_FastStart(1, TRUE);
+	END_IF;
 END_IF;
 
 IF xChangeToReserve AND  Condition_VFD_ChangeToReserve() THEN
 	Set_VFD_Change(2);
+	Set_VFD_Stop(1, TRUE);
+	IF GetStatus_PU_VFD(pu_iChange) THEN
+		Set_VFD_FastStart(2, TRUE);
+	END_IF;
 END_IF;</xhtml>
                         </ST>
                       </body>
@@ -16638,6 +16699,49 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus_VFD_Change" ObjectId="7e5207db-697d-4262-9bdb-902e25dd34fa">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_VFD_Change : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
+	1: GetStatus_VFD_Change := vfd_iChange = 1;
+	2: GetStatus_VFD_Change := vfd_iChange = 2;
+END_CASE;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_VFD_Change : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
@@ -16713,6 +16817,7 @@ VAR
 	xPU_Reset 			: FB_SignalSplit;
 	xPU_Change_VFDtoBP	: FB_SignalSplit;
 	xPU_Change_BPtoVFD	: FB_SignalSplit;
+	xPU_xEmergencyStopCommon : FB_SignalSplit;
 
 	xVFD_Start          : FB_SignalSplit;
 	xVFD_Stop           : FB_SignalSplit;
@@ -16720,6 +16825,7 @@ VAR
 	xVFD_Reset			: FB_SignalSplit;
 	xVFD_ChangeToMain	: FB_SignalSplit;
 	xVFD_ChangeToReserve : FB_SignalSplit;
+	xVFD_EmergencyStopCommon : FB_SignalSplit;
 	
 	xBY_Open			: FB_SignalSplit;
 	xBY_Close           : FB_SignalSplit;
@@ -16732,7 +16838,6 @@ VAR
 	rtrig_byCmd_xClose             	: R_TRIG;
 	rtrig_byCmd_xStop     			: R_TRIG;
 	rtrig_byCmd_xReset              : R_TRIG;
-	
 	// **Process_PU_Commands**
 	rtrig_puCmd_xStartBP 			: R_TRIG;
 	rtrig_puCmd_xStartVFD			: R_TRIG;
@@ -16740,11 +16845,12 @@ VAR
 	rtrig_puCmd_xReset              : R_TRIG;
 	rtrig_puCmd_xChange_toBP     	: R_TRIG;
 	rtrig_puCmd_xChange_VFD     	: R_TRIG;
-	rtrig_pu_xEmergencyStopCommon	: R_TRIG;
+	rtrig_puCmd_xEmergencyStopCommon : R_TRIG;
 	// **Process_VFD_Commands**
 	rtrig_vfdCmd_xStart				: R_TRIG;
 	rtrig_vfdCmd_xStop              : R_TRIG;
 	rtrig_vfdCmd_xEmergencyStop		: R_TRIG;
+	rtrig_vfdCmd_xEmergencyStopCommon : R_TRIG;
 	rtrig_vfdCmd_xReset             : R_TRIG;
 	rtrig_vfdCmd_xChangeToMain		: R_TRIG;
 	rtrig_vfdCmd_xChangeToReserve	: R_TRIG;
@@ -25060,6 +25166,7 @@ END_TYPE
                       <Object Name="GetStatus_VFD_qDelayError" ObjectId="fc49cfdc-ab2b-4fac-8b2b-85c50243cee1" />
                     </Folder>
                     <Object Name="GetStatus_KM8" ObjectId="b4c34011-ca1f-4ebf-b3e3-6699074bbf1e" />
+                    <Object Name="GetStatus_VFD_Change" ObjectId="7e5207db-697d-4262-9bdb-902e25dd34fa" />
                   </Folder>
                 </Folder>
                 <Folder Name="Команды">
