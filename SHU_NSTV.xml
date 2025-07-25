@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T11:50:03.6577807" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T11:49:51.2577053" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T12:02:49.945499" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T12:02:35.9005255" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -11816,6 +11816,22 @@ END_VAR
 	</xhtml>
                       </documentation>
                     </variable>
+                    <variable name="auto_vfd_rSetFreq">
+                      <type>
+                        <REAL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Задание частоты режим авто</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="service_vfd_rSetFreq">
+                      <type>
+                        <REAL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Задание частоты режим сервис</xhtml>
+                      </documentation>
+                    </variable>
                     <variable name="tRattlingDelay">
                       <type>
                         <TIME />
@@ -12083,6 +12099,11 @@ END_VAR
                       </type>
                     </variable>
                     <variable name="xVFD_EmergencyStopCommon">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
+                    </variable>
+                    <variable name="rVFD_SetFreq">
                       <type>
                         <derived name="FB_SignalSplit" />
                       </type>
@@ -12660,6 +12681,8 @@ VAR
 	// 	==============================================
 	
 	// Общие глобальные переменные
+	auto_vfd_rSetFreq : REAL;					// Задание частоты режим авто
+	service_vfd_rSetFreq : REAL;				// Задание частоты режим сервис
 	tRattlingDelay : TIME := T#100MS;			// Задержка получения сигнала входов (защита от дребезга)
 	vfd_iChange : INT := 1;						// Выбор работающего ЧРП
 	pu_iChange : INT;							// Выбор насоса для исполнения команд
@@ -12711,6 +12734,7 @@ VAR
 	xVFD_ChangeToMain	: FB_SignalSplit;
 	xVFD_ChangeToReserve : FB_SignalSplit;
 	xVFD_EmergencyStopCommon : FB_SignalSplit;
+	rVFD_SetFreq		: FB_SignalSplit;
 	
 	xBY_Open			: FB_SignalSplit;
 	xBY_Close           : FB_SignalSplit;
@@ -15734,6 +15758,12 @@ xVFD_EmergencyStopCommon(
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
+	
+rVFD_SetFreq(
+	irAutoSignal:= auto_vfd_rSetFreq, 
+	irServiceSignal:= service_vfd_rSetFreq, 
+	iiPLCMode:= PLC_Mode, 
+	qrSignal=&gt; );
 
 // КОМАНДЫ - ЗРА
 
@@ -16854,6 +16884,8 @@ VAR
 	// 	==============================================
 	
 	// Общие глобальные переменные
+	auto_vfd_rSetFreq : REAL;					// Задание частоты режим авто
+	service_vfd_rSetFreq : REAL;				// Задание частоты режим сервис
 	tRattlingDelay : TIME := T#100MS;			// Задержка получения сигнала входов (защита от дребезга)
 	vfd_iChange : INT := 1;						// Выбор работающего ЧРП
 	pu_iChange : INT;							// Выбор насоса для исполнения команд
@@ -16905,6 +16937,7 @@ VAR
 	xVFD_ChangeToMain	: FB_SignalSplit;
 	xVFD_ChangeToReserve : FB_SignalSplit;
 	xVFD_EmergencyStopCommon : FB_SignalSplit;
+	rVFD_SetFreq		: FB_SignalSplit;
 	
 	xBY_Open			: FB_SignalSplit;
 	xBY_Close           : FB_SignalSplit;
@@ -17055,6 +17088,16 @@ END_VAR
                         <BOOL />
                       </type>
                     </variable>
+                    <variable name="irAutoSignal">
+                      <type>
+                        <REAL />
+                      </type>
+                    </variable>
+                    <variable name="irServiceSignal">
+                      <type>
+                        <REAL />
+                      </type>
+                    </variable>
                     <variable name="iiPLCMode">
                       <type>
                         <INT />
@@ -17067,10 +17110,15 @@ END_VAR
 VAR_INPUT
 	ixAutoSignal : BOOL;
 	ixServiceSignal : BOOL;
+	
+	irAutoSignal : REAL;
+	irServiceSignal : REAL;
+	
 	iiPLCMode : INT;
 END_VAR
 VAR_OUTPUT
 	qxSignal : BOOL;
+	qrSignal : REAL;
 END_VAR
 VAR
 END_VAR
@@ -17085,6 +17133,11 @@ END_VAR
                         <BOOL />
                       </type>
                     </variable>
+                    <variable name="qrSignal">
+                      <type>
+                        <REAL />
+                      </type>
+                    </variable>
                     <addData>
                       <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                         <InterfaceAsPlainText>
@@ -17092,10 +17145,15 @@ END_VAR
 VAR_INPUT
 	ixAutoSignal : BOOL;
 	ixServiceSignal : BOOL;
+	
+	irAutoSignal : REAL;
+	irServiceSignal : REAL;
+	
 	iiPLCMode : INT;
 END_VAR
 VAR_OUTPUT
 	qxSignal : BOOL;
+	qrSignal : REAL;
 END_VAR
 VAR
 END_VAR
@@ -17108,8 +17166,8 @@ END_VAR
                 <body>
                   <ST>
                     <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE iiPLCMode OF
-	0: qxSignal := ixAutoSignal;
-	2: qxSignal := ixServiceSignal;
+	0: qxSignal := ixAutoSignal; qrSignal := irAutoSignal;
+	2: qxSignal := ixServiceSignal; qrSignal := qrSignal;
 END_CASE;</xhtml>
                   </ST>
                 </body>
@@ -17120,10 +17178,15 @@ END_CASE;</xhtml>
 VAR_INPUT
 	ixAutoSignal : BOOL;
 	ixServiceSignal : BOOL;
+	
+	irAutoSignal : REAL;
+	irServiceSignal : REAL;
+	
 	iiPLCMode : INT;
 END_VAR
 VAR_OUTPUT
 	qxSignal : BOOL;
+	qrSignal : REAL;
 END_VAR
 VAR
 END_VAR
