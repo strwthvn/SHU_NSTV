@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T10:53:52.6058097" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T10:53:17.7530748" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T11:50:03.6577807" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T11:49:51.2577053" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -11886,6 +11886,14 @@ END_VAR
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Переключение ЧРП на резеврный по команде</xhtml>
                       </documentation>
                     </variable>
+                    <variable name="common_xReset">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Общий сброс всех ошибок</xhtml>
+                      </documentation>
+                    </variable>
                     <variable name="vfd_rMaxFreq">
                       <type>
                         <REAL />
@@ -12001,13 +12009,18 @@ END_VAR
                         <derived name="PU_Commands" />
                       </type>
                     </variable>
-                    <variable name="xPU_StartBP">
+                    <variable name="xCommon_Reset">
                       <type>
                         <derived name="FB_SignalSplit" />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> init_ServiceAutoSignals (команды режима сервис и авто)</xhtml>
                       </documentation>
+                    </variable>
+                    <variable name="xPU_StartBP">
+                      <type>
+                        <derived name="FB_SignalSplit" />
+                      </type>
                     </variable>
                     <variable name="xPU_StartVFD">
                       <type>
@@ -12655,6 +12668,7 @@ VAR
 	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	vfd_xChangeToMain : BOOL;					// Переключение ЧРП на основной по команде
 	vfd_xChangeToReserve : BOOL;				// Переключение ЧРП на резеврный по команде
+	common_xReset : BOOL;						// Общий сброс всех ошибок
 	
 	// VFD
 	// Конфигурация
@@ -12679,6 +12693,9 @@ VAR
 	cmdPU5 : PU_Commands;
 	
 	// init_ServiceAutoSignals (команды режима сервис и авто)
+	
+	xCommon_Reset		: FB_SignalSplit;
+	
 	xPU_StartBP 		: FB_SignalSplit;
 	xPU_StartVFD		: FB_SignalSplit;
 	xPU_Stop 			: FB_SignalSplit;
@@ -12862,7 +12879,7 @@ Process_VFD();
 	ixStopped:= NOT GetStatus_PU_VFD(pu_iChange), 
 	ixDeviceError:= GetStatus_VFD_Error(1), 
 	ixDeviceReady:= GetStatus_VFD_Ready(1), 
-	irActualFreq:= GetStatus_VFD_ActualFreq(1), 
+	irActualFreq:= GetValue_VFD_ActualFreq(1), 
 	qrFreq=&gt; , 
 	qxStart=&gt; , 
 	qxStop=&gt; , 
@@ -12905,7 +12922,7 @@ END_VAR
 	ixStopped:= NOT GetStatus_PU_VFD(pu_iChange), 
 	ixDeviceError:= GetStatus_VFD_Error(2), 
 	ixDeviceReady:= GetStatus_VFD_Ready(2), 
-	irActualFreq:= GetStatus_VFD_ActualFreq(2), 
+	irActualFreq:= GetValue_VFD_ActualFreq(2), 
 	qrFreq=&gt; , 
 	qxStart=&gt; , 
 	qxStop=&gt; , 
@@ -14355,7 +14372,7 @@ END_VAR
                     </Method>
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="GetStatus_VFD_ActualFreq" ObjectId="79f82619-80cb-441f-8bef-b7429a248520">
+                    <Method name="GetValue_VFD_ActualFreq" ObjectId="79f82619-80cb-441f-8bef-b7429a248520">
                       <interface>
                         <returnType>
                           <REAL />
@@ -14369,7 +14386,7 @@ END_VAR
                           <addData>
                             <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                               <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_VFD_ActualFreq : REAL
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_VFD_ActualFreq : REAL
 VAR_INPUT
 	i : INT;
 END_VAR
@@ -14388,11 +14405,11 @@ END_VAR
 // END_CASE;
 
 // Симуляция сигнала
-GetStatus_VFD_ActualFreq := ActualFreqSim.qrActualFreq;</xhtml>
+GetValue_VFD_ActualFreq := ActualFreqSim.qrActualFreq;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_VFD_ActualFreq : REAL
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_VFD_ActualFreq : REAL
 VAR_INPUT
 	i : INT;
 END_VAR
@@ -15436,7 +15453,7 @@ IF xEStopCommmon THEN
 END_IF;
 
 // Работа смены ЧРП и БП
-IF xChange_toBP AND Condition_PU_ChangeToBP(pu_iChange) THEN
+IF xChange_toBP AND Condition_PU_ChangeToBP(pu_iChange, vfd_iChange) THEN
 	Set_PU_VFD(pu_iChange, FALSE);	
 	Set_PU_BP(pu_iChange, TRUE);
 END_IF;
@@ -15623,7 +15640,14 @@ END_VAR</xhtml>
                       <interface />
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// КОМАНДЫ - НАСОС
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Общие команды
+xCommon_Reset(
+	ixAutoSignal:= common_xReset, 
+	ixServiceSignal:= , 
+	iiPLCMode:= PLC_Mode, 
+	qxSignal=&gt; );
+
+// КОМАНДЫ - НАСОС
 xPU_StartBP(
 	ixAutoSignal:= cmdPU1.StartBP OR cmdPU2.StartBP OR cmdPU3.StartBP OR cmdPU4.StartBP OR cmdPU5.StartBP, 
 	ixServiceSignal:= , 
@@ -16619,7 +16643,12 @@ END_VAR
                           <BOOL />
                         </returnType>
                         <inputVars>
-                          <variable name="i">
+                          <variable name="PU">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <variable name="VFD">
                             <type>
                               <INT />
                             </type>
@@ -16629,7 +16658,8 @@ END_VAR
                               <InterfaceAsPlainText>
                                 <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_ChangeToBP : BOOL
 VAR_INPUT
-	i : INT;
+	PU : INT;
+	VFD : INT;
 END_VAR
 </xhtml>
                               </InterfaceAsPlainText>
@@ -16639,13 +16669,14 @@ END_VAR
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Condition_PU_ChangeToBP := GetStatus_PU_VFD(i);</xhtml>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Condition_PU_ChangeToBP := GetStatus_PU_VFD(PU) AND (GetValue_VFD_ActualFreq(VFD) &gt; 49.9 AND GetValue_VFD_ActualFreq(VFD) &lt; 50.1);</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_ChangeToBP : BOOL
 VAR_INPUT
-	i : INT;
+	PU : INT;
+	VFD : INT;
 END_VAR
 </xhtml>
                       </InterfaceAsPlainText>
@@ -16742,6 +16773,50 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus_VFD_Started" ObjectId="2276b5ef-b813-444c-ab4a-cd1fc5b2db7a">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_VFD_Started : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
+	1: GetStatus_VFD_Started := in_0303_05_1_ixVFD_InWork.qxSignal;
+	2: GetStatus_VFD_Started := in_0303_05_2_ixVFD_InWork.qxSignal;
+
+END_CASE;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_VFD_Started : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
@@ -16787,6 +16862,7 @@ VAR
 	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	vfd_xChangeToMain : BOOL;					// Переключение ЧРП на основной по команде
 	vfd_xChangeToReserve : BOOL;				// Переключение ЧРП на резеврный по команде
+	common_xReset : BOOL;						// Общий сброс всех ошибок
 	
 	// VFD
 	// Конфигурация
@@ -16811,6 +16887,9 @@ VAR
 	cmdPU5 : PU_Commands;
 	
 	// init_ServiceAutoSignals (команды режима сервис и авто)
+	
+	xCommon_Reset		: FB_SignalSplit;
+	
 	xPU_StartBP 		: FB_SignalSplit;
 	xPU_StartVFD		: FB_SignalSplit;
 	xPU_Stop 			: FB_SignalSplit;
@@ -25155,7 +25234,7 @@ END_TYPE
                   <Folder Name="ЧРП">
                     <Object Name="GetStatus_VFD_Error" ObjectId="7fc05031-5c5c-484c-b30f-05c4a23051d5" />
                     <Object Name="GetStatus_VFD_Ready" ObjectId="5569e552-c838-425c-a35b-98b733b06b34" />
-                    <Object Name="GetStatus_VFD_ActualFreq" ObjectId="79f82619-80cb-441f-8bef-b7429a248520" />
+                    <Object Name="GetValue_VFD_ActualFreq" ObjectId="79f82619-80cb-441f-8bef-b7429a248520" />
                     <Object Name="GetValue_VFD_OutSignalConvertation" ObjectId="e5826bf1-b527-4875-84b5-1e02db58a5c8" />
                     <Folder Name="Выходные сигналы блока">
                       <Object Name="GetValue_VFD_qrFreq" ObjectId="099253d9-71d7-4830-a46c-9bcd58e5beb1" />
@@ -25167,6 +25246,7 @@ END_TYPE
                     </Folder>
                     <Object Name="GetStatus_KM8" ObjectId="b4c34011-ca1f-4ebf-b3e3-6699074bbf1e" />
                     <Object Name="GetStatus_VFD_Change" ObjectId="7e5207db-697d-4262-9bdb-902e25dd34fa" />
+                    <Object Name="GetStatus_VFD_Started" ObjectId="2276b5ef-b813-444c-ab4a-cd1fc5b2db7a" />
                   </Folder>
                 </Folder>
                 <Folder Name="Команды">
