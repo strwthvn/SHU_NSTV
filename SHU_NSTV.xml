@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T12:18:38.459061" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T12:18:19.4013201" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T14:59:30.2703103" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T14:59:22.2606717" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -14490,6 +14490,7 @@ Set_VFD_OutSignalToModule(
 	GetValue_VFD_OutSignalConvertation(GetValue_VFD_qrFreq(vfd_iChange))
 );
 
+// Сброс частоты модуля аналогового выхода при смене ЧРП
 IF GetStatus_VFD_Change(1) THEN Set_VFD_OutSignalToModule(2, 0); END_IF;
 IF GetStatus_VFD_Change(2) THEN Set_VFD_OutSignalToModule(1, 0); END_IF;</xhtml>
                         </ST>
@@ -16295,26 +16296,65 @@ VAR_INPUT
 	xChangeToMain : BOOL;
 	xChangeToReserve : BOOL;
 END_VAR
-</xhtml>
+VAR
+	xChangeToMainProcess : BOOL;
+	xChangeToReserveProcess : BOOL;
+END_VAR</xhtml>
                               </InterfaceAsPlainText>
                             </data>
                           </addData>
                         </inputVars>
+                        <localVars>
+                          <variable name="xChangeToMainProcess">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xChangeToReserveProcess">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Change
+VAR_INPUT
+	xChangeToMain : BOOL;
+	xChangeToReserve : BOOL;
+END_VAR
+VAR
+	xChangeToMainProcess : BOOL;
+	xChangeToReserveProcess : BOOL;
+END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </localVars>
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IF xChangeToMain AND Condition_VFD_ChangeToMain() THEN
-	Set_VFD_Change(1);
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IF xChangeToMain AND Condition_VFD_ChangeToMain() THEN xChangeToMainProcess := TRUE; END_IF;
+IF xChangeToReserve AND Condition_VFD_ChangeToReserve() THEN xChangeToReserveProcess := TRUE; END_IF;
+
+// Процесс переключения ЧРП на ОСНОВНОЙ
+IF xChangeToMainProcess THEN
 	Set_VFD_Stop(2, TRUE);
-	IF GetStatus_PU_VFD(pu_iChange) THEN
+	IF NOT GetStatus_VFD_Started(2) AND NOT GetStatus_PU_VFD(pu_iChange) THEN
+		Set_VFD_Change(1);
+	ELSIF NOT GetStatus_VFD_Started(2) AND GetStatus_PU_VFD(pu_iChange) THEN
+		Set_VFD_Change(1);
 		Set_VFD_FastStart(1, TRUE);
 	END_IF;
 END_IF;
 
-IF xChangeToReserve AND  Condition_VFD_ChangeToReserve() THEN
-	Set_VFD_Change(2);
+// Процесс переключения ЧРП на РЕЗЕРВ
+IF xChangeToReserveProcess THEN
 	Set_VFD_Stop(1, TRUE);
-	IF GetStatus_PU_VFD(pu_iChange) THEN
+	IF NOT GetStatus_VFD_Started(1) AND NOT GetStatus_PU_VFD(pu_iChange) THEN
+		Set_VFD_Change(2);
+	ELSIF NOT GetStatus_VFD_Started(1) AND GetStatus_PU_VFD(pu_iChange) THEN
+		Set_VFD_Change(2);
 		Set_VFD_FastStart(2, TRUE);
 	END_IF;
 END_IF;</xhtml>
@@ -16326,7 +16366,10 @@ VAR_INPUT
 	xChangeToMain : BOOL;
 	xChangeToReserve : BOOL;
 END_VAR
-</xhtml>
+VAR
+	xChangeToMainProcess : BOOL;
+	xChangeToReserveProcess : BOOL;
+END_VAR</xhtml>
                       </InterfaceAsPlainText>
                       <addData />
                     </Method>
