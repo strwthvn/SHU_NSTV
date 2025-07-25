@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T12:02:49.945499" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T12:02:35.9005255" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-25T12:18:38.459061" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-25T12:18:19.4013201" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -14735,7 +14735,9 @@ Set_VFD_FastStart(vfd_iChange, xChangePUToVFD AND Condition_PU_ChangeToVFD(pu_iC
 Set_VFD_EmergencyStop(vfd_iChange, xEmergencyStop);
 
 // Работа остановки ЧРП и переключения на БП
-Set_VFD_Stop(vfd_iChange, (xStop OR xChangePUToBP) AND GetStatus_PU_VFD(pu_iChange));
+Set_VFD_Stop(vfd_iChange, 
+	(xStop AND GetStatus_PU_VFD(pu_iChange))
+	OR (xChangePUToBP AND Condition_PU_ChangeToBP(pu_iChange, vfd_iChange)));
 
 // Работа обобщённой аварийной остановки
 Set_VFD_EmergencyStop(vfd_iChange, xEmergencyStopCommon);
@@ -15763,7 +15765,7 @@ rVFD_SetFreq(
 	irAutoSignal:= auto_vfd_rSetFreq, 
 	irServiceSignal:= service_vfd_rSetFreq, 
 	iiPLCMode:= PLC_Mode, 
-	qrSignal=&gt; );
+	qrSignal=&gt; vfd_rSetFreq);
 
 // КОМАНДЫ - ЗРА
 
