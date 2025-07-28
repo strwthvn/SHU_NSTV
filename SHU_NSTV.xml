@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-28T12:25:47.5115299" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-28T12:23:26.7843335" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-28T14:56:48.6935523" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-28T14:56:18.6004077" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -2834,57 +2834,6 @@ END_TYPE
               </dataType>
             </data>
             <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
-              <dataType name="PU_Errors">
-                <baseType>
-                  <struct>
-                    <variable name="xError_LongTime_Cmd_StartVFD">
-                      <type>
-                        <BOOL />
-                      </type>
-                    </variable>
-                    <variable name="xError_LongTime_Cmd_StartBP">
-                      <type>
-                        <BOOL />
-                      </type>
-                    </variable>
-                    <variable name="xError_LongTime_Cmd_Stop">
-                      <type>
-                        <BOOL />
-                      </type>
-                    </variable>
-                    <variable name="xError_LongTime_Cmd_ChangeToVFD">
-                      <type>
-                        <BOOL />
-                      </type>
-                    </variable>
-                    <variable name="xError_LongTime_Cmd_ChangeToBP">
-                      <type>
-                        <BOOL />
-                      </type>
-                    </variable>
-                  </struct>
-                </baseType>
-                <addData>
-                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                    <InterfaceAsPlainText>
-                      <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE PU_Errors :
-STRUCT
-	xError_LongTime_Cmd_StartVFD : BOOL;
-	xError_LongTime_Cmd_StartBP : BOOL;
-	xError_LongTime_Cmd_Stop : BOOL;
-	xError_LongTime_Cmd_ChangeToVFD : BOOL;
-	xError_LongTime_Cmd_ChangeToBP : BOOL;
-END_STRUCT
-END_TYPE</xhtml>
-                    </InterfaceAsPlainText>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
-                    <ObjectId>8854ce99-1e70-49b0-b24f-704ef9cca456</ObjectId>
-                  </data>
-                </addData>
-              </dataType>
-            </data>
-            <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
               <dataType name="cmdAuto">
                 <baseType>
                   <struct>
@@ -3052,6 +3001,57 @@ END_TYPE
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
                     <ObjectId>cf39f97f-2fad-480f-bf9c-931c721b96fd</ObjectId>
+                  </data>
+                </addData>
+              </dataType>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
+              <dataType name="PU_Errors">
+                <baseType>
+                  <struct>
+                    <variable name="xError_LongTime_Cmd_StartVFD">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xError_LongTime_Cmd_StartBP">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xError_LongTime_Cmd_Stop">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xError_LongTime_Cmd_ChangeToVFD">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xError_LongTime_Cmd_ChangeToBP">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                  </struct>
+                </baseType>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                    <InterfaceAsPlainText>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE PU_Errors :
+STRUCT
+	xError_LongTime_Cmd_StartVFD : BOOL;
+	xError_LongTime_Cmd_StartBP : BOOL;
+	xError_LongTime_Cmd_Stop : BOOL;
+	xError_LongTime_Cmd_ChangeToVFD : BOOL;
+	xError_LongTime_Cmd_ChangeToBP : BOOL;
+END_STRUCT
+END_TYPE</xhtml>
+                    </InterfaceAsPlainText>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>8854ce99-1e70-49b0-b24f-704ef9cca456</ObjectId>
                   </data>
                 </addData>
               </dataType>
@@ -11953,12 +11953,28 @@ END_VAR
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Переключение ЧРП на резеврный по команде</xhtml>
                       </documentation>
                     </variable>
-                    <variable name="common_xReset">
+                    <variable name="auto_xReset_Common">
                       <type>
                         <BOOL />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Общий сброс всех ошибок</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="pu_ivalue_BPWorked">
+                      <type>
+                        <INT />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Количество работающих насосов от БП</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="pu_ivalue_VFDWorked">
+                      <type>
+                        <INT />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Колиичество работающих насосов от ЧРП</xhtml>
                       </documentation>
                     </variable>
                     <variable name="vfd_rMaxFreq">
@@ -12104,7 +12120,7 @@ END_VAR
                         <derived name="PU_Errors" />
                       </type>
                     </variable>
-                    <variable name="xCommon_Reset">
+                    <variable name="xReset_Common">
                       <type>
                         <derived name="FB_SignalSplit" />
                       </type>
@@ -12770,7 +12786,9 @@ VAR
 	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	vfd_xChangeToMain : BOOL;					// Переключение ЧРП на основной по команде
 	vfd_xChangeToReserve : BOOL;				// Переключение ЧРП на резеврный по команде
-	common_xReset : BOOL;						// Общий сброс всех ошибок
+	auto_xReset_Common : BOOL;						// Общий сброс всех ошибок
+	pu_ivalue_BPWorked : INT;					// Количество работающих насосов от БП
+	pu_ivalue_VFDWorked : INT;					// Колиичество работающих насосов от ЧРП
 	
 	// VFD
 	// Конфигурация
@@ -12803,7 +12821,7 @@ VAR
 	
 	// init_ServiceAutoSignals (команды режима сервис и авто)
 	
-	xCommon_Reset		: FB_SignalSplit;
+	xReset_Common		: FB_SignalSplit;
 	
 	xPU_StartBP 		: FB_SignalSplit;
 	xPU_StartVFD		: FB_SignalSplit;
@@ -15598,8 +15616,17 @@ END_VAR</xhtml>
                       <interface />
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Set_PU_VFD(pu_iChange, GetStatus_VFD_qStart(vfd_iChange));
-</xhtml>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">pu_ivalue_BPWorked := GetValue_PU_CountWorkStatusBP();
+pu_ivalue_VFDWorked := GetValue_PU_CountWorkStatusVFD();
+
+IF pu_ivalue_VFDWorked &gt; 1 THEN
+	Set_PU_VFD(1, FALSE);
+	Set_PU_VFD(2, FALSE);
+	Set_PU_VFD(3, FALSE);
+	Set_PU_VFD(4, FALSE);
+	Set_PU_VFD(5, FALSE);
+	Set_PU_EmergencyStopCommon(TRUE);
+END_IF;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -15688,7 +15715,11 @@ Set_KM8(vfd_iChange, GetStatus_PU_VFD_Common());
 CASE vfd_iChange OF
 	1: Set_KM8(2, FALSE);
 	2: Set_KM8(1, FALSE);
-END_CASE;</xhtml>
+END_CASE;
+// Отключение контакторов КМ8 при условии их одновременной работы
+IF GetStatus_KM8(1) AND GetStatus_KM8(2) THEN Set_KM8(1, FALSE); Set_KM8(2, FALSE); END_IF;
+// Аварийная остановка ЧРП при обнаружении их одновременной работы
+IF GetStatus_VFD_Started(1) AND GetStatus_VFD_Started(2) THEN Set_VFD_EmergencyStop(1, TRUE); Set_VFD_EmergencyStop(2, TRUE); END_IF;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -15713,7 +15744,7 @@ rtrig_puCmd_xStop(CLK:= xPU_Stop.qxSignal, Q=&gt; );
 rtrig_puCmd_xReset(CLK:= xPU_Reset.qxSignal, Q=&gt; );
 rtrig_puCmd_xChange_toBP(CLK:= xPU_Change_VFDtoBP.qxSignal, Q=&gt; );
 rtrig_puCmd_xChange_VFD(CLK:= xPU_Change_BPtoVFD.qxSignal, Q=&gt; );
-rtrig_puCmd_xEmergencyStopCommon(CLK:= xPU_xEmergencyStopCommon.qxSignal);
+rtrig_puCmd_xEmergencyStopCommon(CLK:= xPU_xEmergencyStopCommon.qxSignal OR pu_xEmergencyStopCommonStatus);
 
 rtrig_vfdCmd_xStart(CLK:= xVFD_Start.qxSignal, Q=&gt; );
 // rtrig_vfdCmd_xEmergencyStop(CLK:= xVFD_Start.qxSignal, Q=&gt; );
@@ -15721,7 +15752,7 @@ rtrig_vfdCmd_xStop(CLK:= xVFD_Stop.qxSignal, Q=&gt; );
 rtrig_vfdCmd_xReset(CLK:= xVFD_Reset.qxSignal, Q=&gt; );
 rtrig_vfdCmd_xChangeToMain(CLK := xVFD_ChangeToMain.qxSignal);
 rtrig_vfdCmd_xChangeToReserve(CLK := xVFD_ChangeToReserve.qxSignal);
-rtrig_vfdCmd_xEmergencyStopCommon(CLK:= xVFD_EmergencyStopCommon.qxSignal);
+rtrig_vfdCmd_xEmergencyStopCommon(CLK:= xVFD_EmergencyStopCommon.qxSignal OR pu_xEmergencyStopCommonStatus);
 
 rtrig_byCmd_xOpen(CLK:= xBY_Open.qxSignal, Q=&gt; );
 rtrig_byCmd_xClose(CLK:= xBY_Close.qxSignal, Q=&gt; );
@@ -15752,8 +15783,8 @@ END_VAR</xhtml>
                       <body>
                         <ST>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">// Общие команды
-xCommon_Reset(
-	ixAutoSignal:= common_xReset, 
+xReset_Common(
+	ixAutoSignal:= auto_xReset_Common, 
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
@@ -16962,7 +16993,6 @@ END_VAR
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
 	1: GetStatus_VFD_Started := in_0303_05_1_ixVFD_InWork.qxSignal;
 	2: GetStatus_VFD_Started := in_0303_05_2_ixVFD_InWork.qxSignal;
-
 END_CASE;</xhtml>
                         </ST>
                       </body>
@@ -17230,17 +17260,17 @@ END_VAR</xhtml>
 *)
 
 // Обработка ошибки получения обратной связи от контактора насоса, при действующем выходном сигнале на включение насоса от БП.
-ton_PU1_CommandBP_ProcessLongTime(IN:= _0303_05_PU01_qxKM_cmdOn AND NOT in_0303_05_PU01_ixKM_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU1.xError_LongTime_Cmd_StartBP, ET=&gt; );
-ton_PU2_CommandBP_ProcessLongTime(IN:= _0303_05_PU02_qxKM_cmdOn AND NOT in_0303_05_PU02_ixKM_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU2.xError_LongTime_Cmd_StartBP, ET=&gt; );
-ton_PU3_CommandBP_ProcessLongTime(IN:= _0303_05_PU03_qxKM_cmdOn AND NOT in_0303_05_PU03_ixKM_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_StartBP, ET=&gt; );
-ton_PU4_CommandBP_ProcessLongTime(IN:= _0303_05_PU04_qxKM_cmdOn AND NOT in_0303_05_PU04_ixKM_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU4.xError_LongTime_Cmd_StartBP, ET=&gt; );
-ton_PU5_CommandBP_ProcessLongTime(IN:= _0303_05_PU05_qxKM_cmdOn AND NOT in_0303_05_PU05_ixKM_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU5.xError_LongTime_Cmd_StartBP, ET=&gt; );
+ton_PU1_CommandBP_ProcessLongTime(IN:= _0303_05_PU01_qxKM_cmdOn AND NOT in_0303_05_PU01_ixKM_StatusOn.qxSignal , PT:= itCommandProcessLongTime, Q=&gt; errPU1.xError_LongTime_Cmd_StartBP, ET=&gt; );
+ton_PU2_CommandBP_ProcessLongTime(IN:= _0303_05_PU02_qxKM_cmdOn AND NOT in_0303_05_PU02_ixKM_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU2.xError_LongTime_Cmd_StartBP, ET=&gt; );
+ton_PU3_CommandBP_ProcessLongTime(IN:= _0303_05_PU03_qxKM_cmdOn AND NOT in_0303_05_PU03_ixKM_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_StartBP, ET=&gt; );
+ton_PU4_CommandBP_ProcessLongTime(IN:= _0303_05_PU04_qxKM_cmdOn AND NOT in_0303_05_PU04_ixKM_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU4.xError_LongTime_Cmd_StartBP, ET=&gt; );
+ton_PU5_CommandBP_ProcessLongTime(IN:= _0303_05_PU05_qxKM_cmdOn AND NOT in_0303_05_PU05_ixKM_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU5.xError_LongTime_Cmd_StartBP, ET=&gt; );
 // Обработка ошибки получения обратной связи от контактора насоса, при действующем выходном сигнале на включение насоса от ЧРП.
-ton_PU1_CommandBP_ProcessLongTime(IN:= _0303_05_PU01_qxKM_Frq_cmdOn AND NOT in_0303_05_PU01_ixKM_VFD_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU1.xError_LongTime_Cmd_StartVFD, ET=&gt; );
-ton_PU2_CommandBP_ProcessLongTime(IN:= _0303_05_PU02_qxKM_Frq_cmdOn AND NOT in_0303_05_PU02_ixKM_VFD_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU2.xError_LongTime_Cmd_StartVFD, ET=&gt; );
-ton_PU3_CommandBP_ProcessLongTime(IN:= _0303_05_PU03_qxKM_Frq_cmdOn AND NOT in_0303_05_PU03_ixKM_VFD_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_StartVFD, ET=&gt; );
-ton_PU4_CommandBP_ProcessLongTime(IN:= _0303_05_PU04_qxKM_Frq_cmdOn AND NOT in_0303_05_PU04_ixKM_VFD_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU4.xError_LongTime_Cmd_StartVFD, ET=&gt; );
-ton_PU5_CommandBP_ProcessLongTime(IN:= _0303_05_PU05_qxKM_Frq_cmdOn AND NOT in_0303_05_PU05_ixKM_VFD_StatusOn, PT:= itCommandProcessLongTime, Q=&gt; errPU5.xError_LongTime_Cmd_StartVFD, ET=&gt; );
+ton_PU1_CommandBP_ProcessLongTime(IN:= _0303_05_PU01_qxKM_Frq_cmdOn AND NOT in_0303_05_PU01_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU1.xError_LongTime_Cmd_StartVFD, ET=&gt; );
+ton_PU2_CommandBP_ProcessLongTime(IN:= _0303_05_PU02_qxKM_Frq_cmdOn AND NOT in_0303_05_PU02_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU2.xError_LongTime_Cmd_StartVFD, ET=&gt; );
+ton_PU3_CommandBP_ProcessLongTime(IN:= _0303_05_PU03_qxKM_Frq_cmdOn AND NOT in_0303_05_PU03_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_StartVFD, ET=&gt; );
+ton_PU4_CommandBP_ProcessLongTime(IN:= _0303_05_PU04_qxKM_Frq_cmdOn AND NOT in_0303_05_PU04_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU4.xError_LongTime_Cmd_StartVFD, ET=&gt; );
+ton_PU5_CommandBP_ProcessLongTime(IN:= _0303_05_PU05_qxKM_Frq_cmdOn AND NOT in_0303_05_PU05_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU5.xError_LongTime_Cmd_StartVFD, ET=&gt; );
 // Обработка ошибки получения статуса остановленного насоса после получения команды стоп через панель.
 </xhtml>
                         </ST>
@@ -17354,17 +17384,90 @@ END_VAR
                         <returnType>
                           <INT />
                         </returnType>
+                        <localVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                            <initialValue>
+                              <simpleValue value="1" />
+                            </initialValue>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_PU_CountWorkStatusBP : INT
+VAR_INPUT
+END_VAR
+VAR
+	i : INT := 1;
+END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </localVars>
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">FOR i := 1 TO 5 DO
+	IF GetStatus_PU_BP(i) THEN GetValue_PU_CountWorkStatusBP := GetValue_PU_CountWorkStatusBP + 1; END_IF;
+END_FOR;</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_PU_CountWorkStatusBP : INT
 VAR_INPUT
 END_VAR
-</xhtml>
+VAR
+	i : INT := 1;
+END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetValue_PU_CountWorkStatusVFD" ObjectId="24731cbf-a92f-49cc-9ef2-47b01a0a01d8">
+                      <interface>
+                        <returnType>
+                          <INT />
+                        </returnType>
+                        <localVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                            <initialValue>
+                              <simpleValue value="1" />
+                            </initialValue>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_PU_CountWorkStatusVFD : INT
+VAR_INPUT
+END_VAR
+VAR
+	i : INT := 1;
+END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </localVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">FOR i := 1 TO 5 DO
+	IF GetStatus_PU_VFD(i) THEN GetValue_PU_CountWorkStatusVFD := GetValue_PU_CountWorkStatusVFD + 1; END_IF;
+END_FOR;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_PU_CountWorkStatusVFD : INT
+VAR_INPUT
+END_VAR
+VAR
+	i : INT := 1;
+END_VAR</xhtml>
                       </InterfaceAsPlainText>
                       <addData />
                     </Method>
@@ -17416,7 +17519,9 @@ VAR
 	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	vfd_xChangeToMain : BOOL;					// Переключение ЧРП на основной по команде
 	vfd_xChangeToReserve : BOOL;				// Переключение ЧРП на резеврный по команде
-	common_xReset : BOOL;						// Общий сброс всех ошибок
+	auto_xReset_Common : BOOL;						// Общий сброс всех ошибок
+	pu_ivalue_BPWorked : INT;					// Количество работающих насосов от БП
+	pu_ivalue_VFDWorked : INT;					// Колиичество работающих насосов от ЧРП
 	
 	// VFD
 	// Конфигурация
@@ -17449,7 +17554,7 @@ VAR
 	
 	// init_ServiceAutoSignals (команды режима сервис и авто)
 	
-	xCommon_Reset		: FB_SignalSplit;
+	xReset_Common		: FB_SignalSplit;
 	
 	xPU_StartBP 		: FB_SignalSplit;
 	xPU_StartVFD		: FB_SignalSplit;
@@ -25816,6 +25921,7 @@ END_TYPE
                     <Object Name="GetStatus_PU_EmergencyStopCommon" ObjectId="8a1968cb-ad99-4fc2-a31e-d96ed8649b6f" />
                     <Object Name="GetStatus_PU_EmergencyStop" ObjectId="25ecd605-82db-4cec-bfb4-550d402a8a21" />
                     <Object Name="GetValue_PU_CountWorkStatusBP" ObjectId="d12b67fc-1aba-4d82-9cf8-2406b19f6455" />
+                    <Object Name="GetValue_PU_CountWorkStatusVFD" ObjectId="24731cbf-a92f-49cc-9ef2-47b01a0a01d8" />
                   </Folder>
                   <Folder Name="Затворы">
                     <Object Name="GetStatus_BY_Open" ObjectId="2f7b7588-1129-4e5a-a5de-5b15687eb96d" />
@@ -25925,9 +26031,9 @@ END_TYPE
                 </Folder>
               </Object>
               <Folder Name="Sctruct">
-                <Object Name="PU_Errors" ObjectId="8854ce99-1e70-49b0-b24f-704ef9cca456" />
                 <Object Name="cmdAuto" ObjectId="d5671e56-8b38-44d4-9d60-a394a100ef48" />
                 <Object Name="PU_Commands" ObjectId="cf39f97f-2fad-480f-bf9c-931c721b96fd" />
+                <Object Name="PU_Errors" ObjectId="8854ce99-1e70-49b0-b24f-704ef9cca456" />
               </Folder>
             </Folder>
             <Object Name="MainTask" ObjectId="6e35004b-8872-4a8a-999d-c759191cd90a" />
