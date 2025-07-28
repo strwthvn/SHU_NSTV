@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-28T14:56:48.6935523" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-28T14:56:18.6004077" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-28T17:07:07.6636447" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-28T17:06:53.9682541" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -3052,6 +3052,52 @@ END_TYPE</xhtml>
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
                     <ObjectId>8854ce99-1e70-49b0-b24f-704ef9cca456</ObjectId>
+                  </data>
+                </addData>
+              </dataType>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
+              <dataType name="BY_Commands">
+                <baseType>
+                  <struct>
+                    <variable name="open">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="close">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="stop">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="reset">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                  </struct>
+                </baseType>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                    <InterfaceAsPlainText>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE BY_Commands :
+STRUCT
+	open : BOOL;
+	close : BOOL;
+	stop : BOOL;
+	reset : BOOL;
+END_STRUCT
+END_TYPE
+</xhtml>
+                    </InterfaceAsPlainText>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>1f094ddb-00f1-4fbf-ac6b-ce3fe4d78f43</ObjectId>
                   </data>
                 </addData>
               </dataType>
@@ -12092,6 +12138,44 @@ END_VAR
                         <derived name="PU_Commands" />
                       </type>
                     </variable>
+                    <variable name="cmdBY1">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команды на каждый ЗРА</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="cmdBY2">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                    </variable>
+                    <variable name="cmdBY3">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                    </variable>
+                    <variable name="cmdBY4">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                    </variable>
+                    <variable name="cmdBY5">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                    </variable>
+                    <variable name="cmdBY7">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                    </variable>
+                    <variable name="cmdBY8">
+                      <type>
+                        <derived name="BY_Commands" />
+                      </type>
+                    </variable>
                     <variable name="errPU1">
                       <type>
                         <derived name="PU_Errors" />
@@ -12811,6 +12895,15 @@ VAR
 	cmdPU3 : PU_Commands;
 	cmdPU4 : PU_Commands;
 	cmdPU5 : PU_Commands;
+	
+	// Команды на каждый ЗРА
+	cmdBY1 : BY_Commands;
+	cmdBY2 : BY_Commands;
+	cmdBY3 : BY_Commands;
+	cmdBY4 : BY_Commands;
+	cmdBY5 : BY_Commands;
+	cmdBY7 : BY_Commands;
+	cmdBY8 : BY_Commands;
 	
 	// Ошибки на каждый насос
 	errPU1 : PU_Errors;
@@ -13778,102 +13871,8 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="GetStatus_BY_Open" ObjectId="2f7b7588-1129-4e5a-a5de-5b15687eb96d">
-                      <interface>
-                        <returnType>
-                          <BOOL />
-                        </returnType>
-                        <inputVars>
-                          <variable name="i">
-                            <type>
-                              <INT />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_Open : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </inputVars>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
-	1:	GetStatus_BY_Open := in_0303_05_BY01_ixShutter_PosOpen.qxSignal;
-	2:	GetStatus_BY_Open := in_0303_05_BY02_ixShutter_PosOpen.qxSignal;
-	3:	GetStatus_BY_Open := in_0303_05_BY03_ixShutter_PosOpen.qxSignal;
-	4:	GetStatus_BY_Open := in_0303_05_BY04_ixShutter_PosOpen.qxSignal;
-	5:	GetStatus_BY_Open := in_0303_05_BY05_ixShutter_PosOpen.qxSignal;
-	7:	GetStatus_BY_Open := in_0303_05_BY07_ixShutter_PosOpen.qxSignal;
-	8:	GetStatus_BY_Open := in_0303_05_BY08_ixShutter_PosOpen.qxSignal;
-END_CASE;</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_Open : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="GetStatus_BY_Closed" ObjectId="fae82a9b-8377-4180-9426-a28de5858ffe">
-                      <interface>
-                        <returnType>
-                          <BOOL />
-                        </returnType>
-                        <inputVars>
-                          <variable name="i">
-                            <type>
-                              <INT />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_Closed : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </inputVars>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
-	1:	GetStatus_BY_Closed := in_0303_05_BY01_ixShutter_PosClosed.qxSignal;
-	2:	GetStatus_BY_Closed := in_0303_05_BY02_ixShutter_PosClosed.qxSignal;
-	3:	GetStatus_BY_Closed := in_0303_05_BY03_ixShutter_PosClosed.qxSignal;
-	4:	GetStatus_BY_Closed := in_0303_05_BY04_ixShutter_PosClosed.qxSignal;
-	5:	GetStatus_BY_Closed := in_0303_05_BY05_ixShutter_PosClosed.qxSignal;
-	7:	GetStatus_BY_Closed := in_0303_05_BY07_ixShutter_PosClosed.qxSignal;
-	8:	GetStatus_BY_Closed := in_0303_05_BY08_ixShutter_PosClosed.qxSignal;
-END_CASE;</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_Closed : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation" />
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation" />
                   <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
                     <Method name="GetStatus_BY_Ready" ObjectId="1fff74a8-3f0a-42fa-8243-3e95104b5b77">
                       <interface>
@@ -13922,54 +13921,7 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="GetStatus_BY_Error" ObjectId="baf0f37e-c6d5-4963-968d-29890a637bf3">
-                      <interface>
-                        <returnType>
-                          <BOOL />
-                        </returnType>
-                        <inputVars>
-                          <variable name="i">
-                            <type>
-                              <INT />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_Error : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </inputVars>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
-	1:	GetStatus_BY_Error := in_0303_05_BY01_ixShutter_StatusError.qxSignal;
-	2:	GetStatus_BY_Error := in_0303_05_BY02_ixShutter_StatusError.qxSignal;
-	3:	GetStatus_BY_Error := in_0303_05_BY03_ixShutter_StatusError.qxSignal;
-	4:	GetStatus_BY_Error := in_0303_05_BY04_ixShutter_StatusError.qxSignal;
-	5:	GetStatus_BY_Error := in_0303_05_BY05_ixShutter_StatusError.qxSignal;
-	7:	GetStatus_BY_Error := in_0303_05_BY07_ixShutter_StatusError.qxSignal;
-	8:	GetStatus_BY_Error := in_0303_05_BY08_ixShutter_StatusError.qxSignal;
-END_CASE;</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_Error : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation" />
                   <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
                     <Method name="Set_BY_Open" ObjectId="84a61b43-cf87-4321-ab6a-975ce963c34d">
                       <interface>
@@ -15758,13 +15710,8 @@ rtrig_byCmd_xOpen(CLK:= xBY_Open.qxSignal, Q=&gt; );
 rtrig_byCmd_xClose(CLK:= xBY_Close.qxSignal, Q=&gt; );
 rtrig_byCmd_xStop(CLK:= xBY_Stop.qxSignal, Q=&gt; );
 rtrig_byCmd_xReset(CLK:= xBY_Close.qxSignal, Q=&gt; );
-(*
-cmdPU1.rtrig_StartBP(CLK:= xBY_Open.qxSignal, Q=&gt; );
-cmdPU1.rtrig_StartVFD(CLK:= xBY_Open.qxSignal, Q=&gt; );
-cmdPU1.rtrig_ChangeToBP(CLK:= xBY_Open.qxSignal, Q=&gt; );
-cmdPU1.rtrig_ChangeToVFD(CLK:= xBY_Open.qxSignal, Q=&gt; );
-cmdPU1.rtrig_Stop(CLK:= xBY_Open.qxSignal, Q=&gt; );
-*)</xhtml>
+
+</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -15886,25 +15833,25 @@ rVFD_SetFreq(
 // КОМАНДЫ - ЗРА
 
 xBY_Open(
-	ixAutoSignal:= , 
+	ixAutoSignal:= cmdBY1.open OR cmdBY2.open OR cmdBY3.open OR cmdBY4.open OR cmdBY5.open OR cmdBY7.open OR cmdBY8.open, 
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
 	
 xBY_Close(
-	ixAutoSignal:= , 
+	ixAutoSignal:= cmdBY1.close OR cmdBY2.close OR cmdBY3.close OR cmdBY4.close OR cmdBY5.close OR cmdBY7.close OR cmdBY8.close, 
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
 
 xBY_Stop(
-	ixAutoSignal:= , 
+	ixAutoSignal:= cmdBY1.stop OR cmdBY2.stop OR cmdBY3.stop OR cmdBY4.stop OR cmdBY5.stop OR cmdBY7.stop OR cmdBY8.stop, 
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
 
 xBY_Reset(
-	ixAutoSignal:= , 
+	ixAutoSignal:= cmdBY1.reset OR cmdBY2.reset OR cmdBY3.reset OR cmdBY4.reset OR cmdBY5.reset OR cmdBY7.reset OR cmdBY8.reset, 
 	ixServiceSignal:= , 
 	iiPLCMode:= PLC_Mode, 
 	qxSignal=&gt; );
@@ -15962,148 +15909,6 @@ END_VAR
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_LifeBit
 VAR_INPUT
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="Process_BY_Commands" ObjectId="e602e35d-b484-4449-b58a-958c5708efd2">
-                      <interface>
-                        <inputVars>
-                          <variable name="xOpen">
-                            <type>
-                              <BOOL />
-                            </type>
-                          </variable>
-                          <variable name="xClose">
-                            <type>
-                              <BOOL />
-                            </type>
-                          </variable>
-                          <variable name="xStop">
-                            <type>
-                              <BOOL />
-                            </type>
-                          </variable>
-                          <variable name="XReset">
-                            <type>
-                              <BOOL />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_BY_Commands
-VAR_INPUT
-	xOpen : BOOL;
-	xClose : BOOL;
-	xStop : BOOL;
-	XReset : BOOL;
-END_VAR
-</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </inputVars>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_BY_Commands
-VAR_INPUT
-	xOpen : BOOL;
-	xClose : BOOL;
-	xStop : BOOL;
-	XReset : BOOL;
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="Condition_BY_Open" ObjectId="46892c4d-00d2-4f39-9a7e-5e4d3e983922">
-                      <interface>
-                        <returnType>
-                          <BOOL />
-                        </returnType>
-                        <inputVars>
-                          <variable name="i">
-                            <type>
-                              <INT />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_BY_Open : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </inputVars>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Condition_BY_Open := 
-	NOT GetStatus_BY_Error(i)
-	AND NOT GetStatus_BY_Open(i);</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_BY_Open : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="Condition_BY_Close" ObjectId="3a13ba1d-d9d1-497e-889a-79358c84c09b">
-                      <interface>
-                        <returnType>
-                          <BOOL />
-                        </returnType>
-                        <inputVars>
-                          <variable name="i">
-                            <type>
-                              <INT />
-                            </type>
-                          </variable>
-                          <addData>
-                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
-                              <InterfaceAsPlainText>
-                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_BY_Close : BOOL
-VAR_INPUT
-	i : INT;
-END_VAR
-</xhtml>
-                              </InterfaceAsPlainText>
-                            </data>
-                          </addData>
-                        </inputVars>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Condition_BY_Open := 
-	NOT GetStatus_BY_Error(i)
-	AND NOT GetStatus_BY_Closed(i);</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_BY_Close : BOOL
-VAR_INPUT
-	i : INT;
 END_VAR
 </xhtml>
                       </InterfaceAsPlainText>
@@ -16266,64 +16071,7 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="Process_BY_Signals" ObjectId="124f20aa-c94f-4cde-a4f0-e763882d1215">
-                      <interface />
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Set_BY_Open(1, BY1.qxOpen);
-Set_BY_Close(1, BY1.qxClose);
-
-Set_BY_Open(2, BY2.qxOpen);
-Set_BY_Close(2, BY2.qxClose);
-
-Set_BY_Open(3, BY3.qxOpen);
-Set_BY_Close(3, BY3.qxClose);
-
-Set_BY_Open(4, BY4.qxOpen);
-Set_BY_Close(4, BY4.qxClose);
-
-Set_BY_Open(5, BY5.qxOpen);
-Set_BY_Close(5, BY5.qxClose);
-
-Set_BY_Open(7, BY7.qxOpen);
-Set_BY_Close(7, BY7.qxClose);
-
-Set_BY_Open(8, BY8.qxOpen);
-Set_BY_Close(8, BY8.qxClose);
-</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_BY_Signals
-VAR_INPUT
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="GetValue_BY_Change" ObjectId="79f06c38-f544-47d8-a7d2-36d066d49d1f">
-                      <interface>
-                        <returnType>
-                          <INT />
-                        </returnType>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">GetValue_BY_Change := by_iChange;</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetValue_BY_Change : INT
-VAR_INPUT
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation" />
                   <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
                     <Method name="Set_BY_Stop" ObjectId="f11a3f84-865c-4f13-83c4-9ffed32f88b5">
                       <interface>
@@ -16365,24 +16113,6 @@ END_IF;</xhtml>
 VAR_INPUT
 	i : INT;
 	x : BOOL;
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="Process_BY" ObjectId="023d03f6-fe49-4cf9-831a-76fee6f03915">
-                      <interface />
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Process_BY_Signals();
-//	Process_BY_Commands();</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_BY
-VAR_INPUT
 END_VAR
 </xhtml>
                       </InterfaceAsPlainText>
@@ -17472,6 +17202,102 @@ END_VAR</xhtml>
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus_BY_OpenKM" ObjectId="967fce41-fff4-4d0d-8dec-eb588c97fab6">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_OpenKM : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
+	1: GetStatus_BY_OpenKM := _0303_05_BY01_ixKM_PosOpen;
+	2: GetStatus_BY_OpenKM := _0303_05_BY02_ixKM_PosOpen;
+	3: GetStatus_BY_OpenKM := _0303_05_BY03_ixKM_PosOpen;
+	4: GetStatus_BY_OpenKM := _0303_05_BY04_ixKM_PosOpen;
+	5: GetStatus_BY_OpenKM := _0303_05_BY05_ixKM_PosOpen;
+	7: GetStatus_BY_OpenKM := _0303_05_BY07_ixKM_PosOpen;
+	8: GetStatus_BY_OpenKM := _0303_05_BY08_ixKM_PosOpen;
+END_CASE;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_OpenKM : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus_BY_CloseKM" ObjectId="2f265de6-9ea9-4019-94ba-60980c0cf200">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_CloseKM : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">CASE i OF
+	1: GetStatus_BY_CloseKM := _0303_05_BY01_ixKM_PosClosed;
+	2: GetStatus_BY_CloseKM := _0303_05_BY02_ixKM_PosClosed;
+	3: GetStatus_BY_CloseKM := _0303_05_BY03_ixKM_PosClosed;
+	4: GetStatus_BY_CloseKM := _0303_05_BY04_ixKM_PosClosed;
+	5: GetStatus_BY_CloseKM := _0303_05_BY05_ixKM_PosClosed;
+	7: GetStatus_BY_CloseKM := _0303_05_BY07_ixKM_PosClosed;
+	8: GetStatus_BY_CloseKM := _0303_05_BY08_ixKM_PosClosed;
+END_CASE;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus_BY_CloseKM : BOOL
+VAR_INPUT
+	i : INT;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
@@ -17544,6 +17370,15 @@ VAR
 	cmdPU3 : PU_Commands;
 	cmdPU4 : PU_Commands;
 	cmdPU5 : PU_Commands;
+	
+	// Команды на каждый ЗРА
+	cmdBY1 : BY_Commands;
+	cmdBY2 : BY_Commands;
+	cmdBY3 : BY_Commands;
+	cmdBY4 : BY_Commands;
+	cmdBY5 : BY_Commands;
+	cmdBY7 : BY_Commands;
+	cmdBY8 : BY_Commands;
 	
 	// Ошибки на каждый насос
 	errPU1 : PU_Errors;
@@ -25929,6 +25764,8 @@ END_TYPE
                     <Object Name="GetStatus_BY_Ready" ObjectId="1fff74a8-3f0a-42fa-8243-3e95104b5b77" />
                     <Object Name="GetStatus_BY_Error" ObjectId="baf0f37e-c6d5-4963-968d-29890a637bf3" />
                     <Object Name="GetValue_BY_Change" ObjectId="79f06c38-f544-47d8-a7d2-36d066d49d1f" />
+                    <Object Name="GetStatus_BY_OpenKM" ObjectId="967fce41-fff4-4d0d-8dec-eb588c97fab6" />
+                    <Object Name="GetStatus_BY_CloseKM" ObjectId="2f265de6-9ea9-4019-94ba-60980c0cf200" />
                   </Folder>
                   <Folder Name="ЧРП">
                     <Object Name="GetStatus_VFD_Error" ObjectId="7fc05031-5c5c-484c-b30f-05c4a23051d5" />
@@ -26005,13 +25842,6 @@ END_TYPE
                   <Folder Name="ПЛК">
                     <Object Name="Process_LifeBit" ObjectId="48268f09-3722-4822-af26-0997323e507f" />
                   </Folder>
-                  <Folder Name="Затворы">
-                    <Folder Name="Реализация">
-                      <Object Name="Process_BY_Commands" ObjectId="e602e35d-b484-4449-b58a-958c5708efd2" />
-                      <Object Name="Process_BY_Signals" ObjectId="124f20aa-c94f-4cde-a4f0-e763882d1215" />
-                    </Folder>
-                    <Object Name="Process_BY" ObjectId="023d03f6-fe49-4cf9-831a-76fee6f03915" />
-                  </Folder>
                 </Folder>
                 <Folder Name="Условия">
                   <Folder Name="Насосы">
@@ -26019,10 +25849,6 @@ END_TYPE
                     <Object Name="Condition_PU_VFD" ObjectId="9fc37700-29eb-4458-9466-5cc2dc77d6f6" />
                     <Object Name="Condition_PU_ChangeToBP" ObjectId="f9d74f4d-0d2b-42fc-9b9f-4181bd2162ef" />
                     <Object Name="Condition_PU_ChangeToVFD" ObjectId="b8052f15-5fab-4ede-9951-627cb14ae7b2" />
-                  </Folder>
-                  <Folder Name="Затворы">
-                    <Object Name="Condition_BY_Open" ObjectId="46892c4d-00d2-4f39-9a7e-5e4d3e983922" />
-                    <Object Name="Condition_BY_Close" ObjectId="3a13ba1d-d9d1-497e-889a-79358c84c09b" />
                   </Folder>
                   <Folder Name="ЧРП">
                     <Object Name="Condition_VFD_ChangeToReserve" ObjectId="e0e2e032-fec6-4806-951a-22bb9d0f06c9" />
@@ -26034,6 +25860,7 @@ END_TYPE
                 <Object Name="cmdAuto" ObjectId="d5671e56-8b38-44d4-9d60-a394a100ef48" />
                 <Object Name="PU_Commands" ObjectId="cf39f97f-2fad-480f-bf9c-931c721b96fd" />
                 <Object Name="PU_Errors" ObjectId="8854ce99-1e70-49b0-b24f-704ef9cca456" />
+                <Object Name="BY_Commands" ObjectId="1f094ddb-00f1-4fbf-ac6b-ce3fe4d78f43" />
               </Folder>
             </Folder>
             <Object Name="MainTask" ObjectId="6e35004b-8872-4a8a-999d-c759191cd90a" />
