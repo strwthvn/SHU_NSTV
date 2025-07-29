@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-29T10:30:05.8688094" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-29T10:29:23.578994" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-29T16:53:58.1564482" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-29T16:53:49.0299041" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -17,7 +17,7 @@
       <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
         <ProjectInformation>
           <property name="Company" type="string">Production association OWEN</property>
-          <property name="Project" type="string">KK_SHU_NSTV_V_014</property>
+          <property name="Project" type="string">KK_SHU_NSTV_V_015</property>
           <property name="Title" type="string">TemplatePLC210_01</property>
           <property name="Version" type="version">3.5.14.30</property>
         </ProjectInformation>
@@ -12024,6 +12024,14 @@ END_VAR
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Колиичество работающих насосов от ЧРП</xhtml>
                       </documentation>
                     </variable>
+                    <variable name="vfd_xReserveStatus">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> true - замена основного ЧРП на резерв</xhtml>
+                      </documentation>
+                    </variable>
                     <variable name="vfd_rMaxFreq">
                       <type>
                         <REAL />
@@ -12077,14 +12085,6 @@ END_VAR
                       </initialValue>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма</xhtml>
-                      </documentation>
-                    </variable>
-                    <variable name="vfd_xReserveStatus">
-                      <type>
-                        <BOOL />
-                      </type>
-                      <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> true - замена основного ЧРП на резерв</xhtml>
                       </documentation>
                     </variable>
                     <variable name="vfd_rSetFreq">
@@ -12877,12 +12877,13 @@ VAR
 	
 	// VFD
 	// Конфигурация
+	vfd_xReserveStatus : BOOL;					// true - замена основного ЧРП на резерв
 	vfd_rMaxFreq : REAL := 50;					// Максимальное задание частоты
 	vfd_tUpdateCycle : TIME := T#2S;			// Время обновления цикла плавного пуска/остановки в TIME
 	vfd_rUpdateCycleStep : REAL := 1.5;			// Шаг обновления частоты за 1 цикл
 	vfd_rActualFreqInaccuracy : REAL := 0.2;	// Максимальная допустимая погрешность для ЧРП
 	vfd_tStartStopDelay : TIME := T#10S;		// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	vfd_xReserveStatus : BOOL;					// true - замена основного ЧРП на резерв
+	
 	// Общие переменные
 	vfd_rSetFreq : REAL;						// Задание частоты
 	// ЧРП Основной
@@ -17600,13 +17601,14 @@ END_VAR</xhtml>
                       <interface />
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Process_BY_Commands(
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Process_BY_Change();
+Process_BY_Commands(
 	xOpen:= rtrig_byCmd_xOpen.Q, 
 	xClose:= rtrig_byCmd_xClose.Q, 
 	xStop:= rtrig_byCmd_xStop.Q, 
 	xReset:= rtrig_byCmd_xReset.Q);
-	
-Process_BY_Signals();</xhtml>
+Process_BY_Signals();
+</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -17774,12 +17776,13 @@ VAR
 	
 	// VFD
 	// Конфигурация
+	vfd_xReserveStatus : BOOL;					// true - замена основного ЧРП на резерв
 	vfd_rMaxFreq : REAL := 50;					// Максимальное задание частоты
 	vfd_tUpdateCycle : TIME := T#2S;			// Время обновления цикла плавного пуска/остановки в TIME
 	vfd_rUpdateCycleStep : REAL := 1.5;			// Шаг обновления частоты за 1 цикл
 	vfd_rActualFreqInaccuracy : REAL := 0.2;	// Максимальная допустимая погрешность для ЧРП
 	vfd_tStartStopDelay : TIME := T#10S;		// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	vfd_xReserveStatus : BOOL;					// true - замена основного ЧРП на резерв
+	
 	// Общие переменные
 	vfd_rSetFreq : REAL;						// Задание частоты
 	// ЧРП Основной
@@ -26107,45 +26110,6 @@ END_TYPE
                 </Object>
               </Folder>
               <Object Name="LEGACY_MAIN" ObjectId="75f05418-0aea-41d1-b976-8cdf7a8420f2" />
-              <Folder Name="BY_FB">
-                <Folder Name="Interface">
-                  <Object Name="IShutterCommands" ObjectId="49231667-75a8-47c8-aed0-0f7e084bec2a">
-                    <Object Name="cmdOpen" ObjectId="9c6559db-4966-4a05-aaa1-51e90a5f2515" />
-                    <Object Name="cmdClose" ObjectId="67d298a4-0050-4904-a207-2f201aef7e5a" />
-                    <Object Name="cmdStop" ObjectId="15118eb0-2593-4881-b8ba-d63b088b4526" />
-                    <Object Name="cmdReset" ObjectId="53f8ff67-9b91-4d3e-ad2f-d74c68899684" />
-                  </Object>
-                  <Object Name="IShutterFeedback" ObjectId="3b0c9b29-15a9-4a4a-92f7-39824ae690be">
-                    <Object Name="GetStatusReady" ObjectId="cb78aff4-a620-47d7-bca9-8b8eaffcf26b" />
-                    <Object Name="GetStatusClosed" ObjectId="cf8f1dd4-74f7-4f61-b624-18e502036d36" />
-                    <Object Name="GetStatusOpen" ObjectId="58648427-f166-47d4-a98f-3eaf151b3247" />
-                    <Object Name="GetStatusManual" ObjectId="0fe3994e-0386-41de-899a-88d347069541" />
-                    <Object Name="GetStatusCommonError" ObjectId="36d29bc5-910b-47f4-b69d-d7f9ff456ba6" />
-                  </Object>
-                </Folder>
-                <Object Name="FB_Shutter" ObjectId="ef6f2cbb-a3d8-4c7c-af89-8180ce522444">
-                  <Folder Name="Основные">
-                    <Object Name="UpdateFeedbackProcess" ObjectId="50b59e6a-27d9-4f5d-aa1a-d2d11bfeba97" />
-                    <Object Name="CloseOpenProcess" ObjectId="272ef3cf-65ba-4163-b94c-311cadc1787a" />
-                  </Folder>
-                  <Folder Name="Обратная связь">
-                    <Object Name="OpenCloseProcessStatus" ObjectId="ef81af37-f23a-4747-98eb-d54d934c4647" />
-                    <Folder Name="IShutterFeedback">
-                      <Object Name="GetStatusClosed" ObjectId="24f630e2-c2a8-45f3-836a-1d6fc6e0d893" />
-                      <Object Name="GetStatusCommonError" ObjectId="0171d4f9-5158-45e1-91d6-d060b104c637" />
-                      <Object Name="GetStatusManual" ObjectId="c0596d56-8c1a-4d18-8b65-0afc6420f685" />
-                      <Object Name="GetStatusOpen" ObjectId="b2c44bd9-7c2d-4e93-bc48-2a5f65e3b00c" />
-                      <Object Name="GetStatusReady" ObjectId="af0e356d-792c-4de7-9150-d1deaea6da1f" />
-                    </Folder>
-                  </Folder>
-                  <Folder Name="Команды">
-                    <Object Name="cmdClose" ObjectId="b81e9308-f54b-48aa-b654-aa87dffe3a8c" />
-                    <Object Name="cmdOpen" ObjectId="15eb7b57-67e1-4978-b25c-2158c26fc12c" />
-                    <Object Name="cmdReset" ObjectId="cf193b10-2712-46f3-a1c5-b24c80fae80b" />
-                    <Object Name="cmdStop" ObjectId="691ea9be-6856-4718-abb4-20598de111fd" />
-                  </Folder>
-                </Object>
-              </Folder>
               <Object Name="MAIN" ObjectId="6b8ea933-ec4d-4f0a-84f9-4050390b67c9">
                 <Folder Name="Инициализация">
                   <Folder Name="VFD">
@@ -26329,6 +26293,45 @@ END_TYPE
               <Object Name="FB_A_SIGNAL_SCALE" ObjectId="ad13c980-4132-4581-8b6a-300f3abcf295" />
               <Object Name="FB_Contactor" ObjectId="a57352ac-9909-4af0-8dc0-ac44a651d342" />
               <Object Name="FB_SmStart" ObjectId="72ebb5e9-318b-4824-b8c5-e211e4a77ff5" />
+              <Folder Name="BY_FB">
+                <Folder Name="Interface">
+                  <Object Name="IShutterCommands" ObjectId="49231667-75a8-47c8-aed0-0f7e084bec2a">
+                    <Object Name="cmdOpen" ObjectId="9c6559db-4966-4a05-aaa1-51e90a5f2515" />
+                    <Object Name="cmdClose" ObjectId="67d298a4-0050-4904-a207-2f201aef7e5a" />
+                    <Object Name="cmdStop" ObjectId="15118eb0-2593-4881-b8ba-d63b088b4526" />
+                    <Object Name="cmdReset" ObjectId="53f8ff67-9b91-4d3e-ad2f-d74c68899684" />
+                  </Object>
+                  <Object Name="IShutterFeedback" ObjectId="3b0c9b29-15a9-4a4a-92f7-39824ae690be">
+                    <Object Name="GetStatusReady" ObjectId="cb78aff4-a620-47d7-bca9-8b8eaffcf26b" />
+                    <Object Name="GetStatusClosed" ObjectId="cf8f1dd4-74f7-4f61-b624-18e502036d36" />
+                    <Object Name="GetStatusOpen" ObjectId="58648427-f166-47d4-a98f-3eaf151b3247" />
+                    <Object Name="GetStatusManual" ObjectId="0fe3994e-0386-41de-899a-88d347069541" />
+                    <Object Name="GetStatusCommonError" ObjectId="36d29bc5-910b-47f4-b69d-d7f9ff456ba6" />
+                  </Object>
+                </Folder>
+                <Object Name="FB_Shutter" ObjectId="ef6f2cbb-a3d8-4c7c-af89-8180ce522444">
+                  <Folder Name="Основные">
+                    <Object Name="UpdateFeedbackProcess" ObjectId="50b59e6a-27d9-4f5d-aa1a-d2d11bfeba97" />
+                    <Object Name="CloseOpenProcess" ObjectId="272ef3cf-65ba-4163-b94c-311cadc1787a" />
+                  </Folder>
+                  <Folder Name="Обратная связь">
+                    <Object Name="OpenCloseProcessStatus" ObjectId="ef81af37-f23a-4747-98eb-d54d934c4647" />
+                    <Folder Name="IShutterFeedback">
+                      <Object Name="GetStatusClosed" ObjectId="24f630e2-c2a8-45f3-836a-1d6fc6e0d893" />
+                      <Object Name="GetStatusCommonError" ObjectId="0171d4f9-5158-45e1-91d6-d060b104c637" />
+                      <Object Name="GetStatusManual" ObjectId="c0596d56-8c1a-4d18-8b65-0afc6420f685" />
+                      <Object Name="GetStatusOpen" ObjectId="b2c44bd9-7c2d-4e93-bc48-2a5f65e3b00c" />
+                      <Object Name="GetStatusReady" ObjectId="af0e356d-792c-4de7-9150-d1deaea6da1f" />
+                    </Folder>
+                  </Folder>
+                  <Folder Name="Команды">
+                    <Object Name="cmdClose" ObjectId="b81e9308-f54b-48aa-b654-aa87dffe3a8c" />
+                    <Object Name="cmdOpen" ObjectId="15eb7b57-67e1-4978-b25c-2158c26fc12c" />
+                    <Object Name="cmdReset" ObjectId="cf193b10-2712-46f3-a1c5-b24c80fae80b" />
+                    <Object Name="cmdStop" ObjectId="691ea9be-6856-4718-abb4-20598de111fd" />
+                  </Folder>
+                </Object>
+              </Folder>
             </Folder>
             <Folder Name="OOP(TEST)">
               <Folder Name="FRQ">
@@ -26398,7 +26401,9 @@ END_TYPE
                 </Object>
               </Folder>
             </Folder>
-            <Object Name="ModuleVariablesSimulation" ObjectId="b34188c6-96d6-4386-896c-8f99cb60b425" />
+            <Folder Name="GlobalVar">
+              <Object Name="ModuleVariablesSimulation" ObjectId="b34188c6-96d6-4386-896c-8f99cb60b425" />
+            </Folder>
           </Object>
           <Object Name="Ethernet_1" ObjectId="f6abf80d-d398-4dc1-98bd-20333e720027">
             <Object Name="Modbus_TCP_Master_1" ObjectId="7a62141f-0051-413c-8b9c-398843045306">
