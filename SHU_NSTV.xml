@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-29T16:53:58.1564482" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-29T16:53:49.0299041" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-30T15:23:53.5369435" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-30T15:23:43.0463131" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -17,7 +17,7 @@
       <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
         <ProjectInformation>
           <property name="Company" type="string">Production association OWEN</property>
-          <property name="Project" type="string">KK_SHU_NSTV_V_015</property>
+          <property name="Project" type="string">KK_SHU_NSTV_V_016</property>
           <property name="Title" type="string">TemplatePLC210_01</property>
           <property name="Version" type="version">3.5.14.30</property>
         </ProjectInformation>
@@ -3099,6 +3099,107 @@ END_TYPE</xhtml>
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
                     <ObjectId>8854ce99-1e70-49b0-b24f-704ef9cca456</ObjectId>
+                  </data>
+                </addData>
+              </dataType>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
+              <dataType name="PU_Commands_Manual">
+                <baseType>
+                  <struct>
+                    <variable name="xKM_VFD_On">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xKM_BP_On">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xKM_VFD_Off">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xKM_BP_Off">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                  </struct>
+                </baseType>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                    <InterfaceAsPlainText>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE PU_Commands_Manual :
+STRUCT
+	xKM_VFD_On : BOOL;
+	xKM_BP_On : BOOL;
+	xKM_VFD_Off : BOOL;
+	xKM_BP_Off : BOOL;
+END_STRUCT
+END_TYPE
+</xhtml>
+                    </InterfaceAsPlainText>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>dde16048-745b-49e8-9b8c-1de9b57b09fa</ObjectId>
+                  </data>
+                </addData>
+              </dataType>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/datatype" handleUnknown="implementation">
+              <dataType name="VFD_Commands_Manual">
+                <baseType>
+                  <struct>
+                    <variable name="xfb_Stop">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xfb_Start">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="xfb_fStart">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="x1KM8">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="x2KM8">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="rSetFrq">
+                      <type>
+                        <REAL />
+                      </type>
+                    </variable>
+                  </struct>
+                </baseType>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                    <InterfaceAsPlainText>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE VFD_Commands_Manual :
+STRUCT
+	xfb_Stop, xfb_Start , xfb_fStart : BOOL;
+	x1KM8, x2KM8 : BOOL;
+	rSetFrq : REAL;
+END_STRUCT
+END_TYPE
+</xhtml>
+                    </InterfaceAsPlainText>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>64af8268-d4ca-420d-bab8-cafe47beacb9</ObjectId>
                   </data>
                 </addData>
               </dataType>
@@ -11952,12 +12053,31 @@ END_VAR
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Выбор работающего ЧРП</xhtml>
                       </documentation>
                     </variable>
+                    <variable name="vfd_iChangeManual">
+                      <type>
+                        <INT />
+                      </type>
+                      <initialValue>
+                        <simpleValue value="1" />
+                      </initialValue>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Выбор работающего ЧРП (Manual)</xhtml>
+                      </documentation>
+                    </variable>
                     <variable name="pu_iChange">
                       <type>
                         <INT />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Выбор насоса для исполнения команд</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="pu_iChangeManual">
+                      <type>
+                        <INT />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Выбор насоса для исполнения команд (Manual)</xhtml>
                       </documentation>
                     </variable>
                     <variable name="by_iChange">
@@ -12023,6 +12143,34 @@ END_VAR
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Колиичество работающих насосов от ЧРП</xhtml>
                       </documentation>
+                    </variable>
+                    <variable name="tWorkPU1">
+                      <type>
+                        <TIME />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Время работы насосов</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="tWorkPU2">
+                      <type>
+                        <TIME />
+                      </type>
+                    </variable>
+                    <variable name="tWorkPU3">
+                      <type>
+                        <TIME />
+                      </type>
+                    </variable>
+                    <variable name="tWorkPU4">
+                      <type>
+                        <TIME />
+                      </type>
+                    </variable>
+                    <variable name="tWorkPU5">
+                      <type>
+                        <TIME />
+                      </type>
                     </variable>
                     <variable name="vfd_xReserveStatus">
                       <type>
@@ -12137,6 +12285,47 @@ END_VAR
                     <variable name="cmdPU5">
                       <type>
                         <derived name="PU_Commands" />
+                      </type>
+                    </variable>
+                    <variable name="mcmdPU1">
+                      <type>
+                        <derived name="PU_Commands_Manual" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команды на каждый насос (Manual)</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="mcmdPU2">
+                      <type>
+                        <derived name="PU_Commands_Manual" />
+                      </type>
+                    </variable>
+                    <variable name="mcmdPU3">
+                      <type>
+                        <derived name="PU_Commands_Manual" />
+                      </type>
+                    </variable>
+                    <variable name="mcmdPU4">
+                      <type>
+                        <derived name="PU_Commands_Manual" />
+                      </type>
+                    </variable>
+                    <variable name="mcmdPU5">
+                      <type>
+                        <derived name="PU_Commands_Manual" />
+                      </type>
+                    </variable>
+                    <variable name="mvfd_main">
+                      <type>
+                        <derived name="VFD_Commands_Manual" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команды ЧРП (Manual)</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="mvfd_reserve">
+                      <type>
+                        <derived name="VFD_Commands_Manual" />
                       </type>
                     </variable>
                     <variable name="cmdBY1">
@@ -12336,7 +12525,7 @@ END_VAR
                         <derived name="R_TRIG" />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> **Process_PU_Commands**</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> **Process_PU_Commands**      	</xhtml>
                       </documentation>
                     </variable>
                     <variable name="rtrig_puCmd_xStartVFD">
@@ -12407,20 +12596,35 @@ END_VAR
                         <derived name="R_TRIG" />
                       </type>
                     </variable>
+                    <variable name="rtrig_mpuCmd_xStartBP">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> **Process_PU_Manual_Commands</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="rtrig_mpuCmd_xStartVFD">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_mpuCmd_xStopBP">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
+                    <variable name="rtrig_mpuCmd_xStopVFD">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                    </variable>
                     <variable name="in_0303_05_1_ixSection1_OverheatAlarm">
                       <type>
                         <derived name="INPUT_OUTPUT" />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> ЗРА
- 	BY1		: FB_Shutter;
- 	BY2     : FB_Shutter;
- 	BY3     : FB_Shutter;
- 	BY4     : FB_Shutter;
- 	BY5     : FB_Shutter;
- 	BY7     : FB_Shutter;
- 	BY8     : FB_Shutter;
- Дребезг сигналов</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Дребезг сигналов</xhtml>
                       </documentation>
                     </variable>
                     <variable name="in_0303_05_1_ixSection1_OverheatWarning">
@@ -12865,16 +13069,24 @@ VAR
 	service_vfd_rSetFreq : REAL;				// Задание частоты режим сервис
 	tRattlingDelay : TIME := T#100MS;			// Задержка получения сигнала входов (защита от дребезга)
 	vfd_iChange : INT := 1;						// Выбор работающего ЧРП
+	vfd_iChangeManual : INT := 1;				// Выбор работающего ЧРП (Manual)
 	pu_iChange : INT;							// Выбор насоса для исполнения команд
+	pu_iChangeManual : INT;						// Выбор насоса для исполнения команд (Manual)
 	by_iChange : INT;							// Выбор затвора для исполнения команд
 	pu_xEmergencyStopCommon : BOOL;				// Обобщённый аварийный стоп
 	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	vfd_xChangeToMain : BOOL;					// Переключение ЧРП на основной по команде
 	vfd_xChangeToReserve : BOOL;				// Переключение ЧРП на резеврный по команде
-	auto_xReset_Common : BOOL;						// Общий сброс всех ошибок
+	auto_xReset_Common : BOOL;					// Общий сброс всех ошибок
 	pu_ivalue_BPWorked : INT;					// Количество работающих насосов от БП
 	pu_ivalue_VFDWorked : INT;					// Колиичество работающих насосов от ЧРП
-	
+	// Время работы насосов
+	tWorkPU1 : TIME;
+	tWorkPU2 : TIME;
+	tWorkPU3 : TIME;
+	tWorkPU4 : TIME;
+	tWorkPU5 : TIME;
+
 	// VFD
 	// Конфигурация
 	vfd_xReserveStatus : BOOL;					// true - замена основного ЧРП на резерв
@@ -12898,6 +13110,17 @@ VAR
 	cmdPU4 : PU_Commands;
 	cmdPU5 : PU_Commands;
 	
+	// Команды на каждый насос (Manual)
+	mcmdPU1 : PU_Commands_Manual;
+	mcmdPU2 : PU_Commands_Manual;
+	mcmdPU3 : PU_Commands_Manual;
+	mcmdPU4 : PU_Commands_Manual;
+	mcmdPU5 : PU_Commands_Manual;
+	
+	// Команды ЧРП (Manual)
+	mvfd_main : VFD_Commands_Manual;
+	mvfd_reserve : VFD_Commands_Manual;
+	
 	// Команды на каждый ЗРА
 	cmdBY1 : BY_Commands;
 	cmdBY2 : BY_Commands;
@@ -12916,65 +13139,60 @@ VAR
 	
 	// init_ServiceAutoSignals (команды режима сервис и авто)
 	
-	xReset_Common		: FB_SignalSplit;
-	
-	xPU_StartBP 		: FB_SignalSplit;
-	xPU_StartVFD		: FB_SignalSplit;
-	xPU_Stop 			: FB_SignalSplit;
-	xPU_Reset 			: FB_SignalSplit;
-	xPU_Change_VFDtoBP	: FB_SignalSplit;
-	xPU_Change_BPtoVFD	: FB_SignalSplit;
-	xPU_xEmergencyStopCommon : FB_SignalSplit;
+	xReset_Common				: FB_SignalSplit;
+	                    		
+	xPU_StartBP 				: FB_SignalSplit;
+	xPU_StartVFD				: FB_SignalSplit;
+	xPU_Stop 					: FB_SignalSplit;
+	xPU_Reset 					: FB_SignalSplit;
+	xPU_Change_VFDtoBP			: FB_SignalSplit;
+	xPU_Change_BPtoVFD			: FB_SignalSplit;
+	xPU_xEmergencyStopCommon 	: FB_SignalSplit;
 
-	xVFD_Start          : FB_SignalSplit;
-	xVFD_Stop           : FB_SignalSplit;
-	xVFD_EmergencyStop	: FB_SignalSplit;
-	xVFD_Reset			: FB_SignalSplit;
-	xVFD_ChangeToMain	: FB_SignalSplit;
-	xVFD_ChangeToReserve : FB_SignalSplit;
-	xVFD_EmergencyStopCommon : FB_SignalSplit;
-	rVFD_SetFreq		: FB_SignalSplit;
+	xVFD_Start          		: FB_SignalSplit;
+	xVFD_Stop           		: FB_SignalSplit;
+	xVFD_EmergencyStop			: FB_SignalSplit;
+	xVFD_Reset					: FB_SignalSplit;
+	xVFD_ChangeToMain			: FB_SignalSplit;
+	xVFD_ChangeToReserve 		: FB_SignalSplit;
+	xVFD_EmergencyStopCommon 	: FB_SignalSplit;
+	rVFD_SetFreq				: FB_SignalSplit;
 	
-	xBY_Open			: FB_SignalSplit;
-	xBY_Close           : FB_SignalSplit;
-	xBY_Stop            : FB_SignalSplit;
-	xBY_Reset           : FB_SignalSplit;
+	xBY_Open					: FB_SignalSplit;
+	xBY_Close           		: FB_SignalSplit;
+	xBY_Stop            		: FB_SignalSplit;
+	xBY_Reset           		: FB_SignalSplit;
 	
 	
 	// **Process_BY_Commands**
-	rtrig_byCmd_xOpen 				: R_TRIG;
-	rtrig_byCmd_xClose             	: R_TRIG;
-	rtrig_byCmd_xStop     			: R_TRIG;
-	rtrig_byCmd_xReset              : R_TRIG;
-	// **Process_PU_Commands**
-	rtrig_puCmd_xStartBP 			: R_TRIG;
-	rtrig_puCmd_xStartVFD			: R_TRIG;
-	rtrig_puCmd_xStop               : R_TRIG;
-	rtrig_puCmd_xReset              : R_TRIG;
-	rtrig_puCmd_xChange_toBP     	: R_TRIG;
-	rtrig_puCmd_xChange_VFD     	: R_TRIG;
-	rtrig_puCmd_xEmergencyStopCommon : R_TRIG;
+	rtrig_byCmd_xOpen 					: R_TRIG;
+	rtrig_byCmd_xClose             		: R_TRIG;
+	rtrig_byCmd_xStop     				: R_TRIG;
+	rtrig_byCmd_xReset              	: R_TRIG;
+	// **Process_PU_Commands**      	
+	rtrig_puCmd_xStartBP 				: R_TRIG;
+	rtrig_puCmd_xStartVFD				: R_TRIG;
+	rtrig_puCmd_xStop               	: R_TRIG;
+	rtrig_puCmd_xReset              	: R_TRIG;
+	rtrig_puCmd_xChange_toBP     		: R_TRIG;
+	rtrig_puCmd_xChange_VFD     		: R_TRIG;
+	rtrig_puCmd_xEmergencyStopCommon 	: R_TRIG;
 	// **Process_VFD_Commands**
-	rtrig_vfdCmd_xStart				: R_TRIG;
-	rtrig_vfdCmd_xStop              : R_TRIG;
-	rtrig_vfdCmd_xEmergencyStop		: R_TRIG;
-	rtrig_vfdCmd_xEmergencyStopCommon : R_TRIG;
-	rtrig_vfdCmd_xReset             : R_TRIG;
-	rtrig_vfdCmd_xChangeToMain		: R_TRIG;
-	rtrig_vfdCmd_xChangeToReserve	: R_TRIG;
+	rtrig_vfdCmd_xStart					: R_TRIG;
+	rtrig_vfdCmd_xStop              	: R_TRIG;
+	rtrig_vfdCmd_xEmergencyStop			: R_TRIG;
+	rtrig_vfdCmd_xEmergencyStopCommon 	: R_TRIG;
+	rtrig_vfdCmd_xReset            	 	: R_TRIG;
+	rtrig_vfdCmd_xChangeToMain			: R_TRIG;
+	rtrig_vfdCmd_xChangeToReserve		: R_TRIG;
+	// **Process_PU_Manual_Commands
+	rtrig_mpuCmd_xStartBP				: R_TRIG;
+	rtrig_mpuCmd_xStartVFD				: R_TRIG;
+	rtrig_mpuCmd_xStopBP				: R_TRIG;
+	rtrig_mpuCmd_xStopVFD				: R_TRIG;
+
 	
-	
-	// ЗРА
-	
-// 	BY1		: FB_Shutter;
-// 	BY2     : FB_Shutter;
-// 	BY3     : FB_Shutter;
-// 	BY4     : FB_Shutter;
-// 	BY5     : FB_Shutter;
-// 	BY7     : FB_Shutter;
-// 	BY8     : FB_Shutter;
-	
-	
+
 	// Дребезг сигналов
 	in_0303_05_1_ixSection1_OverheatAlarm          : INPUT_OUTPUT;
 	in_0303_05_1_ixSection1_OverheatWarning        : INPUT_OUTPUT;
@@ -13057,9 +13275,7 @@ VAR
 	in_0303_05_PU05_ixKM_StatusOn                  : INPUT_OUTPUT;
 	in_0303_05_PU05_ixKM_VFD_StatusOn              : INPUT_OUTPUT;
 	in_0303_05_PU05_ixStatusManual                 : INPUT_OUTPUT;
-	
-	// Дублирование переменных для симуляции
-	
+
 END_VAR
 </xhtml>
                         </InterfaceAsPlainText>
@@ -15854,7 +16070,37 @@ rtrig_byCmd_xClose(CLK:= xBY_Close.qxSignal, Q=&gt; );
 rtrig_byCmd_xStop(CLK:= xBY_Stop.qxSignal, Q=&gt; );
 rtrig_byCmd_xReset(CLK:= xBY_Close.qxSignal, Q=&gt; );
 
-</xhtml>
+rtrig_mpuCmd_xStartBP(CLK:= 
+	   mcmdPU1.xKM_BP_On
+	OR mcmdPU2.xKM_BP_On
+	OR mcmdPU3.xKM_BP_On
+	OR mcmdPU4.xKM_BP_On
+	OR mcmdPU5.xKM_BP_On
+	);
+
+rtrig_mpuCmd_xStopBP(CLK:= 
+	   mcmdPU1.xKM_BP_Off
+	OR mcmdPU2.xKM_BP_Off
+	OR mcmdPU3.xKM_BP_Off
+	OR mcmdPU4.xKM_BP_Off
+	OR mcmdPU5.xKM_BP_Off
+	);
+	
+rtrig_mpuCmd_xStartVFD(CLK:= 
+	   mcmdPU1.xKM_VFD_On
+	OR mcmdPU2.xKM_VFD_On
+	OR mcmdPU3.xKM_VFD_On
+	OR mcmdPU4.xKM_VFD_On
+	OR mcmdPU5.xKM_VFD_On
+	);
+
+rtrig_mpuCmd_xStopVFD(CLK:= 
+	   mcmdPU1.xKM_VFD_Off
+	OR mcmdPU2.xKM_VFD_Off
+	OR mcmdPU3.xKM_VFD_Off
+	OR mcmdPU4.xKM_VFD_Off
+	OR mcmdPU5.xKM_VFD_Off
+	);</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -17723,6 +17969,340 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_PU_Manual_Commands" ObjectId="5f6bd7ca-19ba-4ad6-a9f1-25cb436d4c71">
+                      <interface>
+                        <inputVars>
+                          <variable name="xStart_BP">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStart_VFD">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStop_BP">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStop_VFD">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_PU_Manual_Commands
+VAR_INPUT
+	xStart_BP, 
+	xStart_VFD, 
+	xStop_BP, 
+	xStop_VFD : BOOL;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IF xStart_BP AND Condition_PU_Manual_Start_BP(pu_iChangeManual) THEN Set_PU_BP(pu_iChangeManual, TRUE); END_IF;
+IF xStart_VFD AND Condition_PU_Manual_Start_VFD(pu_iChangeManual) THEN Set_PU_VFD(pu_iChangeManual, TRUE); END_IF;
+IF xStop_BP THEN Set_PU_BP(pu_iChangeManual, FALSE); END_IF;
+IF xStop_VFD THEN Set_PU_VFD(pu_iChangeManual, FALSE); END_IF;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_PU_Manual_Commands
+VAR_INPUT
+	xStart_BP, 
+	xStart_VFD, 
+	xStop_BP, 
+	xStop_VFD : BOOL;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_PU_Manual_Signals" ObjectId="0fff1003-62e1-4c91-890d-c0b8bd03b89b">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IF mcmdPU1.xKM_BP_On OR mcmdPU1.xKM_BP_Off OR mcmdPU1.xKM_VFD_On OR mcmdPU1.xKM_VFD_Off THEN pu_iChangeManual := 1; END_IF;
+IF mcmdPU2.xKM_BP_On OR mcmdPU2.xKM_BP_Off OR mcmdPU2.xKM_VFD_On OR mcmdPU2.xKM_VFD_Off THEN pu_iChangeManual := 2; END_IF;
+IF mcmdPU3.xKM_BP_On OR mcmdPU3.xKM_BP_Off OR mcmdPU3.xKM_VFD_On OR mcmdPU3.xKM_VFD_Off THEN pu_iChangeManual := 3; END_IF;
+IF mcmdPU4.xKM_BP_On OR mcmdPU4.xKM_BP_Off OR mcmdPU4.xKM_VFD_On OR mcmdPU4.xKM_VFD_Off THEN pu_iChangeManual := 4; END_IF;
+IF mcmdPU5.xKM_BP_On OR mcmdPU5.xKM_BP_Off OR mcmdPU5.xKM_VFD_On OR mcmdPU5.xKM_VFD_Off THEN pu_iChangeManual := 5; END_IF;
+</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_PU_Manual_Signals
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Condition_PU_Manual_Start_BP" ObjectId="2cbb3add-aa40-4b70-a8a5-3465d0605057">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_BP : BOOL
+VAR_INPUT
+	i : BOOL;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Condition_PU_Manual_Start_BP := NOT GetStatus_PU_VFD(i);</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_BP : BOOL
+VAR_INPUT
+	i : BOOL;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Condition_PU_Manual_Start_VFD" ObjectId="8e20842c-b36f-4367-a1cf-63a9007e2b38">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <inputVars>
+                          <variable name="i">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_VFD : BOOL
+VAR_INPUT
+	i : BOOL;
+END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Condition_PU_Manual_Start_VFD := NOT GetStatus_PU_BP(i) AND NOT GetStatus_PU_VFD_Common();</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_VFD : BOOL
+VAR_INPUT
+	i : BOOL;
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_PU_Manual" ObjectId="537cc33c-88a0-4283-90ee-a4870a02c34a">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Process_PU_Manual_Signals();
+Process_PU_Manual_Commands(
+	xStart_BP:= rtrig_mpuCmd_xStartBP.Q, 
+	xStart_VFD:= rtrig_mpuCmd_xStartVFD.Q, 
+	xStop_BP:= rtrig_mpuCmd_xStopBP.Q, 
+	xStop_VFD:= rtrig_mpuCmd_xStopVFD.Q);
+</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_PU_Manual
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_VFD_Manual_Commands" ObjectId="d4d968f0-f46e-4a6f-b830-fa397ebbb158">
+                      <interface>
+                        <inputVars>
+                          <variable name="xStart1KM8">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStop1KM8">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStart2KM8">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStop2KM8">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStartVFD">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xfStartVFD">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStopVFD">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xChangeVFD_ToMain">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xChangeVFD_ToReserve">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Manual_Commands
+VAR_INPUT
+	xStart1KM8, xStop1KM8 : BOOL;
+	xStart2KM8, xStop2KM8 : BOOL;
+	xStartVFD, xfStartVFD, xStopVFD : BOOL;
+	xChangeVFD_ToMain, xChangeVFD_ToReserve : BOOL;
+END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IF xStart1KM8 AND NOT GetStatus_KM8(2) THEN Set_KM8(1, TRUE); END_IF;
+IF xStop1KM8 THEN Set_KM8(1, FALSE); END_IF;
+
+IF xStart2KM8 AND NOT GetStatus_KM8(1) THEN Set_KM8(2, TRUE); END_IF;
+IF xStop2KM8 THEN Set_KM8(2, FALSE); END_IF;
+
+Set_VFD_Start(vfd_iChangeManual, xStartVFD);
+Set_VFD_FastStart(vfd_iChangeManual, xfStartVFD);
+Set_VFD_Stop(vfd_iChangeManual, xStopVFD);
+
+IF xChangeVFD_ToMain THEN vfd_iChangeManual := 1; END_IF;
+IF xChangeVFD_ToReserve THEN vfd_iChangeManual := 2; END_IF;
+</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Manual_Commands
+VAR_INPUT
+	xStart1KM8, xStop1KM8 : BOOL;
+	xStart2KM8, xStop2KM8 : BOOL;
+	xStartVFD, xfStartVFD, xStopVFD : BOOL;
+	xChangeVFD_ToMain, xChangeVFD_ToReserve : BOOL;
+END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_VFD_Manual_Signals" ObjectId="425da325-32c6-4df4-a99c-9f46fe1bff74">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Manual_Signals
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_VFD_Manual" ObjectId="2872a9cd-49d6-43ee-a558-1ef04ce75eca">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Manual
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_VFD_Manual_qfreq" ObjectId="784fddae-3bd3-439c-8dbb-cde016393def">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Задание частоты на модуль аналогового выхода, зависимо от выбранного ЧРП
+Set_VFD_OutSignalToModule(
+	vfd_iChangeManual,
+	GetValue_VFD_OutSignalConvertation(GetValue_VFD_qrFreq(vfd_iChange))
+);</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_VFD_Manual_qfreq
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
@@ -17764,16 +18344,24 @@ VAR
 	service_vfd_rSetFreq : REAL;				// Задание частоты режим сервис
 	tRattlingDelay : TIME := T#100MS;			// Задержка получения сигнала входов (защита от дребезга)
 	vfd_iChange : INT := 1;						// Выбор работающего ЧРП
+	vfd_iChangeManual : INT := 1;				// Выбор работающего ЧРП (Manual)
 	pu_iChange : INT;							// Выбор насоса для исполнения команд
+	pu_iChangeManual : INT;						// Выбор насоса для исполнения команд (Manual)
 	by_iChange : INT;							// Выбор затвора для исполнения команд
 	pu_xEmergencyStopCommon : BOOL;				// Обобщённый аварийный стоп
 	pu_xEmergencyStopCommonStatus : BOOL;		// Статус обобщённой аварийной остановки насосов 
 	vfd_xChangeToMain : BOOL;					// Переключение ЧРП на основной по команде
 	vfd_xChangeToReserve : BOOL;				// Переключение ЧРП на резеврный по команде
-	auto_xReset_Common : BOOL;						// Общий сброс всех ошибок
+	auto_xReset_Common : BOOL;					// Общий сброс всех ошибок
 	pu_ivalue_BPWorked : INT;					// Количество работающих насосов от БП
 	pu_ivalue_VFDWorked : INT;					// Колиичество работающих насосов от ЧРП
-	
+	// Время работы насосов
+	tWorkPU1 : TIME;
+	tWorkPU2 : TIME;
+	tWorkPU3 : TIME;
+	tWorkPU4 : TIME;
+	tWorkPU5 : TIME;
+
 	// VFD
 	// Конфигурация
 	vfd_xReserveStatus : BOOL;					// true - замена основного ЧРП на резерв
@@ -17797,6 +18385,17 @@ VAR
 	cmdPU4 : PU_Commands;
 	cmdPU5 : PU_Commands;
 	
+	// Команды на каждый насос (Manual)
+	mcmdPU1 : PU_Commands_Manual;
+	mcmdPU2 : PU_Commands_Manual;
+	mcmdPU3 : PU_Commands_Manual;
+	mcmdPU4 : PU_Commands_Manual;
+	mcmdPU5 : PU_Commands_Manual;
+	
+	// Команды ЧРП (Manual)
+	mvfd_main : VFD_Commands_Manual;
+	mvfd_reserve : VFD_Commands_Manual;
+	
 	// Команды на каждый ЗРА
 	cmdBY1 : BY_Commands;
 	cmdBY2 : BY_Commands;
@@ -17815,65 +18414,60 @@ VAR
 	
 	// init_ServiceAutoSignals (команды режима сервис и авто)
 	
-	xReset_Common		: FB_SignalSplit;
-	
-	xPU_StartBP 		: FB_SignalSplit;
-	xPU_StartVFD		: FB_SignalSplit;
-	xPU_Stop 			: FB_SignalSplit;
-	xPU_Reset 			: FB_SignalSplit;
-	xPU_Change_VFDtoBP	: FB_SignalSplit;
-	xPU_Change_BPtoVFD	: FB_SignalSplit;
-	xPU_xEmergencyStopCommon : FB_SignalSplit;
+	xReset_Common				: FB_SignalSplit;
+	                    		
+	xPU_StartBP 				: FB_SignalSplit;
+	xPU_StartVFD				: FB_SignalSplit;
+	xPU_Stop 					: FB_SignalSplit;
+	xPU_Reset 					: FB_SignalSplit;
+	xPU_Change_VFDtoBP			: FB_SignalSplit;
+	xPU_Change_BPtoVFD			: FB_SignalSplit;
+	xPU_xEmergencyStopCommon 	: FB_SignalSplit;
 
-	xVFD_Start          : FB_SignalSplit;
-	xVFD_Stop           : FB_SignalSplit;
-	xVFD_EmergencyStop	: FB_SignalSplit;
-	xVFD_Reset			: FB_SignalSplit;
-	xVFD_ChangeToMain	: FB_SignalSplit;
-	xVFD_ChangeToReserve : FB_SignalSplit;
-	xVFD_EmergencyStopCommon : FB_SignalSplit;
-	rVFD_SetFreq		: FB_SignalSplit;
+	xVFD_Start          		: FB_SignalSplit;
+	xVFD_Stop           		: FB_SignalSplit;
+	xVFD_EmergencyStop			: FB_SignalSplit;
+	xVFD_Reset					: FB_SignalSplit;
+	xVFD_ChangeToMain			: FB_SignalSplit;
+	xVFD_ChangeToReserve 		: FB_SignalSplit;
+	xVFD_EmergencyStopCommon 	: FB_SignalSplit;
+	rVFD_SetFreq				: FB_SignalSplit;
 	
-	xBY_Open			: FB_SignalSplit;
-	xBY_Close           : FB_SignalSplit;
-	xBY_Stop            : FB_SignalSplit;
-	xBY_Reset           : FB_SignalSplit;
+	xBY_Open					: FB_SignalSplit;
+	xBY_Close           		: FB_SignalSplit;
+	xBY_Stop            		: FB_SignalSplit;
+	xBY_Reset           		: FB_SignalSplit;
 	
 	
 	// **Process_BY_Commands**
-	rtrig_byCmd_xOpen 				: R_TRIG;
-	rtrig_byCmd_xClose             	: R_TRIG;
-	rtrig_byCmd_xStop     			: R_TRIG;
-	rtrig_byCmd_xReset              : R_TRIG;
-	// **Process_PU_Commands**
-	rtrig_puCmd_xStartBP 			: R_TRIG;
-	rtrig_puCmd_xStartVFD			: R_TRIG;
-	rtrig_puCmd_xStop               : R_TRIG;
-	rtrig_puCmd_xReset              : R_TRIG;
-	rtrig_puCmd_xChange_toBP     	: R_TRIG;
-	rtrig_puCmd_xChange_VFD     	: R_TRIG;
-	rtrig_puCmd_xEmergencyStopCommon : R_TRIG;
+	rtrig_byCmd_xOpen 					: R_TRIG;
+	rtrig_byCmd_xClose             		: R_TRIG;
+	rtrig_byCmd_xStop     				: R_TRIG;
+	rtrig_byCmd_xReset              	: R_TRIG;
+	// **Process_PU_Commands**      	
+	rtrig_puCmd_xStartBP 				: R_TRIG;
+	rtrig_puCmd_xStartVFD				: R_TRIG;
+	rtrig_puCmd_xStop               	: R_TRIG;
+	rtrig_puCmd_xReset              	: R_TRIG;
+	rtrig_puCmd_xChange_toBP     		: R_TRIG;
+	rtrig_puCmd_xChange_VFD     		: R_TRIG;
+	rtrig_puCmd_xEmergencyStopCommon 	: R_TRIG;
 	// **Process_VFD_Commands**
-	rtrig_vfdCmd_xStart				: R_TRIG;
-	rtrig_vfdCmd_xStop              : R_TRIG;
-	rtrig_vfdCmd_xEmergencyStop		: R_TRIG;
-	rtrig_vfdCmd_xEmergencyStopCommon : R_TRIG;
-	rtrig_vfdCmd_xReset             : R_TRIG;
-	rtrig_vfdCmd_xChangeToMain		: R_TRIG;
-	rtrig_vfdCmd_xChangeToReserve	: R_TRIG;
+	rtrig_vfdCmd_xStart					: R_TRIG;
+	rtrig_vfdCmd_xStop              	: R_TRIG;
+	rtrig_vfdCmd_xEmergencyStop			: R_TRIG;
+	rtrig_vfdCmd_xEmergencyStopCommon 	: R_TRIG;
+	rtrig_vfdCmd_xReset            	 	: R_TRIG;
+	rtrig_vfdCmd_xChangeToMain			: R_TRIG;
+	rtrig_vfdCmd_xChangeToReserve		: R_TRIG;
+	// **Process_PU_Manual_Commands
+	rtrig_mpuCmd_xStartBP				: R_TRIG;
+	rtrig_mpuCmd_xStartVFD				: R_TRIG;
+	rtrig_mpuCmd_xStopBP				: R_TRIG;
+	rtrig_mpuCmd_xStopVFD				: R_TRIG;
+
 	
-	
-	// ЗРА
-	
-// 	BY1		: FB_Shutter;
-// 	BY2     : FB_Shutter;
-// 	BY3     : FB_Shutter;
-// 	BY4     : FB_Shutter;
-// 	BY5     : FB_Shutter;
-// 	BY7     : FB_Shutter;
-// 	BY8     : FB_Shutter;
-	
-	
+
 	// Дребезг сигналов
 	in_0303_05_1_ixSection1_OverheatAlarm          : INPUT_OUTPUT;
 	in_0303_05_1_ixSection1_OverheatWarning        : INPUT_OUTPUT;
@@ -17956,9 +18550,7 @@ VAR
 	in_0303_05_PU05_ixKM_StatusOn                  : INPUT_OUTPUT;
 	in_0303_05_PU05_ixKM_VFD_StatusOn              : INPUT_OUTPUT;
 	in_0303_05_PU05_ixStatusManual                 : INPUT_OUTPUT;
-	
-	// Дублирование переменных для симуляции
-	
+
 END_VAR
 </xhtml>
                     </InterfaceAsPlainText>
@@ -26254,6 +26846,29 @@ END_TYPE
                     <Object Name="Condition_VFD_ChangeToReserve" ObjectId="e0e2e032-fec6-4806-951a-22bb9d0f06c9" />
                     <Object Name="Condition_VFD_ChangeToMain" ObjectId="35e2bf59-a330-4c91-93ee-0e7edd0c26f3" />
                   </Folder>
+                  <Folder Name="Manual">
+                    <Folder Name="PU">
+                      <Object Name="Condition_PU_Manual_Start_BP" ObjectId="2cbb3add-aa40-4b70-a8a5-3465d0605057" />
+                      <Object Name="Condition_PU_Manual_Start_VFD" ObjectId="8e20842c-b36f-4367-a1cf-63a9007e2b38" />
+                    </Folder>
+                  </Folder>
+                </Folder>
+                <Folder Name="Процессы | Manual">
+                  <Folder Name="PU">
+                    <Folder Name="Реализация">
+                      <Object Name="Process_PU_Manual_Commands" ObjectId="5f6bd7ca-19ba-4ad6-a9f1-25cb436d4c71" />
+                      <Object Name="Process_PU_Manual_Signals" ObjectId="0fff1003-62e1-4c91-890d-c0b8bd03b89b" />
+                    </Folder>
+                    <Object Name="Process_PU_Manual" ObjectId="537cc33c-88a0-4283-90ee-a4870a02c34a" />
+                  </Folder>
+                  <Folder Name="VFD">
+                    <Folder Name="Реализация">
+                      <Object Name="Process_VFD_Manual_Commands" ObjectId="d4d968f0-f46e-4a6f-b830-fa397ebbb158" />
+                      <Object Name="Process_VFD_Manual_Signals" ObjectId="425da325-32c6-4df4-a99c-9f46fe1bff74" />
+                      <Object Name="Process_VFD_Manual_qfreq" ObjectId="784fddae-3bd3-439c-8dbb-cde016393def" />
+                    </Folder>
+                    <Object Name="Process_VFD_Manual" ObjectId="2872a9cd-49d6-43ee-a558-1ef04ce75eca" />
+                  </Folder>
                 </Folder>
               </Object>
               <Folder Name="Sctruct">
@@ -26261,6 +26876,8 @@ END_TYPE
                 <Object Name="BY_Commands" ObjectId="1f094ddb-00f1-4fbf-ac6b-ce3fe4d78f43" />
                 <Object Name="PU_Commands" ObjectId="cf39f97f-2fad-480f-bf9c-931c721b96fd" />
                 <Object Name="PU_Errors" ObjectId="8854ce99-1e70-49b0-b24f-704ef9cca456" />
+                <Object Name="PU_Commands_Manual" ObjectId="dde16048-745b-49e8-9b8c-1de9b57b09fa" />
+                <Object Name="VFD_Commands_Manual" ObjectId="64af8268-d4ca-420d-bab8-cafe47beacb9" />
               </Folder>
             </Folder>
             <Object Name="MainTask" ObjectId="6e35004b-8872-4a8a-999d-c759191cd90a" />
