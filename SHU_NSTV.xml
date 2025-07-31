@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-30T15:23:53.5369435" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-30T15:23:43.0463131" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-07-31T16:55:22.7268635" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-07-31T16:54:30.6732977" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -12146,7 +12146,7 @@ END_VAR
                     </variable>
                     <variable name="tWorkPU1">
                       <type>
-                        <TIME />
+                        <INT />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Время работы насосов</xhtml>
@@ -13081,7 +13081,7 @@ VAR
 	pu_ivalue_BPWorked : INT;					// Количество работающих насосов от БП
 	pu_ivalue_VFDWorked : INT;					// Колиичество работающих насосов от ЧРП
 	// Время работы насосов
-	tWorkPU1 : TIME;
+	tWorkPU1 : INT;
 	tWorkPU2 : TIME;
 	tWorkPU3 : TIME;
 	tWorkPU4 : TIME;
@@ -17378,16 +17378,12 @@ VAR
 	ton_PU3_CommandStop_ProcessLongTime : TON;
 	ton_PU4_CommandStop_ProcessLongTime : TON;
 	ton_PU5_CommandStop_ProcessLongTime : TON;
-	rs_PU1_cmdStop_ProcessLongTime : RS;
-	rs_PU2_cmdStop_ProcessLongTime : RS;
-	rs_PU3_cmdStop_ProcessLongTime : RS;
-	rs_PU4_cmdStop_ProcessLongTime : RS;
-	rs_PU5_cmdStop_ProcessLongTime : RS;
 	ftrig_PU1_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU2_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU3_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU4_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU5_cmdStop_ProcessLongTime : F_TRIG;
+	xStopProcessPU1, xStopProcessPU2, xStopProcessPU3, xStopProcessPU4, xStopProcessPU5 : BOOL;
 END_VAR</xhtml>
                               </InterfaceAsPlainText>
                             </data>
@@ -17478,31 +17474,6 @@ END_VAR</xhtml>
                               <derived name="TON" />
                             </type>
                           </variable>
-                          <variable name="rs_PU1_cmdStop_ProcessLongTime">
-                            <type>
-                              <derived name="RS" />
-                            </type>
-                          </variable>
-                          <variable name="rs_PU2_cmdStop_ProcessLongTime">
-                            <type>
-                              <derived name="RS" />
-                            </type>
-                          </variable>
-                          <variable name="rs_PU3_cmdStop_ProcessLongTime">
-                            <type>
-                              <derived name="RS" />
-                            </type>
-                          </variable>
-                          <variable name="rs_PU4_cmdStop_ProcessLongTime">
-                            <type>
-                              <derived name="RS" />
-                            </type>
-                          </variable>
-                          <variable name="rs_PU5_cmdStop_ProcessLongTime">
-                            <type>
-                              <derived name="RS" />
-                            </type>
-                          </variable>
                           <variable name="ftrig_PU1_cmdStop_ProcessLongTime">
                             <type>
                               <derived name="F_TRIG" />
@@ -17526,6 +17497,31 @@ END_VAR</xhtml>
                           <variable name="ftrig_PU5_cmdStop_ProcessLongTime">
                             <type>
                               <derived name="F_TRIG" />
+                            </type>
+                          </variable>
+                          <variable name="xStopProcessPU1">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStopProcessPU2">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStopProcessPU3">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStopProcessPU4">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="xStopProcessPU5">
+                            <type>
+                              <BOOL />
                             </type>
                           </variable>
                           <addData>
@@ -17554,16 +17550,12 @@ VAR
 	ton_PU3_CommandStop_ProcessLongTime : TON;
 	ton_PU4_CommandStop_ProcessLongTime : TON;
 	ton_PU5_CommandStop_ProcessLongTime : TON;
-	rs_PU1_cmdStop_ProcessLongTime : RS;
-	rs_PU2_cmdStop_ProcessLongTime : RS;
-	rs_PU3_cmdStop_ProcessLongTime : RS;
-	rs_PU4_cmdStop_ProcessLongTime : RS;
-	rs_PU5_cmdStop_ProcessLongTime : RS;
 	ftrig_PU1_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU2_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU3_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU4_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU5_cmdStop_ProcessLongTime : F_TRIG;
+	xStopProcessPU1, xStopProcessPU2, xStopProcessPU3, xStopProcessPU4, xStopProcessPU5 : BOOL;
 END_VAR</xhtml>
                               </InterfaceAsPlainText>
                             </data>
@@ -17572,14 +17564,7 @@ END_VAR</xhtml>
                       </interface>
                       <body>
                         <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">(* 
-	Обработка ошибок производится независимо от переменной pu_iChange, 
-	т.к. алгоритм подразумевает асинхронную обработку ошибок.
-	Переменная pu_iChange не должна быть включена в алгоритм данного метода.
-	Ошибки обрабатываются для каждого исполнительного механизма отдельно, работая из методов GetStatus() или напрямую с переменными модулей входов/выходов
-*)
-
-// Обработка ошибки получения обратной связи от контактора насоса, при действующем выходном сигнале на включение насоса от БП.
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">// Обработка ошибки получения обратной связи от контактора насоса, при действующем выходном сигнале на включение насоса от БП.
 ton_PU1_CommandBP_ProcessLongTime(IN:= _0303_05_PU01_qxKM_cmdOn AND NOT in_0303_05_PU01_ixKM_StatusOn.qxSignal , PT:= itCommandProcessLongTime, Q=&gt; errPU1.xError_LongTime_Cmd_StartBP, ET=&gt; );
 ton_PU2_CommandBP_ProcessLongTime(IN:= _0303_05_PU02_qxKM_cmdOn AND NOT in_0303_05_PU02_ixKM_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU2.xError_LongTime_Cmd_StartBP, ET=&gt; );
 ton_PU3_CommandBP_ProcessLongTime(IN:= _0303_05_PU03_qxKM_cmdOn AND NOT in_0303_05_PU03_ixKM_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_StartBP, ET=&gt; );
@@ -17591,8 +17576,37 @@ ton_PU2_CommandBP_ProcessLongTime(IN:= _0303_05_PU02_qxKM_Frq_cmdOn AND NOT in_0
 ton_PU3_CommandBP_ProcessLongTime(IN:= _0303_05_PU03_qxKM_Frq_cmdOn AND NOT in_0303_05_PU03_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_StartVFD, ET=&gt; );
 ton_PU4_CommandBP_ProcessLongTime(IN:= _0303_05_PU04_qxKM_Frq_cmdOn AND NOT in_0303_05_PU04_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU4.xError_LongTime_Cmd_StartVFD, ET=&gt; );
 ton_PU5_CommandBP_ProcessLongTime(IN:= _0303_05_PU05_qxKM_Frq_cmdOn AND NOT in_0303_05_PU05_ixKM_VFD_StatusOn.qxSignal, PT:= itCommandProcessLongTime, Q=&gt; errPU5.xError_LongTime_Cmd_StartVFD, ET=&gt; );
-// Обработка ошибки получения статуса остановленного насоса после получения команды стоп через панель.
-</xhtml>
+
+// === Обработка ошибки получения статуса остановленного насоса после получения команды стоп через панель. ===
+IF rtrig_puCmd_xStop.Q AND pu_iChange = 1 THEN xStopProcessPU1 := TRUE; END_IF;
+IF rtrig_puCmd_xStop.Q AND pu_iChange = 2 THEN xStopProcessPU2 := TRUE; END_IF;
+IF rtrig_puCmd_xStop.Q AND pu_iChange = 3 THEN xStopProcessPU3 := TRUE; END_IF;
+IF rtrig_puCmd_xStop.Q AND pu_iChange = 4 THEN xStopProcessPU4 := TRUE; END_IF;
+IF rtrig_puCmd_xStop.Q AND pu_iChange = 5 THEN xStopProcessPU5 := TRUE; END_IF;
+// PU 1
+ftrig_PU1_cmdStop_ProcessLongTime(CLK:= GetStatus_PU_BP(1) OR GetStatus_PU_VFD(1));
+IF ftrig_PU1_cmdStop_ProcessLongTime.Q THEN xStopProcessPU1 := FALSE; END_IF;
+ton_PU1_CommandStop_ProcessLongTime(IN:= xStopProcessPU1, PT:= itCommandProcessLongTime, Q=&gt; errPU1.xError_LongTime_Cmd_Stop, ET=&gt; );
+
+// PU2
+ftrig_PU2_cmdStop_ProcessLongTime(CLK:= GetStatus_PU_BP(2) OR GetStatus_PU_VFD(2));
+IF ftrig_PU2_cmdStop_ProcessLongTime.Q THEN xStopProcessPU2 := FALSE; END_IF;
+ton_PU2_CommandStop_ProcessLongTime(IN:= xStopProcessPU2, PT:= itCommandProcessLongTime, Q=&gt; errPU2.xError_LongTime_Cmd_Stop, ET=&gt; );
+
+// PU3
+ftrig_PU3_cmdStop_ProcessLongTime(CLK:= GetStatus_PU_BP(3) OR GetStatus_PU_VFD(3));
+IF ftrig_PU3_cmdStop_ProcessLongTime.Q THEN xStopProcessPU3 := FALSE; END_IF;
+ton_PU3_CommandStop_ProcessLongTime(IN:= xStopProcessPU3, PT:= itCommandProcessLongTime, Q=&gt; errPU3.xError_LongTime_Cmd_Stop, ET=&gt; );
+
+// PU4
+ftrig_PU4_cmdStop_ProcessLongTime(CLK:= GetStatus_PU_BP(4) OR GetStatus_PU_VFD(4));
+IF ftrig_PU4_cmdStop_ProcessLongTime.Q THEN xStopProcessPU4 := FALSE; END_IF;
+ton_PU4_CommandStop_ProcessLongTime(IN:= xStopProcessPU4, PT:= itCommandProcessLongTime, Q=&gt; errPU4.xError_LongTime_Cmd_Stop, ET=&gt; );
+
+// PU5
+ftrig_PU5_cmdStop_ProcessLongTime(CLK:= GetStatus_PU_BP(5) OR GetStatus_PU_VFD(5));
+IF ftrig_PU5_cmdStop_ProcessLongTime.Q THEN xStopProcessPU5 := FALSE; END_IF;
+ton_PU5_CommandStop_ProcessLongTime(IN:= xStopProcessPU5, PT:= itCommandProcessLongTime, Q=&gt; errPU5.xError_LongTime_Cmd_Stop, ET=&gt; );</xhtml>
                         </ST>
                       </body>
                       <InterfaceAsPlainText>
@@ -17619,16 +17633,12 @@ VAR
 	ton_PU3_CommandStop_ProcessLongTime : TON;
 	ton_PU4_CommandStop_ProcessLongTime : TON;
 	ton_PU5_CommandStop_ProcessLongTime : TON;
-	rs_PU1_cmdStop_ProcessLongTime : RS;
-	rs_PU2_cmdStop_ProcessLongTime : RS;
-	rs_PU3_cmdStop_ProcessLongTime : RS;
-	rs_PU4_cmdStop_ProcessLongTime : RS;
-	rs_PU5_cmdStop_ProcessLongTime : RS;
 	ftrig_PU1_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU2_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU3_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU4_cmdStop_ProcessLongTime : F_TRIG;
 	ftrig_PU5_cmdStop_ProcessLongTime : F_TRIG;
+	xStopProcessPU1, xStopProcessPU2, xStopProcessPU3, xStopProcessPU4, xStopProcessPU5 : BOOL;
 END_VAR</xhtml>
                       </InterfaceAsPlainText>
                       <addData />
@@ -18061,7 +18071,7 @@ END_VAR
                         <inputVars>
                           <variable name="i">
                             <type>
-                              <BOOL />
+                              <INT />
                             </type>
                           </variable>
                           <addData>
@@ -18069,7 +18079,7 @@ END_VAR
                               <InterfaceAsPlainText>
                                 <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_BP : BOOL
 VAR_INPUT
-	i : BOOL;
+	i : INT;
 END_VAR
 </xhtml>
                               </InterfaceAsPlainText>
@@ -18085,7 +18095,7 @@ END_VAR
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_BP : BOOL
 VAR_INPUT
-	i : BOOL;
+	i : INT;
 END_VAR
 </xhtml>
                       </InterfaceAsPlainText>
@@ -18101,7 +18111,7 @@ END_VAR
                         <inputVars>
                           <variable name="i">
                             <type>
-                              <BOOL />
+                              <INT />
                             </type>
                           </variable>
                           <addData>
@@ -18109,7 +18119,7 @@ END_VAR
                               <InterfaceAsPlainText>
                                 <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_VFD : BOOL
 VAR_INPUT
-	i : BOOL;
+	i : INT;
 END_VAR
 </xhtml>
                               </InterfaceAsPlainText>
@@ -18125,7 +18135,7 @@ END_VAR
                       <InterfaceAsPlainText>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Condition_PU_Manual_Start_VFD : BOOL
 VAR_INPUT
-	i : BOOL;
+	i : INT;
 END_VAR
 </xhtml>
                       </InterfaceAsPlainText>
@@ -18303,6 +18313,71 @@ END_VAR
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Process_PU_Timers" ObjectId="782d5234-c066-4986-ae80-d3a419fb0f6c">
+                      <interface>
+                        <localVars>
+                          <variable name="ton_PU1">
+                            <type>
+                              <derived name="TON" />
+                            </type>
+                          </variable>
+                          <variable name="ton_PU2">
+                            <type>
+                              <derived name="TON" />
+                            </type>
+                          </variable>
+                          <variable name="ton_PU3">
+                            <type>
+                              <derived name="TON" />
+                            </type>
+                          </variable>
+                          <variable name="ton_PU4">
+                            <type>
+                              <derived name="TON" />
+                            </type>
+                          </variable>
+                          <variable name="ton_PU5">
+                            <type>
+                              <derived name="TON" />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_PU_Timers
+VAR_INPUT
+END_VAR
+VAR
+ton_PU1, ton_PU2, ton_PU3, ton_PU4, ton_PU5 : TON;
+END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </localVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">ton_PU1(IN:= GetStatus_PU_BP(1) OR GetStatus_PU_VFD(1), PT:= T#49D, Q=&gt; , ET=&gt; );
+ton_PU2(IN:= GetStatus_PU_BP(2) OR GetStatus_PU_VFD(2), PT:= T#49D, Q=&gt; , ET=&gt; tWorkPU2);
+ton_PU3(IN:= GetStatus_PU_BP(3) OR GetStatus_PU_VFD(3), PT:= T#49d, Q=&gt; , ET=&gt; tWorkPU3);
+ton_PU4(IN:= GetStatus_PU_BP(4) OR GetStatus_PU_VFD(4), PT:= T#49D, Q=&gt; , ET=&gt; tWorkPU4);
+ton_PU5(IN:= GetStatus_PU_BP(5) OR GetStatus_PU_VFD(5), PT:= T#49D, Q=&gt; , ET=&gt; tWorkPU5);
+
+tWorkPU1 := TIME_TO_INT(ton_PU1.ET);</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Process_PU_Timers
+VAR_INPUT
+END_VAR
+VAR
+ton_PU1, ton_PU2, ton_PU3, ton_PU4, ton_PU5 : TON;
+END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM MAIN
@@ -18356,7 +18431,7 @@ VAR
 	pu_ivalue_BPWorked : INT;					// Количество работающих насосов от БП
 	pu_ivalue_VFDWorked : INT;					// Колиичество работающих насосов от ЧРП
 	// Время работы насосов
-	tWorkPU1 : TIME;
+	tWorkPU1 : INT;
 	tWorkPU2 : TIME;
 	tWorkPU3 : TIME;
 	tWorkPU4 : TIME;
@@ -26816,6 +26891,7 @@ END_TYPE
                       <Object Name="Process_PU_Signals" ObjectId="f2fc1f74-9d2b-466d-8d88-fe06b3776b07" />
                       <Object Name="Process_PU_Change" ObjectId="fa92955c-679f-4ee7-be24-f1e0090f467f" />
                       <Object Name="Process_PU_Errors" ObjectId="abd6c68e-1865-4310-9e27-5c04d6f4e4c7" />
+                      <Object Name="Process_PU_Timers" ObjectId="782d5234-c066-4986-ae80-d3a419fb0f6c" />
                     </Folder>
                     <Object Name="Process_PU" ObjectId="0dd8c502-1018-4580-8acb-efa175fe7b27" />
                   </Folder>
