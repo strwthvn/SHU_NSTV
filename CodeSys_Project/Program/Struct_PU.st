@@ -36,6 +36,7 @@ STRUCT
 	// Генерируемые состояния
 	xCommonError          : BOOL;
 	xEmergencyStopStatus  : BOOL;
+	xWorkingFromVFD	  	: BOOL;
 	
 	xErrorLongTimeException_xStartBP     : BOOL;
 	xErrorLongTimeException_xStartVFD    : BOOL;
