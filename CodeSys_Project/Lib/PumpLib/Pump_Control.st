@@ -41,3 +41,4 @@ PROPERTY AccessToStop : BOOL
         ConditionStop := AccessToStop;
     END_GET
 END_PROPERTY
+END_FUNCTION_BLOCK

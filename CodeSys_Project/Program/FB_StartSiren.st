@@ -42,3 +42,4 @@ CASE step OF
 END_CASE;
 ton_soundProcess(IN:= xProcess);
 qxEndSignal := ton_soundProcess.Q AND step = 3;
+END_FUNCTION_BLOCK

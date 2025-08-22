@@ -177,6 +177,11 @@ blink_UpdateCycle(ENABLE:= TRUE, TIMELOW:= T#2S, TIMEHIGH:= T#1S, OUT=> );
 rtrig_UpdateCyclePulse(CLK:= blink_UpdateCycle.OUT);
 
 IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
+    PLC_ConnectionControl();
+END_IF;
+
+
+IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
 	// Получение сигнала о связи с ПЛК АСУТП LifeBit
 	ton_PLC_LifeBit_Control_Off(IN:= NOT PLC_LifeBit, PT:= LIFEBIT_CONNECTION_TIME);
 	ton_PLC_LifeBit_Control_On(IN:= PLC_LifeBit, PT:= LIFEBIT_CONNECTION_TIME);
@@ -1138,7 +1143,8 @@ METHOD Init_Pump
         // Формирование сигнала готовности запуска от БП и от ЧРП
         PU[i].xReadyToStartBP := PU[i].xConditionToStartBP;
         PU[i].xReadyToStartVFD := PU[i].xConditionToStartVFD AND NOT Get_PU_VFD_Common();
-
+        // Формирование (полного) сигнала о работе насоса от ЧРП
+        PU[i].xWorkingFromVFD := PU[i].Device.PowerVFD AND VFD[iVFD_Change].xWork AND VFD[iVFD_Change].Device.Power;
         
         // --- Передача состояния по протоколу Modbus ---
     // 	PU[i].wStatus.VarByte[0].0 	:= 		PU[i].xReadyToStartVFD;
@@ -1162,7 +1168,6 @@ METHOD Init_Pump
 
     END_FOR;
 END_METHOD
-
 (* Инициализация ЧРП *)
 METHOD Init_VFD
     VAR
@@ -1276,7 +1281,6 @@ METHOD Commands_BY
         END_IF;
     END_FOR;
 END_METHOD
-
 (* Команды ПЛК *)
 METHOD Commands_PLC
     PLC_cmd.rtrig_xcmdService_ChangetoAuto(CLK:= PLC_cmd.xcmdService_ChangetoAuto);
@@ -1320,7 +1324,7 @@ METHOD Commands_PLC
         xEmergencyStopCommon := TRUE;
     END_IF;
 END_METHOD
-
+(* Команды насосов *)
 METHOD Commands_Pump
     VAR
         i : INT;
@@ -1451,7 +1455,7 @@ METHOD Commands_Pump
         END_IF;
     END_FOR
 END_METHOD
-
+(* Команды ЧРП *)
 METHOD Commands_VFD
     VAR
         i : INT;
@@ -1517,7 +1521,7 @@ METHOD EmergencyStopCommon
         PU[i].Device.Set_Power_VFD(FALSE);
     END_FOR;
 END_METHOD
-
+(* Алгоритм поэтапной остановки насосной станции при потере связи с АСУТП *)
 METHOD LostConnectionStopProcess
 	VFD[1].Device.Frequency := 0;
 	VFD[2].Device.Frequency := 0;
@@ -1581,6 +1585,47 @@ METHOD LostConnectionStopProcess
         END_IF
     END_FOR;
     *)
+END_METHOD
+(* Контроль связи с ПЛК АСУТП *)
+METHOD PLC_ConnectionControl
+    // Таймеры контроля LifeBit
+    ton_PLC_LifeBit_Control_Off(
+        IN := NOT PLC_LifeBit,
+        PT := LIFEBIT_CONNECTION_TIME
+    );
+    ton_PLC_LifeBit_Control_On(
+        IN := PLC_LifeBit,
+        PT := LIFEBIT_CONNECTION_TIME
+    );
+
+    // SR-триггер для фиксации состояния связи
+    sr_PLC_LifeBit_Control(
+        SET1 := NOT (ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q),
+        RESET := ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q
+    );
+
+    // Если связь потеряна — фиксируем ошибку и переводим ПЛК в режим "Обрыв связи"
+    IF NOT sr_PLC_LifeBit_Control.Q1 THEN
+        PLC_Connection_Fault := TRUE;
+        PLC_Mode := 1;
+    END_IF;
+
+    // Если связь восстановлена — снимаем ошибку и возвращаем режим "Авто"
+    PLC_Connection_Ok := sr_PLC_LifeBit_Control.Q1;
+    IF PLC_Mode = 1 AND PLC_Connection_Ok THEN
+        PLC_Mode := 0;
+    END_IF;
+
+    // Таймер аварийной остановки по потере связи
+    ton_LostConnectionEmergencyStopTimeOut(
+        IN := PLC_Mode = 1,
+        PT := LOST_CONNECTION_EMERGENCY_STOP_TIME
+    );
+
+    // Если таймер аварийной остановки сработал — формируем команду аварийной остановки
+    IF ton_LostConnectionEmergencyStopTimeOut.Q THEN
+        xEmergencyStopCommonLostConnectionTimeOut := TRUE;
+    END_IF;
 END_METHOD
 
 END_PROGRAM

@@ -19,3 +19,4 @@ CASE iiPLCMode OF
 	0: qxSignal := ixAutoSignal; qrSignal := irAutoSignal;
 	2: qxSignal := ixServiceSignal; qrSignal := qrSignal;
 END_CASE;
+END_FUNCTION_BLOCK

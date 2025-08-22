@@ -18,3 +18,4 @@ PROPERTY PowerVFD : BOOL
         PowerVFD := qxPowerVFD;	// Возвращаем значение выходного сигнала питания от ЧРП
     END_GET
 END_PROPERTY
+END_FUNCTION_BLOCK

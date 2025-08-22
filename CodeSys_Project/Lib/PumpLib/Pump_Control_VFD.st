@@ -71,4 +71,4 @@ PROPERTY AccessToSwitchToVFD : BOOL
         ConditionSwitchToVFD := AccessToSwitchToVFD;
     END_SET
 END_PROPERTY
-
+END_FUNCTION_BLOCK

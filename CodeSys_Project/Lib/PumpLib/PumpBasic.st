@@ -19,3 +19,4 @@ PROPERTY Power : BOOL
         Power := qxPower;	// Возвращаем значение выходного сигнала питания
     END_GET
 END_PROPERTY
+END_FUNCTION_BLOCK
