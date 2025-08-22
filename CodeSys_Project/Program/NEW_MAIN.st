@@ -177,9 +177,6 @@ END_VAR
 blink_UpdateCycle(ENABLE:= TRUE, TIMELOW:= T#2S, TIMEHIGH:= T#1S, OUT=> );
 rtrig_UpdateCyclePulse(CLK:= blink_UpdateCycle.OUT);
 
-IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
-    PLC_ConnectionControl();
-END_IF;
 
 
 Init_RattlingKM();
@@ -193,13 +190,26 @@ Commands_VFD();
 Commands_PLC();
 Commands_BY();
 
+// Контроль связи с ПЛК АСУТП
+IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
+    PLC_ConnectionControl();
+END_IF;
+
+// Аварийная остановка по таймауту связи
 IF xEmergencyStopCommonLostConnectionTimeOut THEN
 	LostConnectionStopProcess();
 END_IF;
 
+// Аварийная остановка по кнопке или по таймауту связи
 IF xEmergencyStopCommon THEN
 	EmergencyStopCommon();
 END_IF
+
+// Сброс всех ошибок
+rtrig_PLC_cmdResetAll(CLK:= PLC_cmdResetAll);
+IF rtrig_PLC_cmdResetAll.Q THEN
+    ResetAllErrors();
+END_IF;
 
 //IF NOT in_PowerSupplyIsOk_1.qxSignal OR NOT in_PowerSupplyIsOk_1.qxSignal THEN xEmergencyStopCommon := TRUE; END_IF;
 
