@@ -1504,6 +1504,7 @@ END_METHOD
 METHOD EmergencyStopCommon
     VAR
         i : INT;
+        j : INT;
     END_VAR
 
     VFD[1].Device.Set_Frequency_Manual(0);
@@ -1515,6 +1516,11 @@ METHOD EmergencyStopCommon
         PU[i].Device.Set_Power(FALSE);
         PU[i].Device.Set_Power_VFD(FALSE);
     END_FOR;
+
+    FOR j := 1 TO BY_AMOUNT BY 1 DO
+        Shutter[j].Device.Close();
+    END_FOR;
+
 END_METHOD
 
 (* Алгоритм поэтапной остановки насосной станции при потере связи с АСУТП *)
