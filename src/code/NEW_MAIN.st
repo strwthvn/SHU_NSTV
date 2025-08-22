@@ -189,7 +189,7 @@ Commands_PLC();
 Commands_BY();
 
 // Контроль связи с ПЛК АСУТП
-IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
+IF PLC_Mode <> 2 AND NOT PLC_SimulationCommunication THEN
     PLC_ConnectionControl();
 END_IF;
 

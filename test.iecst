@@ -1,3 +1,0 @@
-IF Condition THEN
-    Action();    
-END_IF;
