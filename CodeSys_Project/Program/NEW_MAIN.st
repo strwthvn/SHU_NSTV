@@ -21,6 +21,7 @@ VAR
 	PLC_Word : Union_ByteToWord;
 	PLC_cmdWord : Union_ByteToWord;
 	PLC_cmdResetAll : BOOL;
+    rtrig_PLC_cmdResetAll : R_TRIG;
 	PLC_ResetConnectionError : BOOL;
 	PLC_SimulationCommunication : BOOL := TRUE;
 	
@@ -1046,7 +1047,7 @@ METHOD Init_Pump
         i : INT;
     END_VAR
 
-        // PU 1
+    // PU 1
     PU[1].xStatusEnableBP := in_0303_05_PU01_ixKM_StatusOn.qxSignal;
     PU[1].xStatusEnableVFD := in_0303_05_PU01_ixKM_VFD_StatusOn.qxSignal;
     PU[1].xManualStart := in_0303_05_PU01_ixKM_StatusManualStart.qxSignal;
@@ -1613,6 +1614,41 @@ METHOD PLC_ConnectionControl
     IF ton_LostConnectionEmergencyStopTimeOut.Q THEN
         xEmergencyStopCommonLostConnectionTimeOut := TRUE;
     END_IF;
+END_METHOD
+
+METHOD ResetAllErrors
+    VAR
+        i : INT;
+        j : INT;
+    END_VAR
+
+    // Сброс ошибок насосов
+    FOR i := 1 TO PU_AMOUNT DO
+        PU[i].xErrorLongTimeException_xStartBP := FALSE;
+        PU[i].xErrorLongTimeException_xStartVFD := FALSE;
+        PU[i].xErrorLongTimeException_xSwitchToBP := FALSE;
+        PU[i].xErrorLongTimeException_xSwitchToVFD := FALSE;
+        PU[i].xErrorLongTimeException_xStop := FALSE;
+        PU[i].xErrorLostFeedbackSignal := FALSE;
+        PU[i].xErrorEnableStatusVFD := FALSE;
+        PU[i].xCommonError := FALSE;
+    END_FOR
+
+    // Сброс ошибок затворов
+    FOR j := 1 TO BY_AMOUNT DO
+        Shutter[j].xStatusError := FALSE;
+        Shutter[j].xLongExpectationOpen := FALSE;
+        Shutter[j].xErrorLongExpectationClose := FALSE;
+        Shutter[j].xErrorLongExpectationStop := FALSE;
+        Shutter[j].ErrorOpen.Q := FALSE;
+        Shutter[j].ErrorClose.Q := FALSE;
+        Shutter[j].ErrorStop.Q := FALSE;
+    END_FOR
+
+    // Сброс аварийных сигналов
+    xEmergencyStopCommon := FALSE;
+    xEmergencyStopCommonLostConnectionTimeOut := FALSE;
+    PLC_Connection_Fault := FALSE;
 END_METHOD
 
 END_PROGRAM
