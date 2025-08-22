@@ -1,0 +1,31 @@
+INTERFACE FrequencyCalculate
+METHOD Calculate_Frequency
+VAR_INPUT
+	rStep : REAL;
+	xProceed : BOOL;
+END_VAR
+END_METHOD
+
+METHOD Set_Frequency
+VAR_INPUT
+END_VAR
+END_METHOD
+
+METHOD Set_Frequency_Manual
+VAR_INPUT
+	rFrequency : REAL;
+END_VAR
+END_METHOD
+
+PROPERTY AccessToCalculate : BOOL
+    SET
+END_PROPERTY
+
+PROPERTY Frequency : REAL
+    GET
+    SET
+END_PROPERTY
+
+PROPERTY FrequencyMax : REAL
+    SET
+END_PROPERTY

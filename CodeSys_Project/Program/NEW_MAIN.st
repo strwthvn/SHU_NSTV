@@ -211,7 +211,624 @@ END_IF
 
 //IF NOT in_PowerSupplyIsOk_1.qxSignal OR NOT in_PowerSupplyIsOk_1.qxSignal THEN xEmergencyStopCommon := TRUE; END_IF;
 
-
+METHOD Init_RattlingKM
+    in_0303_05_1_ixSection1_OverheatAlarm(
+        ixSignal:= _0303_05_1_ixSection1_OverheatAlarm, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_1_ixSection1_OverheatWarning(
+        ixSignal:= _0303_05_1_ixSection1_OverheatWarning, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_1_ixVFD_Failure(
+        ixSignal:= _0303_05_1_ixVFD_Failure, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_1_ixVFD_InWork(
+        ixSignal:= _0303_05_1_ixVFD_InWork, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_1_ixVFD_Manual(
+        ixSignal:= _0303_05_1_ixVFD_Manual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_1_ixVFD_Ready(
+        ixSignal:= _0303_05_1_ixVFD_Ready, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2_ixSection1_OverheatAlarm(
+        ixSignal:= _0303_05_2_ixSection1_OverheatAlarm, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2_ixSection1_OverheatWarning(
+        ixSignal:= _0303_05_2_ixSection1_OverheatWarning, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2_ixVFD_Failure(
+        ixSignal:= _0303_05_2_ixVFD_Failure, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2_ixVFD_InWork(
+        ixSignal:= _0303_05_2_ixVFD_InWork, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2_ixVFD_Manual(
+        ixSignal:= _0303_05_2_ixVFD_Manual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2_ixVFD_Ready(
+        ixSignal:= _0303_05_2_ixVFD_Ready, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_1KM8_ixStatusOn(
+        ixSignal:= _0303_05_1KM8_ixStatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_2KM8_ixStatusOn(
+        ixSignal:= _0303_05_2KM8_ixStatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY01_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY01_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY01_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY01_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY01_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY01_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY01_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY01_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY01_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY01_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY01_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY01_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY02_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY02_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY02_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY02_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY02_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY02_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY02_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY02_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY02_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY02_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY02_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY02_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY03_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY03_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY03_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY03_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY03_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY03_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY03_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY03_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY03_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY03_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY03_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY03_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY04_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY04_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY04_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY04_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY04_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY04_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY04_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY04_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY04_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY04_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY04_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY04_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY05_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY05_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY05_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY05_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY05_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY05_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY05_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY05_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY05_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY05_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY05_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY05_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY07_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY07_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY07_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY07_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY07_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY07_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY07_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY07_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY07_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY07_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY07_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY07_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY08_ixKM_PosClosed(
+        ixSignal:= _0303_05_BY08_ixKM_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY08_ixKM_PosOpen(
+        ixSignal:= _0303_05_BY08_ixKM_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY08_ixShutter_PosClosed(
+        ixSignal:= _0303_05_BY08_ixShutter_PosClosed, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY08_ixShutter_PosOpen(
+        ixSignal:= _0303_05_BY08_ixShutter_PosOpen, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY08_ixShutter_StatusError(
+        ixSignal:= _0303_05_BY08_ixShutter_StatusError, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_BY08_ixShutter_StatusReady(
+        ixSignal:= _0303_05_BY08_ixShutter_StatusReady, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU01_ixKM_StatusManualStart(
+        ixSignal:= _0303_05_PU01_ixKM_StatusManualStart, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU01_ixKM_StatusManualStop(
+        ixSignal:= _0303_05_PU01_ixKM_StatusManualStop, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU01_ixKM_StatusOn(
+        ixSignal:= _0303_05_PU01_ixKM_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU01_ixKM_VFD_StatusOn(
+        ixSignal:= _0303_05_PU01_ixKM_VFD_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU01_ixStatusManual(
+        ixSignal:= _0303_05_PU01_ixStatusManual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU02_ixKM_StatusManualStart(
+        ixSignal:= _0303_05_PU02_ixKM_StatusManualStart, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU02_ixKM_StatusManualStop(
+        ixSignal:= _0303_05_PU02_ixKM_StatusManualStop, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU02_ixKM_StatusOn(
+        ixSignal:= _0303_05_PU02_ixKM_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU02_ixKM_VFD_StatusOn(
+        ixSignal:= _0303_05_PU02_ixKM_VFD_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU02_ixStatusManual(
+        ixSignal:= _0303_05_PU02_ixStatusManual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU03_ixKM_StatusManualStart(
+        ixSignal:= _0303_05_PU03_ixKM_StatusManualStart, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU03_ixKM_StatusManualStop(
+        ixSignal:= _0303_05_PU03_ixKM_StatusManualStop, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU03_ixKM_StatusOn(
+        ixSignal:= _0303_05_PU03_ixKM_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU03_ixKM_VFD_StatusOn(
+        ixSignal:= _0303_05_PU03_ixKM_VFD_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU03_ixStatusManual(
+        ixSignal:= _0303_05_PU03_ixStatusManual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU04_ixKM_StatusManualStart(
+        ixSignal:= _0303_05_PU04_ixKM_StatusManualStart, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU04_ixKM_StatusManualStop(
+        ixSignal:= _0303_05_PU04_ixKM_StatusManualStop, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU04_ixKM_StatusOn(
+        ixSignal:= _0303_05_PU04_ixKM_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU04_ixKM_VFD_StatusOn(
+        ixSignal:= _0303_05_PU04_ixKM_VFD_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU04_ixStatusManual(
+        ixSignal:= _0303_05_PU04_ixStatusManual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU05_ixKM_StatusManualStart(
+        ixSignal:= _0303_05_PU05_ixKM_StatusManualStart, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU05_ixKM_StatusManualStop(
+        ixSignal:= _0303_05_PU05_ixKM_StatusManualStop,
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU05_ixKM_StatusOn(
+        ixSignal:= _0303_05_PU05_ixKM_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU05_ixKM_VFD_StatusOn(
+        ixSignal:= _0303_05_PU05_ixKM_VFD_StatusOn, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU05_ixStatusManual(
+        ixSignal:= _0303_05_PU05_ixStatusManual, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU01_qxDryRun(
+        ixSignal:= _0303_05_PU01_qxDryRun, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU02_qxDryRun(
+        ixSignal:= _0303_05_PU02_qxDryRun, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU03_qxDryRun(
+        ixSignal:= _0303_05_PU03_qxDryRun, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU04_qxDryRun(
+        ixSignal:= _0303_05_PU04_qxDryRun, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_0303_05_PU05_qxDryRun(
+        ixSignal:= _0303_05_PU05_qxDryRun, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+    in_PowerSupplyIsOk_1(
+        ixSignal:= xPowerSupplyIsOk_1, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
+        
+    in_PowerSupplyIsOk_2(
+        ixSignal:= xPowerSupplyIsOk_2, 
+        itInputTime:= RATTLING_DELAY, 
+        itRattling_count_reset:= , 
+        ixResetAlarm:= , 
+        qxSignal=> , 
+        qxRattlingAlarm=> );
 
 (* Возвращает наличие работающего насоса от ЧРП *)
 METHOD Get_PU_VFD_Common : BOOL
@@ -965,3 +1582,5 @@ METHOD LostConnectionStopProcess
     END_FOR;
     *)
 END_METHOD
+
+END_PROGRAM
