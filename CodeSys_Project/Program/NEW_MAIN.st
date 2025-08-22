@@ -181,20 +181,6 @@ IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
 END_IF;
 
 
-IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
-	// Получение сигнала о связи с ПЛК АСУТП LifeBit
-	ton_PLC_LifeBit_Control_Off(IN:= NOT PLC_LifeBit, PT:= LIFEBIT_CONNECTION_TIME);
-	ton_PLC_LifeBit_Control_On(IN:= PLC_LifeBit, PT:= LIFEBIT_CONNECTION_TIME);
-	sr_PLC_LifeBit_Control(SET1:= NOT (ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q), RESET:= ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q);
-	// Действия при отсутствии сигнала
-	IF NOT sr_PLC_LifeBit_Control.Q1 THEN PLC_Connection_Fault := TRUE; END_IF;
-	IF NOT sr_PLC_LifeBit_Control.Q1 THEN PLC_Mode := 1; END_IF;
-	PLC_Connection_Ok := sr_PLC_LifeBit_Control.Q1;
-	IF PLC_Mode = 1 AND PLC_Connection_Ok THEN PLC_Mode := 0; END_IF;
-	ton_LostConnectionEmergencyStopTimeOut(IN:= PLC_Mode = 1, PT:= LOST_CONNECTION_EMERGENCY_STOP_TIME);
-	IF ton_LostConnectionEmergencyStopTimeOut.Q THEN xEmergencyStopCommonLostConnectionTimeOut := TRUE; END_IF;
-END_IF;
-
 Init_RattlingKM();
 Init_PLC();
 Init_Pump();
@@ -1136,7 +1122,6 @@ METHOD Init_Pump
             OR PU[i].xErrorLongTimeException_xStop 
             OR PU[i].xErrorLongTimeException_xStartBP 
             OR PU[i].xErrorLongTimeException_xStartVFD
-            OR PU[i].xErrorLongTimeException_xStop
             OR PU[i].xErrorLongTimeException_xSwitchToBP
             OR PU[i].xStatusDry
             OR PU[i].xErrorLongTimeException_xSwitchToVFD;
@@ -1521,6 +1506,7 @@ METHOD EmergencyStopCommon
         PU[i].Device.Set_Power_VFD(FALSE);
     END_FOR;
 END_METHOD
+
 (* Алгоритм поэтапной остановки насосной станции при потере связи с АСУТП *)
 METHOD LostConnectionStopProcess
 	VFD[1].Device.Frequency := 0;
@@ -1586,6 +1572,7 @@ METHOD LostConnectionStopProcess
     END_FOR;
     *)
 END_METHOD
+
 (* Контроль связи с ПЛК АСУТП *)
 METHOD PLC_ConnectionControl
     // Таймеры контроля LifeBit
