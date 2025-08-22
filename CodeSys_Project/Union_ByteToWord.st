@@ -1,0 +1,6 @@
+TYPE Union_ByteToWord :
+UNION
+	VarWord: WORD;
+	VarByte: ARRAY [0..1] OF BYTE;
+END_UNION
+END_TYPE
