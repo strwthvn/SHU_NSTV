@@ -177,8 +177,6 @@ END_VAR
 blink_UpdateCycle(ENABLE:= TRUE, TIMELOW:= T#2S, TIMEHIGH:= T#1S, OUT=> );
 rtrig_UpdateCyclePulse(CLK:= blink_UpdateCycle.OUT);
 
-
-
 Init_RattlingKM();
 Init_PLC();
 Init_Pump();

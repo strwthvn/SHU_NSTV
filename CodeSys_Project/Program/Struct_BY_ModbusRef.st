@@ -7,7 +7,7 @@ STRUCT
     SetPointReached  :  BOOL;
     NotReadyInd      :  BOOL;
     RunningOpen      :  BOOL;
-    RunningClose     :  BOOL;s
+    RunningClose     :  BOOL;
     ProhibitLocalAct :  BOOL;
     FaultInd         :  BOOL;
 END_STRUCT
