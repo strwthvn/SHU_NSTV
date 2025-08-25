@@ -1358,7 +1358,7 @@ METHOD Commands_Pump
                     PU[i].rtrig_xStop(CLK:= (PU[i].Auto_xStop AND NOT PU[i].xStatusManual) OR (PU[i].Auto_xEnableLocalRemote AND PU[i].xManualStop AND PU[i].xStatusManual), Q=> );
                     PU[i].rtrig_xSwitchToBP(CLK:= PU[i].Auto_xSwitchToBP AND NOT PU[i].xStatusManual, Q=> );
                     PU[i].rtrig_xSwitchToVFD(CLK:= PU[i].Auto_xSwitchToVFD AND NOT PU[i].xStatusManual, Q=> );
-                    PU[i].rtrig_xReset(CLK:= PU[i].Auto_xReset AND NOT PU[i].xStatusManual, Q=> );
+                    PU[i].rtrig_xReset(CLK:= PU[i].Auto_xReset, Q=> );
                     PU[i].rtrig_xEmergencyStop(CLK:= PU[i].Auto_xEmergencyStop);
                 2:	// Режим СЕРВИС
                     PU[i].rtrig_xStartBP(CLK:= PU[i].Service_xStartBP AND NOT PU[i].xStatusManual, Q=> );	
