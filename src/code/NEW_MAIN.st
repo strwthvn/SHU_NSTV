@@ -55,6 +55,7 @@ VAR
 	// --- Насосы и управление ---
 	PU : ARRAY [1..PU_AMOUNT] OF Struct_PU;
 	PU_CTRL : Pump_Control_VFD;
+    PU_i : INT;
 	Auto_xPu_Reset : BOOL;      // Обобщённый ресет на каждый насос (ошибки)
 	Service_xPu_Reset : BOOL;
 	
@@ -68,6 +69,7 @@ VAR
 	// --- ЗРА и управление ---
 	Shutter : ARRAY[1..BY_AMOUNT] OF Struct_BY;
 	Shutter_CTRL : Shutter_Control;
+    Shutter_i : INT;
 	BY_ModbusRef : ARRAY [1..BY_AMOUNT] OF Struct_BY_ModbusRef;
 	
 	// --- Импульсы и обновления ---
@@ -863,6 +865,26 @@ METHOD GET_PU_VFD_Number : INT
     Get_PU_VFD_Number := 0;
 END_METHOD
 
+METHOD Init_LongTimeExpectation
+    VAR_INPUT
+        refClass : REFERENCE TO FB_Error_SignalLongExpectation;  // Явная ссылка
+        execute : BOOL;
+        feedback : BOOL;
+        error : REFERENCE TO BOOL;
+    END_VAR
+    VAR_OUTPUT
+        error : BOOL;
+    END_VAR
+
+    IF __ISVALIDREF(refClass) THEN
+        refClass.SetExecute(execute);
+        refClass.SetFeedback(feedback);
+        refClass.SetTimeout(LONG_TIME_EXPECTATION_TIME);
+        error := refClass.GetError();
+    END_IF
+END_METHOD
+
+
 (* Инициализация ЗРА *)
 METHOD Init_BY
     VAR
@@ -1266,7 +1288,7 @@ METHOD Commands_BY
         Shutter_CTRL.Stop(Shutter[i].rtrig_xStop.Q, Shutter[i].Device);
             // Автоматическая остановка
         Shutter_CTRL.Stop(Shutter[i].ConditionToxAutoStop, Shutter[i].Device);
-        
+
         // Описание команды RESET 
         IF Shutter[i].rtrig_xReset.Q THEN
             Shutter[i].ErrorOpen.Reset();
