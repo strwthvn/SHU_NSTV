@@ -1006,9 +1006,10 @@ METHOD Init_BY
     Shutter[8].xStatusKmClose := in_0303_05_BY08_ixKM_PosClosed.qxSignal;
 
     FOR i := 1 TO BY_AMOUNT BY 1 DO
-        Shutter[i].ErrorOpen(ixExecuteSignal:= Shutter[i].rtrig_xOpen.Q, ixFeedbackSignal:= Shutter[i].xStatusKmOpen, T:= LONG_TIME_EXPECTATION_TIME);
-        Shutter[i].ErrorClose(ixExecuteSignal:= Shutter[i].rtrig_xClose.Q, ixFeedbackSignal:= Shutter[i].xStatusKmClose, T:= LONG_TIME_EXPECTATION_TIME);
-        Shutter[i].ErrorStop(ixExecuteSignal:= Shutter[i].rtrig_xStop.Q, ixFeedbackSignal:= NOT Shutter[i].xStatusKmOpen AND NOT Shutter[i].xStatusKmClose, T:= LONG_TIME_EXPECTATION_TIME);
+       	
+        Init_LongTimeExpectation(Shutter[i].ErrorOpen, Shutter[i].rtrig_xOpen.Q, Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationOpen);
+	    Init_LongTimeExpectation(Shutter[i].ErrorClose, Shutter[i].rtrig_xClose.Q, Shutter[i].xStatusKmClose, shutter[i].xErrorLongExpectationClose);
+	    Init_LongTimeExpectation(Shutter[i].ErrorStop, Shutter[i].rtrig_xClose.Q, NOT Shutter[i].xStatusKmClose AND NOT Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationStop); 
         
         // --- Передача состояния по протоколу Modbus ---
         Shutter[i].wStatus.VarByte[0].0 := Shutter[i].xStatusOpen;
@@ -1097,21 +1098,19 @@ METHOD Init_Pump
     FOR i := 1 TO PU_AMOUNT BY 1 DO
         // Передача обобщённой RESET команды на каждый насос
         CASE PLC_Mode OF 0: PU[i].Auto_xReset := Auto_xPu_Reset; 2: PU[i].Service_xReset := Service_xPu_Reset; END_CASE;
-        // Обработка ошибки долгого ожидания запуска с байпаса
-        PU[i].ErrorxStartBP(ixExecuteSignal:= PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, ixFeedbackSignal:= PU[i].xStatusEnableBP, T:= LONG_TIME_EXPECTATION_TIME, Q=>);
-        IF PU[i].ErrorxStartBP.Q THEN PU[i].xErrorLongTimeException_xStartBP := TRUE; END_IF;
-        // Обработка ошибки долгого ожидания запуска частотника
-        PU[i].ErrorxStartVFD(ixExecuteSignal:= PU[i].rtrig_xStartVFD.Q AND PU[i].xConditionToStartVFD AND NOT Get_PU_VFD_Common(), ixFeedbackSignal:= PU[i].xStatusEnableVFD, T:= LONG_TIME_EXPECTATION_TIME, Q=>);
-        IF PU[i].ErrorxStartVFD.Q THEN PU[i].xErrorLongTimeException_xStartVFD := TRUE; END_IF;
-        // Обработка ошибки долгого ожидания останова
-        PU[i].ErrorxStop(ixExecuteSignal:= PU[i].rtrig_xStop.Q, ixFeedbackSignal:= NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, T:= LONG_TIME_EXPECTATION_TIME, Q=>);
-        IF PU[i].ErrorxStop.Q THEN PU[i].xErrorLongTimeException_xStop := TRUE; END_IF;
-        // Обработка ошибки долгого ожидания переключения на байпас
-        PU[i].ErrorxSwitchToBP(ixExecuteSignal:= PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToSwitchToBP, ixFeedbackSignal:= PU[i].xStatusEnableBP, T:= LONG_TIME_EXPECTATION_TIME, Q=>);
-        IF PU[i].ErrorxSwitchToBP.Q THEN PU[i].xErrorLongTimeException_xSwitchToBP := TRUE; END_IF;
-        // Обработка ошибки долгого ожидания переключения на частотник
-        PU[i].ErrorxSwitchToVFD(ixExecuteSignal:= PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, ixFeedbackSignal:= PU[i].xStatusEnableVFD, T:= LONG_TIME_EXPECTATION_TIME, Q=>);
-        IF PU[i].ErrorxSwitchToVFD.Q THEN PU[i].xErrorLongTimeException_xSwitchToVFD := TRUE; END_IF;
+
+        // Обработка ошибки команды СТАРТ С БП и получения обратной связи
+	    Init_LongTimeExpectation(PU[i].ErrorxStartBP, PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xStartBP);
+        // Обработка ошибки команды СТАРТ С ЧРП и получения обратной связи
+        Init_LongTimeExpectation(PU[i].ErrorxStartVFD, PU[i].rtrig_xStartVFD.Q AND PU[i].xConditionToStartVFD, PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStartVFD);
+        // Обработка ошибки команды СТОП и получения обратной связи
+        Init_LongTimeExpectation(PU[i].ErrorxStop, PU[i].rtrig_xStop.Q, NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStop);
+        // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА БП и получения обратной связи
+        Init_LongTimeExpectation(PU[i].ErrorxSwitchToBP, PU[i].rtrig_xSwitchToBP.Q AND PU[i].xConditionToSwitchToBP, PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xSwitchToBP);
+        // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП и получения обратной связи
+        Init_LongTimeExpectation(PU[i].ErrorxSwitchToVFD, PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].xStatusEnableVFD AND NOT PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xSwitchToVFD);
+
+
         // Генерация состояния насоса в переменную типа INT (для передачи HMI)
         IF (NOT PU[i].xStatusEnableBP) AND (NOT PU[i].xStatusEnableVFD) AND (PU[i].iStatus <> 4) THEN
             PU[i].iStatus := 1;
@@ -1120,11 +1119,13 @@ METHOD Init_Pump
         ELSIF (PU[i].xStatusDry) OR (VFD[iVFD_Change].xFailure) THEN
             PU[i].iStatus := 4;
         END_IF;
+
         // Генерация ошибки получения сигнала о работе насоса (когда он уже включен)
         PU[i].ton_ErrorLostFeedbackSignal(
             IN:= (PU[i].Device.Power AND NOT PU[i].xStatusEnableBP) OR (PU[i].Device.PowerVFD AND (NOT PU[i].xStatusEnableVFD OR NOT VFD[iVFD_Change].xWork OR NOT VFD[iVFD_Change].Device.Power)), 
             PT:= PU_TIME_TO_AUTO_STOP_ERROR_LOST_FEEDBACK);
         IF PU[i].ton_ErrorLostFeedbackSignal.Q THEN PU[i].xErrorLostFeedbackSignal := TRUE; END_IF;
+
         // Запись ошибок в одну переменную для передачи на верхний уровень
         PU[i].xCommonError := 
             PU[i].xErrorLostFeedbackSignal 
@@ -1135,6 +1136,7 @@ METHOD Init_Pump
             OR PU[i].xErrorLongTimeException_xSwitchToBP
             OR PU[i].xStatusDry
             OR PU[i].xErrorLongTimeException_xSwitchToVFD;
+
         // Формирование сигнала готовности запуска от БП и от ЧРП
         PU[i].xReadyToStartBP := PU[i].xConditionToStartBP;
         PU[i].xReadyToStartVFD := PU[i].xConditionToStartVFD AND NOT Get_PU_VFD_Common();
@@ -1245,9 +1247,9 @@ METHOD Commands_BY
             TRUE;
         // Условие на автоматическую остановку затвора
         Shutter[i].ConditionToxAutoStop :=
-            Shutter[i].ErrorClose.Q
-            OR Shutter[i].ErrorOpen.Q
-            OR Shutter[i].ErrorStop.Q
+            Shutter[i].xErrorLongExpectationOpen
+            OR Shutter[i].xErrorLongExpectationClose
+            OR Shutter[i].xErrorLongExpectationStop
             OR (Shutter[i].Device.CloseMechanism.Power AND Shutter[i].xStatusClosed)
             OR (Shutter[i].Device.OpenMechanism.Power AND Shutter[i].xStatusOpen)
             OR Shutter[i].xStatusError;
@@ -1270,9 +1272,9 @@ METHOD Commands_BY
         Shutter[i].ErrorStop.Reset := Shutter[i].rtrig_xReset.Q;
         
         IF Shutter[i].rtrig_xReset.Q THEN
-            Shutter[i].xLongExpectationOpen := FALSE;
-            Shutter[i].xErrorLongExpectationClose := FALSE;
-            Shutter[i].xErrorLongExpectationStop := FALSE;
+            Shutter[i].ErrorOpen.Reset();
+            Shutter[i].ErrorClose.Reset();
+            Shutter[i].ErrorStop.Reset();
         END_IF;
     END_FOR;
 END_METHOD
@@ -1432,20 +1434,13 @@ METHOD Commands_Pump
         // Аварийная остановка насоса (по команде) - ЧРП
         PU_CTRL.StopVFD(PU[i].rtrig_xEmergencyStop.Q, PU[i].Device);
         
-        // Описание команды xReset
-        PU[i].ErrorxStartBP.Reset := PU[i].rtrig_xReset.Q;
-        PU[i].ErrorxStartVFD.Reset:= PU[i].rtrig_xReset.Q;
-        PU[i].ErrorxSwitchToBP.Reset := PU[i].rtrig_xReset.Q;
-        PU[i].ErrorxSwitchToVFD.Reset := PU[i].rtrig_xReset.Q;
-        PU[i].ErrorxStop.Reset := PU[i].rtrig_xReset.Q;
-        
+        // Описание команды RESET
         IF PU[i].rtrig_xReset.Q THEN
-            // Ресет переменных структуры насоса
-            PU[i].xErrorLongTimeException_xStartBP := FALSE;
-            PU[i].xErrorLongTimeException_xStartVFD := FALSE;
-            PU[i].xErrorLongTimeException_xSwitchToBP := FALSE;
-            PU[i].xErrorLongTimeException_xSwitchToVFD := FALSE;
-            PU[i].xErrorLongTimeException_xStop := FALSE;
+            PU[i].ErrorxStartBP.Reset();
+            PU[i].ErrorxStartVFD.Reset();
+            PU[i].ErrorxStop.Reset();
+            PU[i].ErrorxSwitchToBP.Reset();
+            PU[i].ErrorxSwitchToVFD.Reset();
             PU[i].xErrorLostFeedbackSignal := FALSE;
         END_IF;
     END_FOR
