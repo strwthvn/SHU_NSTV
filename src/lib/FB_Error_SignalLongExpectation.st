@@ -6,6 +6,9 @@ VAR
 
     _error : BOOL; // Флаг ошибки
     _error_message : STRING; // Сообщение об ошибке
+    
+    // Добавляем флаг отмены для корректной обработки
+    _cancel_requested : BOOL; // Флаг запроса отмены
 
     _sr_waiting_feedback : SR;
     _ton_waiting_feedback : TON; // Таймер ожидания обратной связи
@@ -13,23 +16,32 @@ VAR
     _ftrig_feedback : F_TRIG; // Фронт обратной связи
 END_VAR
 
+// Обработка отмены в начале цикла
+IF _cancel_requested THEN
+    _cancel_requested := FALSE;
+    _execute := FALSE; // Сбрасываем execute
+    // Остальная логика отмены обработается ниже
+END_IF
+
 // Фронт команды execute
 _rtrig_execute(CLK := _execute);
 
 // SR-триггер для управления состоянием ожидания обратной связи
 _sr_waiting_feedback(
-    SET1 := _rtrig_execute.Q AND NOT _error, // Начинаем ожидание при получении команды (если нет ошибки)
-    RESET := _feedback OR _error // Прекращаем ожидание при получении обратной связи или ошибки
+    SET1 := _rtrig_execute.Q AND NOT _error AND NOT _cancel_requested, 
+    RESET := _feedback OR _error OR _cancel_requested
 );
 
 // Таймер ожидания обратной связи
+// Важно: таймер сбрасывается когда IN становится FALSE
 _ton_waiting_feedback(
-    IN := _sr_waiting_feedback.Q1,
+    IN := _sr_waiting_feedback.Q1 AND NOT _cancel_requested,
     PT := _timeout
 );
 
 // Формирование ошибки по истечении таймаута
-IF _ton_waiting_feedback.Q AND NOT _error THEN
+// Добавляем проверку на отмену
+IF _ton_waiting_feedback.Q AND NOT _error AND NOT _cancel_requested THEN
     _error := TRUE;
 END_IF
 
@@ -82,17 +94,28 @@ METHOD GetError : BOOL
     GetError := _error;
 END_METHOD
 
-(* Сброс ошибки *)
+(* Сброс ошибки - улучшенная версия *)
 METHOD Reset
     _error := FALSE;
-    _sr_waiting_feedback.RESET := TRUE; 
-    _ton_waiting_feedback(IN := FALSE);
+    _execute := FALSE;
+    _feedback := FALSE;
+    _cancel_requested := TRUE; // Устанавливаем флаг отмены
+    
+    // Принудительно вызываем SR-триггер со сбросом
+    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
+    
+    // Принудительно сбрасываем таймер
+    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
+    _ton_waiting_feedback.ET := T#0s; // Сбрасываем накопленное время (если доступно)
+    
+    // Сбрасываем триггеры
+    _rtrig_execute(CLK := FALSE);
+    _ftrig_feedback(CLK := FALSE);
 END_METHOD
-
 
 (* Получение состояния ожидания *)
 METHOD IsWaiting : BOOL
-    IsWaiting := _sr_waiting_feedback.Q1;
+    IsWaiting := _sr_waiting_feedback.Q1 AND NOT _cancel_requested;
 END_METHOD
 
 (* Получение оставшегося времени ожидания *)
@@ -123,12 +146,14 @@ END_METHOD
 
 (* Проверка готовности к новой команде *)
 METHOD IsReady : BOOL
-    IsReady := NOT _sr_waiting_feedback.Q1 AND NOT _error;
+    IsReady := NOT _sr_waiting_feedback.Q1 AND NOT _error AND NOT _cancel_requested;
 END_METHOD
 
 (* Получение статуса выполнения в текстовом виде *)
 METHOD GetStatus : STRING
-    IF _error THEN
+    IF _cancel_requested THEN
+        GetStatus := 'CANCELLING';
+    ELSIF _error THEN
         GetStatus := 'ERROR';
     ELSIF _sr_waiting_feedback.Q1 THEN
         GetStatus := 'WAITING';
@@ -137,10 +162,48 @@ METHOD GetStatus : STRING
     END_IF
 END_METHOD
 
-(* Отмена текущего ожидания и сброс состояния *)
+(* Отмена текущего ожидания - улучшенная версия *)
 METHOD Cancel
-    _sr_waiting_feedback.RESET := TRUE; 
-    _ton_waiting_feedback(IN := FALSE);
+    // Устанавливаем флаг отмены
+    _cancel_requested := TRUE;
+    
+    // Немедленно сбрасываем execute чтобы предотвратить новый запуск
+    _execute := FALSE;
+    
+    // Принудительно вызываем SR-триггер со сбросом
+    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
+    
+    // Принудительно сбрасываем таймер несколько раз для гарантии
+    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
+    
+    // Сбрасываем триггеры
+    _rtrig_execute(CLK := FALSE);
+END_METHOD
+
+(* Альтернативный метод Cancel с полным сбросом *)
+METHOD CancelWithFullReset
+    // Полный сброс всех переменных
+    _execute := FALSE;
+    _feedback := FALSE;
+    _error := FALSE;
+    _cancel_requested := FALSE;
+    
+    // Сброс SR-триггера
+    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
+    _sr_waiting_feedback.Q1 := FALSE; // Прямой сброс выхода (если доступно)
+    
+    // Полный сброс таймера
+    _ton_waiting_feedback(IN := FALSE, PT := T#0s);
+    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
+    _ton_waiting_feedback.Q := FALSE; // Прямой сброс выхода (если доступно)
+    _ton_waiting_feedback.ET := T#0s; // Сброс накопленного времени (если доступно)
+    
+    // Сброс триггеров
+    _rtrig_execute(CLK := FALSE);
+    _rtrig_execute.Q := FALSE; // Прямой сброс выхода (если доступно)
+    
+    _ftrig_feedback(CLK := FALSE);
+    _ftrig_feedback.Q := FALSE; // Прямой сброс выхода (если доступно)
 END_METHOD
 
 END_FUNCTION_BLOCK
