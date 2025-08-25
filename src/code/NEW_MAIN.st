@@ -1266,11 +1266,8 @@ METHOD Commands_BY
         Shutter_CTRL.Stop(Shutter[i].rtrig_xStop.Q, Shutter[i].Device);
             // Автоматическая остановка
         Shutter_CTRL.Stop(Shutter[i].ConditionToxAutoStop, Shutter[i].Device);
-        // Описание команды RESET 
-        Shutter[i].ErrorOpen.Reset := Shutter[i].rtrig_xReset.Q;
-        Shutter[i].ErrorClose.Reset := Shutter[i].rtrig_xReset.Q;
-        Shutter[i].ErrorStop.Reset := Shutter[i].rtrig_xReset.Q;
         
+        // Описание команды RESET 
         IF Shutter[i].rtrig_xReset.Q THEN
             Shutter[i].ErrorOpen.Reset();
             Shutter[i].ErrorClose.Reset();

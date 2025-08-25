@@ -19,11 +19,11 @@ STRUCT
 	rtrig_xReset          : R_TRIG;
 	rtrig_xEmergencyStop  : R_TRIG;
 	
-	ErrorxStartBP         : Error_SignalLongExpectation;
-	ErrorxStartVFD        : Error_SignalLongExpectation;
-	ErrorxStop            : Error_SignalLongExpectation;
-	ErrorxSwitchToBP      : Error_SignalLongExpectation;
-	ErrorxSwitchToVFD     : Error_SignalLongExpectation;
+	ErrorxStartBP         : FB_Error_SignalLongExpectation;
+	ErrorxStartVFD        : FB_Error_SignalLongExpectation;
+	ErrorxStop            : FB_Error_SignalLongExpectation;
+	ErrorxSwitchToBP      : FB_Error_SignalLongExpectation;
+	ErrorxSwitchToVFD     : FB_Error_SignalLongExpectation;
 	
 	// --- Состояния ---
 	// Дискретные входы

@@ -16,8 +16,8 @@ STRUCT
 	StatusRemote : INT; // 0 - Выключен, 1 - Местный, 2 - Авто
 	wStatus : Union_ByteToWord;
 	// Обработка ошибок 
-	ErrorOpen, ErrorClose, ErrorStop : Error_SignalLongExpectation;
-	xLongExpectationOpen, xErrorLongExpectationClose, xErrorLongExpectationStop : BOOL;
+	ErrorOpen, ErrorClose, ErrorStop : FB_Error_SignalLongExpectation;
+	xErrorLongExpectationOpen, xErrorLongExpectationClose, xErrorLongExpectationStop : BOOL;
 	// Класс ЗРА
 	Device : Shutter;
 END_STRUCT
