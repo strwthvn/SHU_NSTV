@@ -135,13 +135,17 @@ END_METHOD
 (* Комплексная инициализация блока *)
 METHOD Initialize
     VAR_INPUT
-        timeout : TIME; // Таймаут ожидания
-        error_message : STRING; // Сообщение об ошибке
+		execute : BOOL;
+		feedback : BOOL;
+		error : REFERENCE TO BOOL;
+		timeout : TIME;
     END_VAR
 
-    _timeout := timeout;
-    _error_message := error_message;
-    Reset(); // Сбрасываем все состояния
+    SetExecute(execute);
+    SetFeedback(feedback);
+    error := GetError();
+    SetTimeout(timeout);
+
 END_METHOD
 
 (* Проверка готовности к новой команде *)
