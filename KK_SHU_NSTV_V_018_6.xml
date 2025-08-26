@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-08-22T13:59:00.5331758" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-08-22T13:58:25.326418" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-08-26T10:16:15.9191784" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-08-26T10:15:40.3669184" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -17,7 +17,7 @@
       <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
         <ProjectInformation>
           <property name="Company" type="string">Production association OWEN</property>
-          <property name="Project" type="string">KK_SHU_NSTV_V_018_5</property>
+          <property name="Project" type="string">KK_SHU_NSTV_V_018_7</property>
           <property name="Title" type="string">TemplatePLC210_01</property>
           <property name="Version" type="version">3.5.14.30</property>
         </ProjectInformation>
@@ -1365,6 +1365,14 @@ END_TYPE
                         <derived name="Union_RealToWord" />
                       </type>
                     </variable>
+                    <variable name="Service_SetFrequency">
+                      <type>
+                        <REAL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Задание частоты в режиме ПЛК СЕРВИС</xhtml>
+                      </documentation>
+                    </variable>
                     <variable name="Service_xStartBP">
                       <type>
                         <BOOL />
@@ -1485,27 +1493,27 @@ END_TYPE
                     </variable>
                     <variable name="ErrorxStartBP">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                     </variable>
                     <variable name="ErrorxStartVFD">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                     </variable>
                     <variable name="ErrorxStop">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                     </variable>
                     <variable name="ErrorxSwitchToBP">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                     </variable>
                     <variable name="ErrorxSwitchToVFD">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                     </variable>
                     <variable name="xStatusEnableBP">
@@ -1666,6 +1674,8 @@ STRUCT
 	Auto_cmdWord : Union_ByteToWord;
 	Auto_cmdSetFreqWord : Union_RealToWord;
 	
+	Service_SetFrequency : REAL; // Задание частоты в режиме ПЛК СЕРВИС
+	
 	Service_xStartBP, Service_xStartVFD, Service_xStop, Service_xSwitchToBP, Service_xSwitchToVFD, Service_xReset, Service_xEmergencyStop : BOOL;
 	xConditionToStartBP, xConditionToStartVFD, xConditionToSwitchToBP, xConditionToSwitchToVFD, xConditionToStop, xConditionToAutoStop : BOOL; // Условия выполнения команд
 	
@@ -1677,11 +1687,11 @@ STRUCT
 	rtrig_xReset          : R_TRIG;
 	rtrig_xEmergencyStop  : R_TRIG;
 	
-	ErrorxStartBP         : Error_SignalLongExpectation;
-	ErrorxStartVFD        : Error_SignalLongExpectation;
-	ErrorxStop            : Error_SignalLongExpectation;
-	ErrorxSwitchToBP      : Error_SignalLongExpectation;
-	ErrorxSwitchToVFD     : Error_SignalLongExpectation;
+	ErrorxStartBP         : FB_Error_SignalLongExpectation;
+	ErrorxStartVFD        : FB_Error_SignalLongExpectation;
+	ErrorxStop            : FB_Error_SignalLongExpectation;
+	ErrorxSwitchToBP      : FB_Error_SignalLongExpectation;
+	ErrorxSwitchToVFD     : FB_Error_SignalLongExpectation;
 	
 	// --- Состояния ---
 	// Дискретные входы
@@ -1954,7 +1964,7 @@ xOpen, xClose, xStop, xReset : BOOL;</xhtml>
                     </variable>
                     <variable name="ErrorOpen">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Обработка ошибок </xhtml>
@@ -1962,7 +1972,7 @@ xOpen, xClose, xStop, xReset : BOOL;</xhtml>
                     </variable>
                     <variable name="ErrorClose">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Обработка ошибок </xhtml>
@@ -1970,13 +1980,13 @@ xOpen, xClose, xStop, xReset : BOOL;</xhtml>
                     </variable>
                     <variable name="ErrorStop">
                       <type>
-                        <derived name="Error_SignalLongExpectation" />
+                        <derived name="FB_Error_SignalLongExpectation" />
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Обработка ошибок </xhtml>
                       </documentation>
                     </variable>
-                    <variable name="xLongExpectationOpen">
+                    <variable name="xErrorLongExpectationOpen">
                       <type>
                         <BOOL />
                       </type>
@@ -2022,8 +2032,8 @@ STRUCT
 	StatusRemote : INT; // 0 - Выключен, 1 - Местный, 2 - Авто
 	wStatus : Union_ByteToWord;
 	// Обработка ошибок 
-	ErrorOpen, ErrorClose, ErrorStop : Error_SignalLongExpectation;
-	xLongExpectationOpen, xErrorLongExpectationClose, xErrorLongExpectationStop : BOOL;
+	ErrorOpen, ErrorClose, ErrorStop : FB_Error_SignalLongExpectation;
+	xErrorLongExpectationOpen, xErrorLongExpectationClose, xErrorLongExpectationStop : BOOL;
 	// Класс ЗРА
 	Device : Shutter;
 END_STRUCT
@@ -4598,7 +4608,7 @@ END_VAR
                         <TIME />
                       </type>
                       <initialValue>
-                        <simpleValue value="TIME#1m0s0ms" />
+                        <simpleValue value="TIME#3s0ms" />
                       </initialValue>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Время до генерации ошибки получения сигнала обратной связи после подачи команды</xhtml>
@@ -4648,7 +4658,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#60S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#3S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -4697,6 +4707,7 @@ VAR
 	// --- Насосы и управление ---
 	PU : ARRAY [1..PU_AMOUNT] OF Struct_PU;
 	PU_CTRL : Pump_Control_VFD;
+	PU_i : INT;
 	Auto_xPu_Reset : BOOL;      // Обобщённый ресет на каждый насос (ошибки)
 	Service_xPu_Reset : BOOL;
 	
@@ -4710,6 +4721,7 @@ VAR
 	// --- ЗРА и управление ---
 	Shutter : ARRAY[1..BY_AMOUNT] OF Struct_BY;
 	Shutter_CTRL : Shutter_Control;
+	Shutter_i : INT;
 	BY_ModbusRef : ARRAY [1..BY_AMOUNT] OF Struct_BY_ModbusRef;
 	
 	// --- Импульсы и обновления ---
@@ -5082,6 +5094,11 @@ END_VAR
                         <derived name="Pump_Control_VFD" />
                       </type>
                     </variable>
+                    <variable name="PU_i">
+                      <type>
+                        <INT />
+                      </type>
+                    </variable>
                     <variable name="Auto_xPu_Reset">
                       <type>
                         <BOOL />
@@ -5156,6 +5173,11 @@ END_VAR
                     <variable name="Shutter_CTRL">
                       <type>
                         <derived name="Shutter_Control" />
+                      </type>
+                    </variable>
+                    <variable name="Shutter_i">
+                      <type>
+                        <INT />
                       </type>
                     </variable>
                     <variable name="BY_ModbusRef">
@@ -5678,7 +5700,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#60S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#3S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -5727,6 +5749,7 @@ VAR
 	// --- Насосы и управление ---
 	PU : ARRAY [1..PU_AMOUNT] OF Struct_PU;
 	PU_CTRL : Pump_Control_VFD;
+	PU_i : INT;
 	Auto_xPu_Reset : BOOL;      // Обобщённый ресет на каждый насос (ошибки)
 	Service_xPu_Reset : BOOL;
 	
@@ -5740,6 +5763,7 @@ VAR
 	// --- ЗРА и управление ---
 	Shutter : ARRAY[1..BY_AMOUNT] OF Struct_BY;
 	Shutter_CTRL : Shutter_Control;
+	Shutter_i : INT;
 	BY_ModbusRef : ARRAY [1..BY_AMOUNT] OF Struct_BY_ModbusRef;
 	
 	// --- Импульсы и обновления ---
@@ -5868,7 +5892,7 @@ Commands_PLC();
 Commands_BY();
 
 // Контроль связи с ПЛК АСУТП
-IF NOT (PLC_Mode = 2) AND NOT PLC_SimulationCommunication THEN
+IF PLC_Mode &lt;&gt; 2 AND NOT PLC_SimulationCommunication THEN
     PLC_ConnectionControl();
 END_IF;
 
@@ -6629,23 +6653,26 @@ Auto_rSetFrequency := PU[Get_PU_VFD_Number()].Auto_cmdSetFreqWord.rTag;
 
 FOR i := 1 TO PU_AMOUNT BY 1 DO
 	// Передача обобщённой RESET команды на каждый насос
-	CASE PLC_Mode OF 0: PU[i].Auto_xReset := Auto_xPu_Reset; 2: PU[i].Service_xReset := Service_xPu_Reset; END_CASE;
-	// Обработка ошибки долгого ожидания запуска с байпаса
-	PU[i].ErrorxStartBP(ixExecuteSignal:= PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, ixFeedbackSignal:= PU[i].xStatusEnableBP, T:= LONG_TIME_EXPECTATION_TIME, Q=&gt;);
-	IF PU[i].ErrorxStartBP.Q THEN PU[i].xErrorLongTimeException_xStartBP := TRUE; END_IF;
-	// Обработка ошибки долгого ожидания запуска частотника
-	PU[i].ErrorxStartVFD(ixExecuteSignal:= PU[i].rtrig_xStartVFD.Q AND PU[i].xConditionToStartVFD AND NOT Get_PU_VFD_Common(), ixFeedbackSignal:= PU[i].xStatusEnableVFD, T:= LONG_TIME_EXPECTATION_TIME, Q=&gt;);
-	IF PU[i].ErrorxStartVFD.Q THEN PU[i].xErrorLongTimeException_xStartVFD := TRUE; END_IF;
-	// Обработка ошибки долгого ожидания останова
-	PU[i].ErrorxStop(ixExecuteSignal:= PU[i].rtrig_xStop.Q, ixFeedbackSignal:= NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, T:= LONG_TIME_EXPECTATION_TIME, Q=&gt;);
-	IF PU[i].ErrorxStop.Q THEN PU[i].xErrorLongTimeException_xStop := TRUE; END_IF;
-	// Обработка ошибки долгого ожидания переключения на байпас
-	PU[i].ErrorxSwitchToBP(ixExecuteSignal:= PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToSwitchToBP, ixFeedbackSignal:= PU[i].xStatusEnableBP, T:= LONG_TIME_EXPECTATION_TIME, Q=&gt;);
-	IF PU[i].ErrorxSwitchToBP.Q THEN PU[i].xErrorLongTimeException_xSwitchToBP := TRUE; END_IF;
-	// Обработка ошибки долгого ожидания переключения на частотник
-	PU[i].ErrorxSwitchToVFD(ixExecuteSignal:= PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, ixFeedbackSignal:= PU[i].xStatusEnableVFD, T:= LONG_TIME_EXPECTATION_TIME, Q=&gt;);
-	IF PU[i].ErrorxSwitchToVFD.Q THEN PU[i].xErrorLongTimeException_xSwitchToVFD := TRUE; END_IF;
-	// Генерация состояния насоса в переменную типа INT (для передачи HMI)
+	// CASE PLC_Mode OF 0: PU[i].Auto_xReset := Auto_xPu_Reset; 2: PU[i].Service_xReset := Service_xPu_Reset; END_CASE;
+	
+	PU[i].ErrorxStartBP();
+	PU[i].ErrorxStartVFD();
+	PU[i].ErrorxSwitchToBP();
+	PU[i].ErrorxSwitchToVFD();
+	PU[i].ErrorxStop();
+	
+	
+	PU[i].ErrorxStartBP.Initialize(PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xStartBP, LONG_TIME_EXPECTATION_TIME);
+	// Обработка ошибки команды СТАРТ С ЧРП и получения обратной связи
+	PU[i].ErrorxStartVFD.Initialize(PU[i].rtrig_xStartVFD.Q AND PU[i].xConditionToStartVFD, PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStartVFD, LONG_TIME_EXPECTATION_TIME);
+	// Обработка ошибки команды СТОП и получения обратной связи
+	PU[i].ErrorxStop.Initialize(PU[i].rtrig_xStop.Q, NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStop, LONG_TIME_EXPECTATION_TIME);
+	// Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА БП и получения обратной связи
+	PU[i].ErrorxSwitchToBP.Initialize(PU[i].rtrig_xSwitchToBP.Q AND PU[i].xConditionToSwitchToBP, PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xSwitchToBP, LONG_TIME_EXPECTATION_TIME);
+	// Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП и получения обратной связи
+	PU[i].ErrorxSwitchToVFD.Initialize(PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].xStatusEnableVFD AND NOT PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xSwitchToVFD, LONG_TIME_EXPECTATION_TIME);
+	
+// Генерация состояния насоса в переменную типа INT (для передачи HMI)
 	IF (NOT PU[i].xStatusEnableBP) AND (NOT PU[i].xStatusEnableVFD) AND (PU[i].iStatus &lt;&gt; 4) THEN
 	    PU[i].iStatus := 1;
 	ELSIF (PU[i].xStatusEnableBP) AND (PU[i].xStatusEnableVFD) AND (PU[i].iStatus &lt;&gt; 4) THEN
@@ -6653,11 +6680,13 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	ELSIF (PU[i].xStatusDry) OR (VFD[iVFD_Change].xFailure) THEN
 	    PU[i].iStatus := 4;
 	END_IF;
+	
 	// Генерация ошибки получения сигнала о работе насоса (когда он уже включен)
 	PU[i].ton_ErrorLostFeedbackSignal(
 		IN:= (PU[i].Device.Power AND NOT PU[i].xStatusEnableBP) OR (PU[i].Device.PowerVFD AND (NOT PU[i].xStatusEnableVFD OR NOT VFD[iVFD_Change].xWork OR NOT VFD[iVFD_Change].Device.Power)), 
 		PT:= PU_TIME_TO_AUTO_STOP_ERROR_LOST_FEEDBACK);
 	IF PU[i].ton_ErrorLostFeedbackSignal.Q THEN PU[i].xErrorLostFeedbackSignal := TRUE; END_IF;
+	
 	// Запись ошибок в одну переменную для передачи на верхний уровень
 	PU[i].xCommonError := 
 		PU[i].xErrorLostFeedbackSignal 
@@ -6668,9 +6697,11 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 		OR PU[i].xErrorLongTimeException_xSwitchToBP
 		OR PU[i].xStatusDry
 		OR PU[i].xErrorLongTimeException_xSwitchToVFD;
+		
 	// Формирование сигнала готовности запуска от БП и от ЧРП
 	PU[i].xReadyToStartBP := PU[i].xConditionToStartBP;
 	PU[i].xReadyToStartVFD := PU[i].xConditionToStartVFD AND NOT Get_PU_VFD_Common();
+	
 	// Формирование (полного) сигнала о работе насоса от ЧРП
 	PU[i].xWorkingFromVFD := PU[i].Device.PowerVFD AND VFD[iVFD_Change].xWork AND VFD[iVFD_Change].Device.Power;
 	
@@ -6765,7 +6796,7 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 				PU[i].rtrig_xStop(CLK:= (PU[i].Auto_xStop AND NOT PU[i].xStatusManual) OR (PU[i].Auto_xEnableLocalRemote AND PU[i].xManualStop AND PU[i].xStatusManual), Q=&gt; );
 				PU[i].rtrig_xSwitchToBP(CLK:= PU[i].Auto_xSwitchToBP AND NOT PU[i].xStatusManual, Q=&gt; );
 				PU[i].rtrig_xSwitchToVFD(CLK:= PU[i].Auto_xSwitchToVFD AND NOT PU[i].xStatusManual, Q=&gt; );
-				PU[i].rtrig_xReset(CLK:= PU[i].Auto_xReset AND NOT PU[i].xStatusManual, Q=&gt; );
+				PU[i].rtrig_xReset(CLK:= PU[i].Auto_xReset, Q=&gt; );
 				PU[i].rtrig_xEmergencyStop(CLK:= PU[i].Auto_xEmergencyStop);
 			2:	// Режим СЕРВИС
 				PU[i].rtrig_xStartBP(CLK:= PU[i].Service_xStartBP AND NOT PU[i].xStatusManual, Q=&gt; );	
@@ -6841,22 +6872,31 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	// Аварийная остановка насоса (по команде) - ЧРП
 	PU_CTRL.StopVFD(PU[i].rtrig_xEmergencyStop.Q, PU[i].Device);
 	
-	// Описание команды xReset
-	PU[i].ErrorxStartBP.Reset := PU[i].rtrig_xReset.Q;
-	PU[i].ErrorxStartVFD.Reset:= PU[i].rtrig_xReset.Q;
-	PU[i].ErrorxSwitchToBP.Reset := PU[i].rtrig_xReset.Q;
-	PU[i].ErrorxSwitchToVFD.Reset := PU[i].rtrig_xReset.Q;
-	PU[i].ErrorxStop.Reset := PU[i].rtrig_xReset.Q;
+	// Команда СТОП останавливает таймер получения сигнала обратной связи
+	IF PU[i].rtrig_xStop.Q THEN 
+		PU[i].ErrorxStartBP.Cancel();
+		PU[i].ErrorxStartVFD.Cancel();
+		PU[i].ErrorxSwitchToBP.Cancel();
+		PU[i].ErrorxSwitchToVFD.Cancel();
+	END_IF;
 	
+	// Описание команды RESET
 	IF PU[i].rtrig_xReset.Q THEN
-		// Ресет переменных структуры насоса
-		PU[i].xErrorLongTimeException_xStartBP := FALSE;
-		PU[i].xErrorLongTimeException_xStartVFD := FALSE;
-		PU[i].xErrorLongTimeException_xSwitchToBP := FALSE;
-		PU[i].xErrorLongTimeException_xSwitchToVFD := FALSE;
-		PU[i].xErrorLongTimeException_xStop := FALSE;
+		PU[i].ErrorxStartBP.Reset();
+		PU[i].ErrorxStartVFD.Reset();
+		PU[i].ErrorxStop.Reset();
+		PU[i].ErrorxSwitchToBP.Reset();
+		PU[i].ErrorxSwitchToVFD.Reset();
 		PU[i].xErrorLostFeedbackSignal := FALSE;
 	END_IF;
+	
+	// Автоматическое изменение частоты, если задание выходит за минимальную уставку
+	CASE PLC_Mode OF
+		0:
+			IF (PU[i].Auto_cmdSetFreqWord.rTag &lt; VFD_MIN_FREQ) AND (PU[i].Auto_cmdSetFreqWord.rTag &gt; 0) AND VFD[iVFD_Change].Device.Power THEN PU[i].Auto_cmdSetFreqWord.rTag := VFD_MIN_FREQ; END_IF;
+		2:
+			IF (PU[i].Service_SetFrequency &lt; VFD_MIN_FREQ) AND (PU[i].Service_SetFrequency &gt; 0) AND VFD[iVFD_Change].Device.Power THEN PU[i].Service_SetFrequency := VFD_MIN_FREQ; END_IF;
+END_CASE;
 END_FOR</xhtml>
                         </ST>
                       </body>
@@ -7049,8 +7089,6 @@ VFD_CTRL.Stop(VFD[iVFD_Change].ConditionAutoStop, VFD[iVFD_Change].Device);
 // Условия продолжения вычислений частоты
 VFD[1].Device.AcessToCalculate := VFD[1].Device.Power;
 VFD[2].Device.AcessToCalculate := VFD[2].Device.Power;
-// Работа минимальной уставки
-IF Auto_rSetFrequency &lt; VFD_MIN_FREQ AND (VFD[1].Device.Power OR VFD[2].Device.Power) THEN Auto_rSetFrequency := VFD_MIN_FREQ; END_IF;
 // Передача команды для запуска и остановки ЧРП
 VFD_CTRL.Start(Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
 VFD_CTRL.Stop(NOT Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
@@ -7244,9 +7282,14 @@ Shutter[8].xStatusKmOpen := in_0303_05_BY08_ixKM_PosOpen.qxSignal;
 Shutter[8].xStatusKmClose := in_0303_05_BY08_ixKM_PosClosed.qxSignal;
 
 FOR i := 1 TO BY_AMOUNT BY 1 DO
-	Shutter[i].ErrorOpen(ixExecuteSignal:= Shutter[i].rtrig_xOpen.Q, ixFeedbackSignal:= Shutter[i].xStatusKmOpen, T:= LONG_TIME_EXPECTATION_TIME);
-	Shutter[i].ErrorClose(ixExecuteSignal:= Shutter[i].rtrig_xClose.Q, ixFeedbackSignal:= Shutter[i].xStatusKmClose, T:= LONG_TIME_EXPECTATION_TIME);
-	Shutter[i].ErrorStop(ixExecuteSignal:= Shutter[i].rtrig_xStop.Q, ixFeedbackSignal:= NOT Shutter[i].xStatusKmOpen AND NOT Shutter[i].xStatusKmClose, T:= LONG_TIME_EXPECTATION_TIME);
+	
+	Shutter[i].ErrorOpen();
+	Shutter[i].ErrorClose();
+	Shutter[i].ErrorStop();
+	
+	Shutter[i].ErrorOpen.Initialize(Shutter[i].rtrig_xOpen.Q, Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationOpen, LONG_TIME_EXPECTATION_TIME);
+	Shutter[i].ErrorClose.Initialize(Shutter[i].rtrig_xClose.Q, Shutter[i].xStatusKmClose, shutter[i].xErrorLongExpectationClose, LONG_TIME_EXPECTATION_TIME);
+	Shutter[i].ErrorStop.Initialize(Shutter[i].rtrig_xStop.Q, NOT Shutter[i].xStatusKmClose AND NOT Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationStop, LONG_TIME_EXPECTATION_TIME);
 	
 	// --- Передача состояния по протоколу Modbus ---
 	Shutter[i].wStatus.VarByte[0].0 := Shutter[i].xStatusOpen;
@@ -7341,9 +7384,9 @@ END_VAR</xhtml>
 		TRUE;
 	// Условие на автоматическую остановку затвора
 	Shutter[i].ConditionToxAutoStop :=
-		Shutter[i].ErrorClose.Q
-		OR Shutter[i].ErrorOpen.Q
-		OR Shutter[i].ErrorStop.Q
+		Shutter[i].xErrorLongExpectationOpen
+		OR Shutter[i].xErrorLongExpectationClose
+		OR Shutter[i].xErrorLongExpectationStop
 		OR (Shutter[i].Device.CloseMechanism.Power AND Shutter[i].xStatusClosed)
 		OR (Shutter[i].Device.OpenMechanism.Power AND Shutter[i].xStatusOpen)
 		OR Shutter[i].xStatusError;
@@ -7361,14 +7404,10 @@ END_VAR</xhtml>
 		// Автоматическая остановка
 	Shutter_CTRL.Stop(Shutter[i].ConditionToxAutoStop, Shutter[i].Device);
 	// Описание команды RESET 
-	Shutter[i].ErrorOpen.Reset := Shutter[i].rtrig_xReset.Q;
-	Shutter[i].ErrorClose.Reset := Shutter[i].rtrig_xReset.Q;
-	Shutter[i].ErrorStop.Reset := Shutter[i].rtrig_xReset.Q;
-	
 	IF Shutter[i].rtrig_xReset.Q THEN
-		Shutter[i].xLongExpectationOpen := FALSE;
-		Shutter[i].xErrorLongExpectationClose := FALSE;
-		Shutter[i].xErrorLongExpectationStop := FALSE;
+		Shutter[i].ErrorOpen.Reset();
+		Shutter[i].ErrorClose.Reset();
+		Shutter[i].ErrorStop.Reset();
 	END_IF;
 END_FOR;</xhtml>
                         </ST>
@@ -7588,6 +7627,11 @@ END_VAR
                               <INT />
                             </type>
                           </variable>
+                          <variable name="j">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
                           <addData>
                             <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                               <InterfaceAsPlainText>
@@ -7597,6 +7641,7 @@ VAR_INPUT
 END_VAR
 VAR
 	i : INT;
+	j : INT;
 END_VAR</xhtml>
                               </InterfaceAsPlainText>
                             </data>
@@ -7616,6 +7661,10 @@ VFD[2].Device.Frequency := 0;
 FOR i := 1 TO PU_AMOUNT BY 1 DO
 	PU[i].Device.Set_Power(FALSE);
 	PU[i].Device.Set_Power_VFD(FALSE);
+END_FOR;
+
+FOR j := 1 TO BY_AMOUNT BY 1 DO	
+	Shutter[j].Device.Close();
 END_FOR;</xhtml>
                         </ST>
                       </body>
@@ -7626,6 +7675,7 @@ VAR_INPUT
 END_VAR
 VAR
 	i : INT;
+	j : INT;
 END_VAR</xhtml>
                       </InterfaceAsPlainText>
                       <addData />
@@ -7740,12 +7790,9 @@ END_VAR</xhtml>
     // Сброс ошибок затворов
     FOR j := 1 TO BY_AMOUNT DO
         Shutter[j].xStatusError := FALSE;
-        Shutter[j].xLongExpectationOpen := FALSE;
+        Shutter[j].xErrorLongExpectationOpen := FALSE;
         Shutter[j].xErrorLongExpectationClose := FALSE;
         Shutter[j].xErrorLongExpectationStop := FALSE;
-        Shutter[j].ErrorOpen.Q := FALSE;
-        Shutter[j].ErrorClose.Q := FALSE;
-        Shutter[j].ErrorStop.Q := FALSE;
     END_FOR
 
     // Сброс аварийных сигналов
@@ -7777,7 +7824,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#60S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#3S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -7826,6 +7873,7 @@ VAR
 	// --- Насосы и управление ---
 	PU : ARRAY [1..PU_AMOUNT] OF Struct_PU;
 	PU_CTRL : Pump_Control_VFD;
+	PU_i : INT;
 	Auto_xPu_Reset : BOOL;      // Обобщённый ресет на каждый насос (ошибки)
 	Service_xPu_Reset : BOOL;
 	
@@ -7839,6 +7887,7 @@ VAR
 	// --- ЗРА и управление ---
 	Shutter : ARRAY[1..BY_AMOUNT] OF Struct_BY;
 	Shutter_CTRL : Shutter_Control;
+	Shutter_i : INT;
 	BY_ModbusRef : ARRAY [1..BY_AMOUNT] OF Struct_BY_ModbusRef;
 	
 	// --- Импульсы и обновления ---
@@ -8722,32 +8771,11 @@ END_IF;</xhtml>
                   </ST>
                 </body>
                 <addData>
-                  <data name="http://www.3s-software.com/plcopenxml/property" handleUnknown="implementation">
-                    <Property name="Reset" ObjectId="e510f611-6475-4349-92cb-1589d4c11b31">
-                      <interface>
-                        <returnType>
-                          <BOOL />
-                        </returnType>
-                      </interface>
-                      <SetAccessor>
-                        <interface />
-                        <body>
-                          <ST>
-                            <xhtml xmlns="http://www.w3.org/1999/xhtml">xReset := Reset;</xhtml>
-                          </ST>
-                        </body>
-                        <InterfaceAsPlainText>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">VAR
-END_VAR
-</xhtml>
-                        </InterfaceAsPlainText>
-                        <addData />
-                      </SetAccessor>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">PROPERTY Reset : BOOL</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Property>
+                  <data name="http://www.3s-software.com/plcopenxml/property" handleUnknown="implementation" />
+                  <data name="http://www.3s-software.com/plcopenxml/buildproperties" handleUnknown="implementation">
+                    <BuildProperties>
+                      <ExcludeFromBuild>true</ExcludeFromBuild>
+                    </BuildProperties>
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
@@ -9218,6 +9246,718 @@ END_VAR
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
                     <ObjectId>a6a57259-1c91-4590-914c-0a8e4011b477</ObjectId>
+                  </data>
+                </addData>
+              </pou>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+              <pou name="FB_Error_SignalLongExpectation" pouType="functionBlock">
+                <interface>
+                  <inputVars>
+                    <variable name="_execute">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг выполнения</xhtml>
+                      </documentation>
+                    </variable>
+                    <addData>
+                      <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                        <InterfaceAsPlainText>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK FB_Error_SignalLongExpectation
+VAR_INPUT
+	_execute : BOOL; // Флаг выполнения
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    
+    _feedback : BOOL; // Флаг обратной связи
+    _timeout : TIME; // Таймаут ожидания
+
+	_cancel_requested : BOOL; // Флаг запроса отмены
+	
+    _error : BOOL; // Флаг ошибки
+    _error_message : STRING; // Сообщение об ошибке
+
+    _sr_waiting_feedback : SR;
+    _ton_waiting_feedback : TON; // Таймер ожидания обратной связи
+    _rtrig_execute : R_TRIG; // Растущий фронт команды выполнения
+    _ftrig_feedback : F_TRIG; // Фронт обратной связи
+END_VAR
+</xhtml>
+                        </InterfaceAsPlainText>
+                      </data>
+                    </addData>
+                  </inputVars>
+                  <localVars>
+                    <variable name="_feedback">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг обратной связи</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_timeout">
+                      <type>
+                        <TIME />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Таймаут ожидания</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_cancel_requested">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг запроса отмены</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_error">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг ошибки</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_error_message">
+                      <type>
+                        <string />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Сообщение об ошибке</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_sr_waiting_feedback">
+                      <type>
+                        <derived name="SR" />
+                      </type>
+                    </variable>
+                    <variable name="_ton_waiting_feedback">
+                      <type>
+                        <derived name="TON" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Таймер ожидания обратной связи</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_rtrig_execute">
+                      <type>
+                        <derived name="R_TRIG" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Растущий фронт команды выполнения</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="_ftrig_feedback">
+                      <type>
+                        <derived name="F_TRIG" />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Фронт обратной связи</xhtml>
+                      </documentation>
+                    </variable>
+                    <addData>
+                      <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                        <InterfaceAsPlainText>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK FB_Error_SignalLongExpectation
+VAR_INPUT
+	_execute : BOOL; // Флаг выполнения
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    
+    _feedback : BOOL; // Флаг обратной связи
+    _timeout : TIME; // Таймаут ожидания
+
+	_cancel_requested : BOOL; // Флаг запроса отмены
+	
+    _error : BOOL; // Флаг ошибки
+    _error_message : STRING; // Сообщение об ошибке
+
+    _sr_waiting_feedback : SR;
+    _ton_waiting_feedback : TON; // Таймер ожидания обратной связи
+    _rtrig_execute : R_TRIG; // Растущий фронт команды выполнения
+    _ftrig_feedback : F_TRIG; // Фронт обратной связи
+END_VAR
+</xhtml>
+                        </InterfaceAsPlainText>
+                      </data>
+                    </addData>
+                  </localVars>
+                </interface>
+                <body>
+                  <ST>
+                    <xhtml xmlns="http://www.w3.org/1999/xhtml">// Обработка отмены в начале цикла
+IF _cancel_requested THEN
+    _cancel_requested := FALSE;
+    _execute := FALSE;
+END_IF
+
+// Фронт команды execute
+_rtrig_execute(CLK := _execute);
+
+// SR-триггер для управления состоянием ожидания обратной связи
+_sr_waiting_feedback(
+    SET1 := _rtrig_execute.Q AND NOT _error AND NOT _cancel_requested,  // Добавлена проверка
+    RESET := _feedback OR _error OR _cancel_requested  // Добавлена проверка
+);
+
+// Таймер ожидания обратной связи
+_ton_waiting_feedback(
+    IN := _sr_waiting_feedback.Q1 AND NOT _cancel_requested,  // Добавлена проверка
+    PT := _timeout
+);
+
+// Формирование ошибки по истечении таймаута
+IF _ton_waiting_feedback.Q AND NOT _error AND NOT _cancel_requested THEN  // Добавлена проверка
+    _error := TRUE;
+END_IF</xhtml>
+                  </ST>
+                </body>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="SetExecute" ObjectId="9be1d668-2efa-4ef4-84bb-cfb0daa594da">
+                      <interface>
+                        <inputVars>
+                          <variable name="execute">
+                            <type>
+                              <BOOL />
+                            </type>
+                            <documentation>
+                              <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг выполнения</xhtml>
+                            </documentation>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка флага выполнения *)
+METHOD SetExecute
+    VAR_INPUT
+        execute : BOOL; // Флаг выполнения
+    END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Установка флага выполнения </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    _execute := execute;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка флага выполнения *)
+METHOD SetExecute
+    VAR_INPUT
+        execute : BOOL; // Флаг выполнения
+    END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="SetFeedback" ObjectId="9c770d95-87df-41ef-af4a-534e130b013a">
+                      <interface>
+                        <inputVars>
+                          <variable name="feedback">
+                            <type>
+                              <BOOL />
+                            </type>
+                            <documentation>
+                              <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг обратной связи</xhtml>
+                            </documentation>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка флага обратной связи *)
+METHOD SetFeedback
+    VAR_INPUT
+        feedback : BOOL; // Флаг обратной связи
+    END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Установка флага обратной связи </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    _feedback := feedback;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка флага обратной связи *)
+METHOD SetFeedback
+    VAR_INPUT
+        feedback : BOOL; // Флаг обратной связи
+    END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="SetTimeout" ObjectId="252c124c-4eae-4715-8ba1-ed2d48920043">
+                      <interface>
+                        <inputVars>
+                          <variable name="timeout">
+                            <type>
+                              <TIME />
+                            </type>
+                            <documentation>
+                              <xhtml xmlns="http://www.w3.org/1999/xhtml"> Таймаут ожидания</xhtml>
+                            </documentation>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка таймаута ожидания *)
+METHOD SetTimeout
+    VAR_INPUT
+        timeout : TIME; // Таймаут ожидания
+    END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Установка таймаута ожидания </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    _timeout := timeout;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка таймаута ожидания *)
+METHOD SetTimeout
+    VAR_INPUT
+        timeout : TIME; // Таймаут ожидания
+    END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="SetErrorMessage" ObjectId="832d8568-e4c0-4b02-bae4-3aec7afeacf1">
+                      <interface>
+                        <inputVars>
+                          <variable name="error_message">
+                            <type>
+                              <string />
+                            </type>
+                            <documentation>
+                              <xhtml xmlns="http://www.w3.org/1999/xhtml"> Сообщение об ошибке</xhtml>
+                            </documentation>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка сообщения об ошибке *)
+METHOD SetErrorMessage
+    VAR_INPUT
+        error_message : STRING; // Сообщение об ошибке
+    END_VAR
+</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Установка сообщения об ошибке </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    _error_message := error_message;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Установка сообщения об ошибке *)
+METHOD SetErrorMessage
+    VAR_INPUT
+        error_message : STRING; // Сообщение об ошибке
+    END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Initialize" ObjectId="7d04dd4c-bc9b-4d59-98e9-4373703ac4f8">
+                      <interface>
+                        <inputVars>
+                          <variable name="execute">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="feedback">
+                            <type>
+                              <BOOL />
+                            </type>
+                          </variable>
+                          <variable name="error">
+                            <type>
+                              <derived name="REFERENCE TO BOOL" />
+                            </type>
+                          </variable>
+                          <variable name="timeout">
+                            <type>
+                              <TIME />
+                            </type>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Комплексная инициализация блока *)
+METHOD Initialize
+    VAR_INPUT
+		execute : BOOL;
+		feedback : BOOL;
+		error : REFERENCE TO BOOL;
+		timeout : TIME;
+    END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </inputVars>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Комплексная инициализация блока </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">SetExecute(execute);
+SetFeedback(feedback);
+error := GetError();
+SetTimeout(timeout);</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Комплексная инициализация блока *)
+METHOD Initialize
+    VAR_INPUT
+		execute : BOOL;
+		feedback : BOOL;
+		error : REFERENCE TO BOOL;
+		timeout : TIME;
+    END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetErrorMessage" ObjectId="093628ad-f74a-46c3-a8b6-9f414253dcf0">
+                      <interface>
+                        <returnType>
+                          <string />
+                        </returnType>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Получение сообщения об ошибке </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">GetErrorMessage := _error_message;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Получение сообщения об ошибке *)
+METHOD GetErrorMessage : STRING
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetError" ObjectId="91114c78-a7bc-47c4-a184-296a4c0f521a">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Получение сигнала ошибки </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">GetError := _error;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Получение сигнала ошибки *)
+METHOD GetError : BOOL
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Reset" ObjectId="e3937493-9948-4697-acf7-ef17a23959b5">
+                      <interface>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Сброс ошибки </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    _error := FALSE;
+    _execute := FALSE;
+    _feedback := FALSE;
+    _cancel_requested := TRUE; // Устанавливаем флаг отмены
+    
+    // Принудительно вызываем SR-триггер со сбросом
+    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
+    
+    // Принудительно сбрасываем таймер
+    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
+    
+    // Сбрасываем триггеры
+    _rtrig_execute(CLK := FALSE);
+    _ftrig_feedback(CLK := FALSE);
+</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Сброс ошибки *)
+METHOD Reset
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="IsWaiting" ObjectId="b5ac251b-e310-412e-837b-74bb1415755d">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Получение состояния ожидания </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IsWaiting := _sr_waiting_feedback.Q1 AND NOT _cancel_requested;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Получение состояния ожидания *)
+METHOD IsWaiting : BOOL
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetRemainingTime" ObjectId="35df5eb2-a0dd-401a-9fef-767026c49e74">
+                      <interface>
+                        <returnType>
+                          <TIME />
+                        </returnType>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Получение оставшегося времени ожидания </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    IF _ton_waiting_feedback.ET &lt; _timeout THEN
+        GetRemainingTime := _timeout - _ton_waiting_feedback.ET;
+    ELSE
+        GetRemainingTime := T#0s;
+    END_IF</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Получение оставшегося времени ожидания *)
+METHOD GetRemainingTime : TIME
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetElapsedTime" ObjectId="f446d2de-3719-4828-9c7d-6069f8985226">
+                      <interface>
+                        <returnType>
+                          <TIME />
+                        </returnType>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Получение прошедшего времени ожидания </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    GetElapsedTime := _ton_waiting_feedback.ET;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Получение прошедшего времени ожидания *)
+METHOD GetElapsedTime : TIME
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="IsReady" ObjectId="82a5955c-5058-4236-8050-296300ae9bb2">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">IsReady := NOT _sr_waiting_feedback.Q1 AND NOT _error AND NOT _cancel_requested;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD IsReady : BOOL
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="GetStatus" ObjectId="706df520-9f8e-422e-b6b6-79b5eb29d65f">
+                      <interface>
+                        <returnType>
+                          <string />
+                        </returnType>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    IF _cancel_requested THEN
+        GetStatus := 'CANCELLING';  // Новое состояние
+    ELSIF _error THEN
+        GetStatus := 'ERROR';
+    ELSIF _sr_waiting_feedback.Q1 THEN
+        GetStatus := 'WAITING';
+    ELSE
+        GetStatus := 'READY';
+    END_IF</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD GetStatus : STRING
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Cancel" ObjectId="d0415b91-f608-4fe7-a2a1-3ab14757266a">
+                      <interface>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Отмена текущего ожидания и сброс состояния </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    // Устанавливаем флаг отмены
+    _cancel_requested := TRUE;
+    
+    // Немедленно сбрасываем execute чтобы предотвратить новый запуск
+    _execute := FALSE;
+    
+    // Принудительно вызываем SR-триггер со сбросом
+    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
+    
+    // Принудительно сбрасываем таймер
+    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
+    
+    // Сбрасываем триггеры
+    _rtrig_execute(CLK := FALSE);
+</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Отмена текущего ожидания и сброс состояния *)
+METHOD Cancel
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="CancelWithFullReset" ObjectId="7cccdbb4-3e03-428a-867c-fcabf385c9be">
+                      <interface />
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    // Полный сброс всех переменных
+    _execute := FALSE;
+    _feedback := FALSE;
+    _error := FALSE;
+    _cancel_requested := FALSE;
+    
+    // Сброс SR-триггера
+    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
+    
+    // Полный сброс таймера
+    _ton_waiting_feedback(IN := FALSE, PT := T#0s);
+    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
+    
+    // Сброс триггеров
+    _rtrig_execute(CLK := FALSE);
+    _ftrig_feedback(CLK := FALSE);</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD CancelWithFullReset
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                    <InterfaceAsPlainText>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK FB_Error_SignalLongExpectation
+VAR_INPUT
+	_execute : BOOL; // Флаг выполнения
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    
+    _feedback : BOOL; // Флаг обратной связи
+    _timeout : TIME; // Таймаут ожидания
+
+	_cancel_requested : BOOL; // Флаг запроса отмены
+	
+    _error : BOOL; // Флаг ошибки
+    _error_message : STRING; // Сообщение об ошибке
+
+    _sr_waiting_feedback : SR;
+    _ton_waiting_feedback : TON; // Таймер ожидания обратной связи
+    _rtrig_execute : R_TRIG; // Растущий фронт команды выполнения
+    _ftrig_feedback : F_TRIG; // Фронт обратной связи
+END_VAR
+</xhtml>
+                    </InterfaceAsPlainText>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>e2ed7b26-cf5b-478b-8bf8-ff2ead15790f</ObjectId>
                   </data>
                 </addData>
               </pou>
@@ -20180,6 +20920,29 @@ END_TYPE
                   <Folder Name="Ошибки">
                     <Object Name="Error_SignalLongExpectation" ObjectId="e072f9df-350b-47eb-9331-6b33ca3220e1">
                       <Object Name="Reset" ObjectId="e510f611-6475-4349-92cb-1589d4c11b31" />
+                    </Object>
+                    <Object Name="FB_Error_SignalLongExpectation" ObjectId="e2ed7b26-cf5b-478b-8bf8-ff2ead15790f">
+                      <Folder Name="Установочные">
+                        <Object Name="SetExecute" ObjectId="9be1d668-2efa-4ef4-84bb-cfb0daa594da" />
+                        <Object Name="SetFeedback" ObjectId="9c770d95-87df-41ef-af4a-534e130b013a" />
+                        <Object Name="SetTimeout" ObjectId="252c124c-4eae-4715-8ba1-ed2d48920043" />
+                        <Object Name="SetErrorMessage" ObjectId="832d8568-e4c0-4b02-bae4-3aec7afeacf1" />
+                        <Object Name="Initialize" ObjectId="7d04dd4c-bc9b-4d59-98e9-4373703ac4f8" />
+                      </Folder>
+                      <Folder Name="Сервисные">
+                        <Object Name="GetErrorMessage" ObjectId="093628ad-f74a-46c3-a8b6-9f414253dcf0" />
+                        <Object Name="GetError" ObjectId="91114c78-a7bc-47c4-a184-296a4c0f521a" />
+                        <Object Name="Reset" ObjectId="e3937493-9948-4697-acf7-ef17a23959b5" />
+                        <Object Name="Cancel" ObjectId="d0415b91-f608-4fe7-a2a1-3ab14757266a" />
+                        <Object Name="CancelWithFullReset" ObjectId="7cccdbb4-3e03-428a-867c-fcabf385c9be" />
+                      </Folder>
+                      <Folder Name="Диагностические">
+                        <Object Name="IsWaiting" ObjectId="b5ac251b-e310-412e-837b-74bb1415755d" />
+                        <Object Name="GetRemainingTime" ObjectId="35df5eb2-a0dd-401a-9fef-767026c49e74" />
+                        <Object Name="GetElapsedTime" ObjectId="f446d2de-3719-4828-9c7d-6069f8985226" />
+                        <Object Name="IsReady" ObjectId="82a5955c-5058-4236-8050-296300ae9bb2" />
+                        <Object Name="GetStatus" ObjectId="706df520-9f8e-422e-b6b6-79b5eb29d65f" />
+                      </Folder>
                     </Object>
                   </Folder>
                 </Folder>
