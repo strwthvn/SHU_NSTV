@@ -1029,9 +1029,13 @@ METHOD Init_BY
 
     FOR i := 1 TO BY_AMOUNT BY 1 DO
        	
-        Init_LongTimeExpectation(Shutter[i].ErrorOpen, Shutter[i].rtrig_xOpen.Q, Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationOpen);
-	    Init_LongTimeExpectation(Shutter[i].ErrorClose, Shutter[i].rtrig_xClose.Q, Shutter[i].xStatusKmClose, shutter[i].xErrorLongExpectationClose);
-	    Init_LongTimeExpectation(Shutter[i].ErrorStop, Shutter[i].rtrig_xClose.Q, NOT Shutter[i].xStatusKmClose AND NOT Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationStop); 
+        Shutter[i].ErrorOpen();
+        Shutter[i].ErrorClose();
+        Shutter[i].ErrorStop();
+        
+        Shutter[i].ErrorOpen.Initialize(Shutter[i].rtrig_xOpen.Q, Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationOpen, LONG_TIME_EXPECTATION_TIME);
+        Shutter[i].ErrorClose.Initialize(Shutter[i].rtrig_xClose.Q, Shutter[i].xStatusKmClose, shutter[i].xErrorLongExpectationClose, LONG_TIME_EXPECTATION_TIME);
+        Shutter[i].ErrorStop.Initialize(Shutter[i].rtrig_xStop.Q, NOT Shutter[i].xStatusKmClose AND NOT Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationStop, LONG_TIME_EXPECTATION_TIME);
         
         // --- Передача состояния по протоколу Modbus ---
         Shutter[i].wStatus.VarByte[0].0 := Shutter[i].xStatusOpen;
@@ -1121,17 +1125,22 @@ METHOD Init_Pump
         // Передача обобщённой RESET команды на каждый насос
         CASE PLC_Mode OF 0: PU[i].Auto_xReset := Auto_xPu_Reset; 2: PU[i].Service_xReset := Service_xPu_Reset; END_CASE;
 
-        // Обработка ошибки команды СТАРТ С БП и получения обратной связи
-	    Init_LongTimeExpectation(PU[i].ErrorxStartBP, PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xStartBP);
+        PU[i].ErrorxStartBP();
+        PU[i].ErrorxStartVFD();
+        PU[i].ErrorxSwitchToBP();
+        PU[i].ErrorxSwitchToVFD();
+        PU[i].ErrorxStop();
+        
+        PU[i].ErrorxStartBP.Initialize(PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xStartBP, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды СТАРТ С ЧРП и получения обратной связи
-        Init_LongTimeExpectation(PU[i].ErrorxStartVFD, PU[i].rtrig_xStartVFD.Q AND PU[i].xConditionToStartVFD, PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStartVFD);
+        PU[i].ErrorxStartVFD.Initialize(PU[i].rtrig_xStartVFD.Q AND PU[i].xConditionToStartVFD, PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStartVFD, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды СТОП и получения обратной связи
-        Init_LongTimeExpectation(PU[i].ErrorxStop, PU[i].rtrig_xStop.Q, NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStop);
+        PU[i].ErrorxStop.Initialize(PU[i].rtrig_xStop.Q, NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStop, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА БП и получения обратной связи
-        Init_LongTimeExpectation(PU[i].ErrorxSwitchToBP, PU[i].rtrig_xSwitchToBP.Q AND PU[i].xConditionToSwitchToBP, PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xSwitchToBP);
+        PU[i].ErrorxSwitchToBP.Initialize(PU[i].rtrig_xSwitchToBP.Q AND PU[i].xConditionToSwitchToBP, PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xSwitchToBP, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП и получения обратной связи
-        Init_LongTimeExpectation(PU[i].ErrorxSwitchToVFD, PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].xStatusEnableVFD AND NOT PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xSwitchToVFD);
-
+        PU[i].ErrorxSwitchToVFD.Initialize(PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].xStatusEnableVFD AND NOT PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xSwitchToVFD, LONG_TIME_EXPECTATION_TIME);
+        
 
         // Генерация состояния насоса в переменную типа INT (для передачи HMI)
         IF (NOT PU[i].xStatusEnableBP) AND (NOT PU[i].xStatusEnableVFD) AND (PU[i].iStatus <> 4) THEN
