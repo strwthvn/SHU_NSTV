@@ -1492,8 +1492,6 @@ METHOD Commands_VFD
     // Условия продолжения вычислений частоты
     VFD[1].Device.AcessToCalculate := VFD[1].Device.Power;
     VFD[2].Device.AcessToCalculate := VFD[2].Device.Power;
-    // Работа минимальной уставки
-    IF Auto_rSetFrequency < VFD_MIN_FREQ AND (VFD[1].Device.Power OR VFD[2].Device.Power) THEN Auto_rSetFrequency := VFD_MIN_FREQ; END_IF;
     // Передача команды для запуска и остановки ЧРП
     VFD_CTRL.Start(Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
     VFD_CTRL.Stop(NOT Get_PU_VFD_Common(), VFD[iVFD_Change].Device);

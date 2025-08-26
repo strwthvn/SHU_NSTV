@@ -7,6 +7,8 @@ STRUCT
 	
 	Auto_cmdWord : Union_ByteToWord;
 	Auto_cmdSetFreqWord : Union_RealToWord;
+
+	Service_SetFrequency : REAL; // Задание частоты в режиме ПЛК СЕРВИС
 	
 	Service_xStartBP, Service_xStartVFD, Service_xStop, Service_xSwitchToBP, Service_xSwitchToVFD, Service_xReset, Service_xEmergencyStop : BOOL;
 	xConditionToStartBP, xConditionToStartVFD, xConditionToSwitchToBP, xConditionToSwitchToVFD, xConditionToStop, xConditionToAutoStop : BOOL; // Условия выполнения команд
