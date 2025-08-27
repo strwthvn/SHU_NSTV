@@ -885,6 +885,9 @@ METHOD Get_PU_VFD_More : BOOL
     Get_PU_VFD_More := FALSE;
 END_METHOD
 
+METHOD Get_VFD_KM8_PowerCommon : BOOL
+    Get_VFD_KM8_PowerCommon := VFD[1].xPower AND VFD[2].xPower;
+END_METHOD
 
 
 METHOD Init_LongTimeExpectation
@@ -1104,7 +1107,6 @@ METHOD Init_Pump
     VAR
         i : INT;
     END_VAR
-
     // PU 1
     PU[1].xStatusEnableBP := in_0303_05_PU01_ixKM_StatusOn.qxSignal;
     PU[1].xStatusEnableVFD := in_0303_05_PU01_ixKM_VFD_StatusOn.qxSignal;
@@ -1145,13 +1147,14 @@ METHOD Init_Pump
 
     FOR i := 1 TO PU_AMOUNT BY 1 DO
         // Передача обобщённой RESET команды на каждый насос
-        CASE PLC_Mode OF 0: PU[i].Auto_xReset := Auto_xPu_Reset; 2: PU[i].Service_xReset := Service_xPu_Reset; END_CASE;
-
+        // CASE PLC_Mode OF 0: PU[i].Auto_xReset := Auto_xPu_Reset; 2: PU[i].Service_xReset := Service_xPu_Reset; END_CASE;
+        
         PU[i].ErrorxStartBP();
         PU[i].ErrorxStartVFD();
         PU[i].ErrorxSwitchToBP();
         PU[i].ErrorxSwitchToVFD();
         PU[i].ErrorxStop();
+        
         
         PU[i].ErrorxStartBP.Initialize(PU[i].rtrig_xStartBP.Q AND PU[i].xConditionToStartBP, PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xStartBP, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды СТАРТ С ЧРП и получения обратной связи
@@ -1163,8 +1166,7 @@ METHOD Init_Pump
         // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП и получения обратной связи
         PU[i].ErrorxSwitchToVFD.Initialize(PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].xStatusEnableVFD AND NOT PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xSwitchToVFD, LONG_TIME_EXPECTATION_TIME);
         
-
-        // Генерация состояния насоса в переменную типа INT (для передачи HMI)
+    // Генерация состояния насоса в переменную типа INT (для передачи HMI)
         IF (NOT PU[i].xStatusEnableBP) AND (NOT PU[i].xStatusEnableVFD) AND (PU[i].iStatus <> 4) THEN
             PU[i].iStatus := 1;
         ELSIF (PU[i].xStatusEnableBP) AND (PU[i].xStatusEnableVFD) AND (PU[i].iStatus <> 4) THEN
@@ -1172,13 +1174,14 @@ METHOD Init_Pump
         ELSIF (PU[i].xStatusDry) OR (VFD[iVFD_Change].xFailure) THEN
             PU[i].iStatus := 4;
         END_IF;
-
+        
         // Генерация ошибки получения сигнала о работе насоса (когда он уже включен)
         PU[i].ton_ErrorLostFeedbackSignal(
-            IN:= (PU[i].Device.Power AND NOT PU[i].xStatusEnableBP) OR (PU[i].Device.PowerVFD AND (NOT PU[i].xStatusEnableVFD OR NOT VFD[iVFD_Change].xWork OR NOT VFD[iVFD_Change].Device.Power)), 
+            IN:= 	(PU[i].Device.Power AND NOT PU[i].xStatusEnableBP) 
+                    OR (PU[i].Device.PowerVFD AND (NOT PU[i].xStatusEnableVFD OR NOT VFD[iVFD_Change].xWork OR NOT VFD[iVFD_Change].xPower)), 
             PT:= PU_TIME_TO_AUTO_STOP_ERROR_LOST_FEEDBACK);
         IF PU[i].ton_ErrorLostFeedbackSignal.Q THEN PU[i].xErrorLostFeedbackSignal := TRUE; END_IF;
-
+        
         // Запись ошибок в одну переменную для передачи на верхний уровень
         PU[i].xCommonError := 
             PU[i].xErrorLostFeedbackSignal 
@@ -1189,31 +1192,32 @@ METHOD Init_Pump
             OR PU[i].xErrorLongTimeException_xSwitchToBP
             OR PU[i].xStatusDry
             OR PU[i].xErrorLongTimeException_xSwitchToVFD;
-
+            
         // Формирование сигнала готовности запуска от БП и от ЧРП
         PU[i].xReadyToStartBP := PU[i].xConditionToStartBP;
         PU[i].xReadyToStartVFD := PU[i].xConditionToStartVFD AND NOT Get_PU_VFD_Common();
+        
         // Формирование (полного) сигнала о работе насоса от ЧРП
         PU[i].xWorkingFromVFD := PU[i].Device.PowerVFD AND VFD[iVFD_Change].xWork AND VFD[iVFD_Change].Device.Power;
         
         // --- Передача состояния по протоколу Modbus ---
-    // 	PU[i].wStatus.VarByte[0].0 	:= 		PU[i].xReadyToStartVFD;
-    // 	PU[i].wStatus.VarByte[0].1 	:= 		PU[i].xReadyToStartBP;
-    // 	PU[i].wStatus.VarByte[0].2 	:= 		PU[i].xCommonError;
-    // 	PU[i].wStatus.VarByte[0].3 	:= 		PU[i].xStatusManual;
-    // 	PU[i].wStatus.VarByte[0].4 	:= 		PU[i].xStatusEnableVFD;
-    // 	PU[i].wStatus.VarByte[0].5 	:= 		PU[i].xStatusEnableBP;
+    // 	PU[i].wStatus.VarByte[1].0 	:= 		PU[i].xReadyToStartVFD;
+    // 	PU[i].wStatus.VarByte[1].1 	:= 		PU[i].xReadyToStartBP;
+    // 	PU[i].wStatus.VarByte[1].2 	:= 		PU[i].xCommonError;
+    // 	PU[i].wStatus.VarByte[1].3 	:= 		PU[i].xStatusManual;
+    // 	PU[i].wStatus.VarByte[1].4 	:= 		PU[i].xStatusEnableVFD;
+    // 	PU[i].wStatus.VarByte[1].5 	:= 		PU[i].xStatusEnableBP;
         PU[i].wCurrentSpeed.rTag 	:= 		VFD[iVFD_Change].Device.Frequency * 2;
         (*
         // --- Получение команд по протоколу Modbus ---
-        PU[i].Auto_xStartVFD 			:= 	PU[i].Auto_cmdWord.VarByte[0].0;
-        PU[i].Auto_xStop 				:= 	PU[i].Auto_cmdWord.VarByte[0].1;
-        PU[i].Auto_xReset 				:= 	PU[i].Auto_cmdWord.VarByte[0].2;
-        PU[i].Auto_xStartBP 			:= 	PU[i].Auto_cmdWord.VarByte[0].3;
-        PU[i].Auto_xRequestLocalRemote 	:= 	PU[i].Auto_cmdWord.VarByte[0].4;
-        PU[i].Auto_xSwitchToBP 			:= 	PU[i].Auto_cmdWord.VarByte[0].5;
-        PU[i].Auto_xSwitchToVFD 		:= 	PU[i].Auto_cmdWord.VarByte[0].6;
-        PU[i].Auto_xEmergencyStop 		:= 	PU[i].Auto_cmdWord.VarByte[0].7;
+        PU[i].Auto_xStartVFD 			:= 	PU[i].Auto_cmdWord.VarByte[1].0;
+        PU[i].Auto_xStop 				:= 	PU[i].Auto_cmdWord.VarByte[1].1;
+        PU[i].Auto_xReset 				:= 	PU[i].Auto_cmdWord.VarByte[1].2;
+        PU[i].Auto_xStartBP 			:= 	PU[i].Auto_cmdWord.VarByte[1].3;
+        PU[i].Auto_xRequestLocalRemote 	:= 	PU[i].Auto_cmdWord.VarByte[1].4;
+        PU[i].Auto_xSwitchToBP 			:= 	PU[i].Auto_cmdWord.VarByte[1].5;
+        PU[i].Auto_xSwitchToVFD 		:= 	PU[i].Auto_cmdWord.VarByte[1].6;
+        PU[i].Auto_xEmergencyStop 		:= 	PU[i].Auto_cmdWord.VarByte[1].7;
         *)
 
     END_FOR;
@@ -1223,7 +1227,6 @@ METHOD Init_VFD
     VAR
         i : INT;
     END_VAR
-
     CASE PLC_Mode OF
         0:
             // Передача команд триггерам
@@ -1252,12 +1255,16 @@ METHOD Init_VFD
     // Передача сигнала питания на контакторы
     _0303_05_1KM8_qxOn := VFD[1].Device.Power;
     _0303_05_2KM8_qxOn := VFD[2].Device.Power;
-    //
+
     VFD[1].xFailure := in_0303_05_1_ixVFD_Failure.qxSignal;
     VFD[1].xReady := in_0303_05_1_ixVFD_Ready.qxSignal;
-    VFD[2].xFailure := in_0303_05_1_ixVFD_Failure.qxSignal;
-    VFD[2].xReady := in_0303_05_1_ixVFD_Ready.qxSignal;
+    VFD[1].xWork := in_0303_05_1_ixVFD_InWork.qxSignal;
+    VFD[1].xPower := in_0303_05_1KM8_ixStatusOn.qxSignal;
 
+    VFD[2].xFailure := in_0303_05_2_ixVFD_Failure.qxSignal;
+    VFD[2].xReady := in_0303_05_2_ixVFD_Ready.qxSignal;
+    VFD[2].xWork := in_0303_05_2_ixVFD_InWork.qxSignal;
+    VFD[2].xPower := in_0303_05_2KM8_ixStatusOn.qxSignal;
 
     FOR i := 1 TO 2 BY 1 DO
         VFD[i].wStatusOutFrequency.rTag := VFD[i].Device.Frequency;
@@ -1376,7 +1383,6 @@ METHOD Commands_Pump
     VAR
         i : INT;
     END_VAR
-
     (* 	Обработка поступаемых команд, обработка условий и передача данных управляющему классу.
     * 	i - инкремент в цикле FOR, который проходит по каждому насосу отдельно,
     *	проверяя его условия
@@ -1424,10 +1430,12 @@ METHOD Commands_Pump
         // Выполнение команды СТАРТ БП
         PU[i].xConditionToStartBP :=
             NOT PU[i].Device.Power
+            AND NOT PU[i].xConditionToAutoStop
             AND NOT PU[i].Device.PowerVFD;    
         // Выполнение команды СТАРТ ЧРП                	
         PU[i].xConditionToStartVFD :=
-            NOT PU[i].Device.Power								
+            NOT PU[i].Device.Power
+            AND NOT PU[i].xConditionToAutoStop
             AND NOT PU[i].Device.PowerVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА БП
         PU[i].xConditionToSwitchToBP :=
@@ -1439,11 +1447,14 @@ METHOD Commands_Pump
         PU[i].xConditionToStop := TRUE;
         // Условия автоматической остановки конкретного насоса
         PU[i].xConditionToAutoStop := 
-            PU[i].xErrorLongTimeException_xStartBP 
+            PU[i].xErrorLongTimeException_xStartBP
             OR PU[i].xErrorLongTimeException_xStartVFD 
             OR PU[i].xErrorLongTimeException_xSwitchToBP 
             OR PU[i].xErrorLongTimeException_xSwitchToVFD
             OR PU[i].xErrorLostFeedbackSignal
+            OR (Get_PU_VFD_More() AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
+            OR ((Get_VFD_KM8_PowerCommon()) AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
+            OR (PU[i].xStatusEnableBP AND PU[i].xStatusEnableVFD)
             OR PU[i].xStatusDry;
         // Мгновенная задача частоты при переходе на ЧРП (* Размещено здесь из-за конфликта очередности проверок *)
         IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND NOT Get_PU_VFD_Common() THEN
@@ -1456,11 +1467,11 @@ METHOD Commands_Pump
         // Условие на остановку (одинаково для контакторов ЧРП и БП)															
         PU_CTRL.AccessToStop := TRUE;		
         // Условие на запуск от ЧРП														
-        PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common();	
+        PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;	
         // Условие на переключение  с ЧРП на БП									
         PU_CTRL.AccessSwitchToStart := VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP;	
         // Условие на переключение с БП на ЧРП	
-        PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common();
+        PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;
 
         // * Описание команд * //
         // Старт БП
@@ -1484,6 +1495,14 @@ METHOD Commands_Pump
         // Аварийная остановка насоса (по команде) - ЧРП
         PU_CTRL.StopVFD(PU[i].rtrig_xEmergencyStop.Q, PU[i].Device);
         
+        // Команда СТОП останавливает таймер получения сигнала обратной связи
+        IF PU[i].rtrig_xStop.Q THEN 
+            PU[i].ErrorxStartBP.Cancel();
+            PU[i].ErrorxStartVFD.Cancel();
+            PU[i].ErrorxSwitchToBP.Cancel();
+            PU[i].ErrorxSwitchToVFD.Cancel();
+        END_IF;
+        
         // Описание команды RESET
         IF PU[i].rtrig_xReset.Q THEN
             PU[i].ErrorxStartBP.Reset();
@@ -1493,6 +1512,14 @@ METHOD Commands_Pump
             PU[i].ErrorxSwitchToVFD.Reset();
             PU[i].xErrorLostFeedbackSignal := FALSE;
         END_IF;
+        
+        // Автоматическое изменение частоты, если задание выходит за минимальную уставку
+        CASE PLC_Mode OF
+            0:
+                IF (PU[i].Auto_cmdSetFreqWord.rTag < VFD_MIN_FREQ) AND (PU[i].Auto_cmdSetFreqWord.rTag > 0) AND VFD[iVFD_Change].Device.Power THEN PU[i].Auto_cmdSetFreqWord.rTag := VFD_MIN_FREQ; END_IF;
+            2:
+                IF (PU[i].Service_SetFrequency < VFD_MIN_FREQ) AND (PU[i].Service_SetFrequency > 0) AND VFD[iVFD_Change].Device.Power THEN PU[i].Service_SetFrequency := VFD_MIN_FREQ; END_IF;
+    END_CASE;
     END_FOR
 END_METHOD
 (* Команды ЧРП *)
@@ -1500,44 +1527,67 @@ METHOD Commands_VFD
     VAR
         i : INT;
     END_VAR
-
     // Передача параметра шага плавной задачи частоты и цикла с регулярным импульсом
     VFD[1].Device.Calculate_Frequency(VFD_CYCLE_STEP, rtrig_UpdateCyclePulse.Q);
     VFD[2].Device.Calculate_Frequency(VFD_CYCLE_STEP, rtrig_UpdateCyclePulse.Q);
+    FOR i := 1 TO VFD_AMOUNT BY 1 DO
+        // Команды ЧРП
+        CASE PLC_Mode OF
+            0:
+                VFD[i].rtrig_xReset(CLK:= VFD[i].Auto_Reset);
+            2:
+                VFD[i].rtrig_xReset(CLK:= VFD[i].Service_Reset);
+        END_CASE;
+        
+        // Работа команды RESET
+        IF VFD[i].rtrig_xReset.Q THEN
+            VFD[i].xStatusFailure := FALSE;
+            VFD[i].xCommonError := FALSE;
+        END_IF;
+        
+        // Фиксирование аварийного статуса
+        IF VFD[i].xFailure THEN VFD[i].xStatusFailure := TRUE; END_IF;
+    END_FOR;
+
     // Условия автоматического перехода на резервный и основной частотник
     VFD[1].ConditionSetToReserve := 
-        VFD[1].xFailure
-        AND NOT VFD[2].xFailure;
+        VFD[1].xStatusFailure
+        AND NOT VFD[2].xStatusFailure;
     VFD[2].ConditionSetToMain :=
-        VFD[2].xFailure
-        AND NOT VFD[1].xFailure;
+        VFD[2].xStatusFailure
+        AND NOT VFD[1].xStatusFailure;
+        
     // Условия запуска и остановки ЧРП
-    VFD_CTRL.AccessToStart := NOT VFD[iVFD_Change].xFailure AND VFD[iVFD_Change].xReady;
+    VFD_CTRL.AccessToStart := NOT VFD[iVFD_Change].xStatusFailure AND VFD[iVFD_Change].xReady;
     VFD_CTRL.AccessToStop := TRUE;
+
     // Условие автоматической остановки ЧРП
-    VFD[1].ConditionAutoStop :=
-        VFD[1].xFailure;
-    VFD[2].ConditionAutoStop :=
-        VFD[2].xFailure;
+    VFD[1].ConditionAutoStop := FALSE;
+    VFD[2].ConditionAutoStop := FALSE;
     VFD_CTRL.Stop(VFD[iVFD_Change].ConditionAutoStop, VFD[iVFD_Change].Device);
+
     // Условия продолжения вычислений частоты
     VFD[1].Device.AcessToCalculate := VFD[1].Device.Power;
     VFD[2].Device.AcessToCalculate := VFD[2].Device.Power;
+
     // Передача команды для запуска и остановки ЧРП
     VFD_CTRL.Start(Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
     VFD_CTRL.Stop(NOT Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
+
     // Условия автоматического сброса выходной частоты до нуля
     VFD_CTRL.ResetFrequency(NOT Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
+
     // Алгоритм переключения основного и резервного ЧРП
-    IF (VFD[1].rtrig_xSetToReserve.Q OR VFD[1].ConditionSetToReserve) AND iVFD_Change = 1 THEN
+    IF (VFD[1].rtrig_xSetToReserve.Q OR VFD[1].ConditionSetToReserve) AND iVFD_Change = 1 AND VFD[2].xReady AND NOT VFD[2].xStatusFailure THEN
         VFD[2].Device.Set_Frequency_Manual(VFD[1].Device.Frequency);
         iVFD_Change := 2;
         VFD[1].Device.Set_Frequency_Manual(0);
-    ELSIF (VFD[2].rtrig_xSetToMain.Q OR VFD[2].ConditionSetToMain) AND iVFD_Change = 2 THEN
+    ELSIF (VFD[2].rtrig_xSetToMain.Q OR VFD[2].ConditionSetToMain) AND iVFD_Change = 2 AND VFD[1].xReady AND NOT VFD[1].xStatusFailure THEN
         VFD[1].Device.Set_Frequency_Manual(VFD[2].Device.Frequency);
         iVFD_Change := 1;
         VFD[2].Device.Set_Frequency_Manual(0);
     END_IF;
+
     // Переключение питания на активный ЧРП при наличии активных насосов от ЧРП
     VFD_CTRL.SwitchPower(iVFD_Change = 2 AND Get_PU_VFD_Common(), VFD[1].Device, VFD[2].Device);
     VFD_CTRL.SwitchPower(iVFD_Change = 1 AND Get_PU_VFD_Common(), VFD[2].Device, VFD[1].Device);

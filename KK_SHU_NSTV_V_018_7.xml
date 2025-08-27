@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-08-26T10:16:15.9191784" />
-  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-08-26T10:15:40.3669184" organization="Production association OWEN">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2025-08-27T11:06:14.5040029" />
+  <contentHeader name="TemplatePLC210_01" version="3.5.14.30" modificationDateTime="2025-08-27T11:05:16.5552748" organization="Production association OWEN">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -1078,7 +1078,7 @@ xStart, xStop, xEmergencyStop, xReset, xSetToMain, xSetToReserve : BOOL;</xhtml>
                         <BOOL />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Статусы</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Дискретные входы</xhtml>
                       </documentation>
                     </variable>
                     <variable name="xFailure">
@@ -1086,7 +1086,7 @@ xStart, xStop, xEmergencyStop, xReset, xSetToMain, xSetToReserve : BOOL;</xhtml>
                         <BOOL />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Статусы</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Дискретные входы</xhtml>
                       </documentation>
                     </variable>
                     <variable name="xWork">
@@ -1094,7 +1094,7 @@ xStart, xStop, xEmergencyStop, xReset, xSetToMain, xSetToReserve : BOOL;</xhtml>
                         <BOOL />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Статусы</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Дискретные входы</xhtml>
                       </documentation>
                     </variable>
                     <variable name="xManual">
@@ -1102,7 +1102,7 @@ xStart, xStop, xEmergencyStop, xReset, xSetToMain, xSetToReserve : BOOL;</xhtml>
                         <BOOL />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Статусы</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Дискретные входы</xhtml>
                       </documentation>
                     </variable>
                     <variable name="xReady">
@@ -1110,7 +1110,7 @@ xStart, xStop, xEmergencyStop, xReset, xSetToMain, xSetToReserve : BOOL;</xhtml>
                         <BOOL />
                       </type>
                       <documentation>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Статусы</xhtml>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Дискретные входы</xhtml>
                       </documentation>
                     </variable>
                     <variable name="xVariableWork">
@@ -1143,6 +1143,22 @@ xStart, xStop, xEmergencyStop, xReset, xSetToMain, xSetToReserve : BOOL;</xhtml>
                       </type>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Значение частоты от 0 до 1000 для задачи в модуль аналогового выхода</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="xCommonError">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Фиксирование ошибки</xhtml>
+                      </documentation>
+                    </variable>
+                    <variable name="xStatusFailure">
+                      <type>
+                        <BOOL />
+                      </type>
+                      <documentation>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml"> Фиксирование аварийного статуса</xhtml>
                       </documentation>
                     </variable>
                     <variable name="wStatusOutFrequency">
@@ -1247,11 +1263,15 @@ STRUCT
 	ConditionStart, ConditionStop, ConditionEmergencyStop, ConditionReset, ConditionSetToMain, ConditionSetToReserve, ConditionAutoStop : BOOL;
 	rtrig_xStart, rtrig_xStop, rtrig_xEmergencyStop, rtrig_xReset, rtrig_xSetToMain, rtrig_xSetToReserve : R_TRIG;
 	// Статусы
-	xPower, xFailure, xWork, xManual, xReady 	: BOOL;
+	xPower, xFailure, xWork, xManual, xReady 	: BOOL; // Дискретные входы
 	xVariableWork : BOOL; // Для проверки совпадения с переменной фактической работы
 	irFrequency : REAL; // Значение частоты в Гц от модуля аналогового входа
 	qrFrequency : REAL; // Значение частоты в Гц от класса
 	qiScaledFrequency_0_1000 : UINT; // Значение частоты от 0 до 1000 для задачи в модуль аналогового выхода
+	xCommonError : BOOL; // Фиксирование ошибки
+	xStatusFailure : BOOL; // Фиксирование аварийного статуса
+	
+	
 	
 	// --- Передача состояний по птороколу Modbus ---
 	// Аналоговый выход
@@ -1701,6 +1721,7 @@ STRUCT
 	xManualStart          : BOOL;
 	xManualStop           : BOOL;
 	xStatusDry            : BOOL;
+	
 	// Генерируемые состояния
 	xCommonError          : BOOL;
 	xEmergencyStopStatus  : BOOL;
@@ -4608,7 +4629,7 @@ END_VAR
                         <TIME />
                       </type>
                       <initialValue>
-                        <simpleValue value="TIME#3s0ms" />
+                        <simpleValue value="TIME#6s0ms" />
                       </initialValue>
                       <documentation>
                         <xhtml xmlns="http://www.w3.org/1999/xhtml"> Время до генерации ошибки получения сигнала обратной связи после подачи команды</xhtml>
@@ -4658,7 +4679,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#3S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#6S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -5700,7 +5721,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#3S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#6S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -6683,7 +6704,8 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	
 	// Генерация ошибки получения сигнала о работе насоса (когда он уже включен)
 	PU[i].ton_ErrorLostFeedbackSignal(
-		IN:= (PU[i].Device.Power AND NOT PU[i].xStatusEnableBP) OR (PU[i].Device.PowerVFD AND (NOT PU[i].xStatusEnableVFD OR NOT VFD[iVFD_Change].xWork OR NOT VFD[iVFD_Change].Device.Power)), 
+		IN:= 	(PU[i].Device.Power AND NOT PU[i].xStatusEnableBP) 
+				OR (PU[i].Device.PowerVFD AND (NOT PU[i].xStatusEnableVFD OR NOT VFD[iVFD_Change].xWork OR NOT VFD[iVFD_Change].xPower)), 
 		PT:= PU_TIME_TO_AUTO_STOP_ERROR_LOST_FEEDBACK);
 	IF PU[i].ton_ErrorLostFeedbackSignal.Q THEN PU[i].xErrorLostFeedbackSignal := TRUE; END_IF;
 	
@@ -6706,23 +6728,23 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	PU[i].xWorkingFromVFD := PU[i].Device.PowerVFD AND VFD[iVFD_Change].xWork AND VFD[iVFD_Change].Device.Power;
 	
 	// --- Передача состояния по протоколу Modbus ---
-// 	PU[i].wStatus.VarByte[0].0 	:= 		PU[i].xReadyToStartVFD;
-// 	PU[i].wStatus.VarByte[0].1 	:= 		PU[i].xReadyToStartBP;
-// 	PU[i].wStatus.VarByte[0].2 	:= 		PU[i].xCommonError;
-// 	PU[i].wStatus.VarByte[0].3 	:= 		PU[i].xStatusManual;
-// 	PU[i].wStatus.VarByte[0].4 	:= 		PU[i].xStatusEnableVFD;
-// 	PU[i].wStatus.VarByte[0].5 	:= 		PU[i].xStatusEnableBP;
+// 	PU[i].wStatus.VarByte[1].0 	:= 		PU[i].xReadyToStartVFD;
+// 	PU[i].wStatus.VarByte[1].1 	:= 		PU[i].xReadyToStartBP;
+// 	PU[i].wStatus.VarByte[1].2 	:= 		PU[i].xCommonError;
+// 	PU[i].wStatus.VarByte[1].3 	:= 		PU[i].xStatusManual;
+// 	PU[i].wStatus.VarByte[1].4 	:= 		PU[i].xStatusEnableVFD;
+// 	PU[i].wStatus.VarByte[1].5 	:= 		PU[i].xStatusEnableBP;
 	PU[i].wCurrentSpeed.rTag 	:= 		VFD[iVFD_Change].Device.Frequency * 2;
 	(*
 	// --- Получение команд по протоколу Modbus ---
-	PU[i].Auto_xStartVFD 			:= 	PU[i].Auto_cmdWord.VarByte[0].0;
-	PU[i].Auto_xStop 				:= 	PU[i].Auto_cmdWord.VarByte[0].1;
-	PU[i].Auto_xReset 				:= 	PU[i].Auto_cmdWord.VarByte[0].2;
-	PU[i].Auto_xStartBP 			:= 	PU[i].Auto_cmdWord.VarByte[0].3;
-	PU[i].Auto_xRequestLocalRemote 	:= 	PU[i].Auto_cmdWord.VarByte[0].4;
-	PU[i].Auto_xSwitchToBP 			:= 	PU[i].Auto_cmdWord.VarByte[0].5;
-	PU[i].Auto_xSwitchToVFD 		:= 	PU[i].Auto_cmdWord.VarByte[0].6;
-	PU[i].Auto_xEmergencyStop 		:= 	PU[i].Auto_cmdWord.VarByte[0].7;
+	PU[i].Auto_xStartVFD 			:= 	PU[i].Auto_cmdWord.VarByte[1].0;
+	PU[i].Auto_xStop 				:= 	PU[i].Auto_cmdWord.VarByte[1].1;
+	PU[i].Auto_xReset 				:= 	PU[i].Auto_cmdWord.VarByte[1].2;
+	PU[i].Auto_xStartBP 			:= 	PU[i].Auto_cmdWord.VarByte[1].3;
+	PU[i].Auto_xRequestLocalRemote 	:= 	PU[i].Auto_cmdWord.VarByte[1].4;
+	PU[i].Auto_xSwitchToBP 			:= 	PU[i].Auto_cmdWord.VarByte[1].5;
+	PU[i].Auto_xSwitchToVFD 		:= 	PU[i].Auto_cmdWord.VarByte[1].6;
+	PU[i].Auto_xEmergencyStop 		:= 	PU[i].Auto_cmdWord.VarByte[1].7;
 	*)
 
 END_FOR;
@@ -6812,10 +6834,12 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	// Выполнение команды СТАРТ БП
 	PU[i].xConditionToStartBP :=
 		NOT PU[i].Device.Power
+		AND NOT PU[i].xConditionToAutoStop
 		AND NOT PU[i].Device.PowerVFD;    
 	// Выполнение команды СТАРТ ЧРП                	
 	PU[i].xConditionToStartVFD :=
-		NOT PU[i].Device.Power								
+		NOT PU[i].Device.Power
+		AND NOT PU[i].xConditionToAutoStop
 		AND NOT PU[i].Device.PowerVFD;
 	// Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА БП
 	PU[i].xConditionToSwitchToBP :=
@@ -6827,11 +6851,14 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	PU[i].xConditionToStop := TRUE;
 	// Условия автоматической остановки конкретного насоса
 	PU[i].xConditionToAutoStop := 
-		PU[i].xErrorLongTimeException_xStartBP 
+		PU[i].xErrorLongTimeException_xStartBP
 		OR PU[i].xErrorLongTimeException_xStartVFD 
 		OR PU[i].xErrorLongTimeException_xSwitchToBP 
 		OR PU[i].xErrorLongTimeException_xSwitchToVFD
 		OR PU[i].xErrorLostFeedbackSignal
+		OR (Get_PU_VFD_More() AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
+		OR ((Get_VFD_KM8_PowerCommon()) AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
+		OR (PU[i].xStatusEnableBP AND PU[i].xStatusEnableVFD)
 		OR PU[i].xStatusDry;
 	// Мгновенная задача частоты при переходе на ЧРП (* Размещено здесь из-за конфликта очередности проверок *)
 	IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND NOT Get_PU_VFD_Common() THEN
@@ -6844,11 +6871,11 @@ FOR i := 1 TO PU_AMOUNT BY 1 DO
 	// Условие на остановку (одинаково для контакторов ЧРП и БП)															
 	PU_CTRL.AccessToStop := TRUE;		
 	// Условие на запуск от ЧРП														
-	PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common();	
+	PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;	
 	// Условие на переключение  с ЧРП на БП									
 	PU_CTRL.AccessSwitchToStart := VFD[iVFD_Change].Device.Frequency &gt;= VFD_FREQ_ACCESS_SWITCH_TO_BP;	
 	// Условие на переключение с БП на ЧРП	
-	PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common();
+	PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;
 
 	// * Описание команд * //
 	// Старт БП
@@ -7018,12 +7045,16 @@ VFD[2].Device.FrequencyMax := VFD_MAX_FREQ;
 // Передача сигнала питания на контакторы
 _0303_05_1KM8_qxOn := VFD[1].Device.Power;
 _0303_05_2KM8_qxOn := VFD[2].Device.Power;
-//
+
 VFD[1].xFailure := in_0303_05_1_ixVFD_Failure.qxSignal;
 VFD[1].xReady := in_0303_05_1_ixVFD_Ready.qxSignal;
-VFD[2].xFailure := in_0303_05_1_ixVFD_Failure.qxSignal;
-VFD[2].xReady := in_0303_05_1_ixVFD_Ready.qxSignal;
+VFD[1].xWork := in_0303_05_1_ixVFD_InWork.qxSignal;
+VFD[1].xPower := in_0303_05_1KM8_ixStatusOn.qxSignal;
 
+VFD[2].xFailure := in_0303_05_2_ixVFD_Failure.qxSignal;
+VFD[2].xReady := in_0303_05_2_ixVFD_Ready.qxSignal;
+VFD[2].xWork := in_0303_05_2_ixVFD_InWork.qxSignal;
+VFD[2].xPower := in_0303_05_2KM8_ixStatusOn.qxSignal;
 
 FOR i := 1 TO 2 BY 1 DO
 	VFD[i].wStatusOutFrequency.rTag := VFD[i].Device.Frequency;
@@ -7070,40 +7101,64 @@ END_VAR</xhtml>
                           <xhtml xmlns="http://www.w3.org/1999/xhtml">// Передача параметра шага плавной задачи частоты и цикла с регулярным импульсом
 VFD[1].Device.Calculate_Frequency(VFD_CYCLE_STEP, rtrig_UpdateCyclePulse.Q);
 VFD[2].Device.Calculate_Frequency(VFD_CYCLE_STEP, rtrig_UpdateCyclePulse.Q);
+FOR i := 1 TO VFD_AMOUNT BY 1 DO
+	// Команды ЧРП
+	CASE PLC_Mode OF
+		0:
+			VFD[i].rtrig_xReset(CLK:= VFD[i].Auto_Reset);
+		2:
+			VFD[i].rtrig_xReset(CLK:= VFD[i].Service_Reset);
+	END_CASE;
+	
+	// Работа команды RESET
+	IF VFD[i].rtrig_xReset.Q THEN
+		VFD[i].xStatusFailure := FALSE;
+		VFD[i].xCommonError := FALSE;
+	END_IF;
+	
+	// Фиксирование аварийного статуса
+	IF VFD[i].xFailure THEN VFD[i].xStatusFailure := TRUE; END_IF;
+END_FOR;
+
 // Условия автоматического перехода на резервный и основной частотник
 VFD[1].ConditionSetToReserve := 
-	VFD[1].xFailure
-	AND NOT VFD[2].xFailure;
+	VFD[1].xStatusFailure
+	AND NOT VFD[2].xStatusFailure;
 VFD[2].ConditionSetToMain :=
-	VFD[2].xFailure
-	AND NOT VFD[1].xFailure;
+	VFD[2].xStatusFailure
+	AND NOT VFD[1].xStatusFailure;
+	
 // Условия запуска и остановки ЧРП
-VFD_CTRL.AccessToStart := NOT VFD[iVFD_Change].xFailure AND VFD[iVFD_Change].xReady;
+VFD_CTRL.AccessToStart := NOT VFD[iVFD_Change].xStatusFailure AND VFD[iVFD_Change].xReady;
 VFD_CTRL.AccessToStop := TRUE;
+
 // Условие автоматической остановки ЧРП
-VFD[1].ConditionAutoStop :=
-	VFD[1].xFailure;
-VFD[2].ConditionAutoStop :=
-	VFD[2].xFailure;
+VFD[1].ConditionAutoStop := FALSE;
+VFD[2].ConditionAutoStop := FALSE;
 VFD_CTRL.Stop(VFD[iVFD_Change].ConditionAutoStop, VFD[iVFD_Change].Device);
+
 // Условия продолжения вычислений частоты
 VFD[1].Device.AcessToCalculate := VFD[1].Device.Power;
 VFD[2].Device.AcessToCalculate := VFD[2].Device.Power;
+
 // Передача команды для запуска и остановки ЧРП
 VFD_CTRL.Start(Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
 VFD_CTRL.Stop(NOT Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
+
 // Условия автоматического сброса выходной частоты до нуля
 VFD_CTRL.ResetFrequency(NOT Get_PU_VFD_Common(), VFD[iVFD_Change].Device);
+
 // Алгоритм переключения основного и резервного ЧРП
-IF (VFD[1].rtrig_xSetToReserve.Q OR VFD[1].ConditionSetToReserve) AND iVFD_Change = 1 THEN
+IF (VFD[1].rtrig_xSetToReserve.Q OR VFD[1].ConditionSetToReserve) AND iVFD_Change = 1 AND VFD[2].xReady AND NOT VFD[2].xStatusFailure THEN
 	VFD[2].Device.Set_Frequency_Manual(VFD[1].Device.Frequency);
 	iVFD_Change := 2;
 	VFD[1].Device.Set_Frequency_Manual(0);
-ELSIF (VFD[2].rtrig_xSetToMain.Q OR VFD[2].ConditionSetToMain) AND iVFD_Change = 2 THEN
+ELSIF (VFD[2].rtrig_xSetToMain.Q OR VFD[2].ConditionSetToMain) AND iVFD_Change = 2 AND VFD[1].xReady AND NOT VFD[1].xStatusFailure THEN
 	VFD[1].Device.Set_Frequency_Manual(VFD[2].Device.Frequency);
 	iVFD_Change := 1;
 	VFD[2].Device.Set_Frequency_Manual(0);
 END_IF;
+
 // Переключение питания на активный ЧРП при наличии активных насосов от ЧРП
 VFD_CTRL.SwitchPower(iVFD_Change = 2 AND Get_PU_VFD_Common(), VFD[1].Device, VFD[2].Device);
 VFD_CTRL.SwitchPower(iVFD_Change = 1 AND Get_PU_VFD_Common(), VFD[2].Device, VFD[1].Device);</xhtml>
@@ -7292,28 +7347,28 @@ FOR i := 1 TO BY_AMOUNT BY 1 DO
 	Shutter[i].ErrorStop.Initialize(Shutter[i].rtrig_xStop.Q, NOT Shutter[i].xStatusKmClose AND NOT Shutter[i].xStatusKmOpen, shutter[i].xErrorLongExpectationStop, LONG_TIME_EXPECTATION_TIME);
 	
 	// --- Передача состояния по протоколу Modbus ---
-	Shutter[i].wStatus.VarByte[0].0 := Shutter[i].xStatusOpen;
-	Shutter[i].wStatus.VarByte[0].1 := Shutter[i].xStatusClosed;
-	Shutter[i].wStatus.VarByte[0].2 := Shutter[i].xStatusKmOpen;
-	Shutter[i].wStatus.VarByte[0].3 := Shutter[i].xStatusKmClose;
-	Shutter[i].wStatus.VarByte[0].4 := Shutter[i].xStatusOpen;
-	Shutter[i].wStatus.VarByte[0].5 := Shutter[i].xStatusOpen;
-	Shutter[i].wStatus.VarByte[0].5 := BY_ModbusRef[i].RemoteMode;
-	Shutter[i].wStatus.VarByte[0].6 := BY_ModbusRef[i].LocalMode;
-	Shutter[i].wStatus.VarByte[0].7 := BY_ModbusRef[i].OpenedPosition;
-	Shutter[i].wStatus.VarByte[1].0 := BY_ModbusRef[i].ClosedPosition;
-	Shutter[i].wStatus.VarByte[1].1 := BY_ModbusRef[i].SetPointReached;
-	Shutter[i].wStatus.VarByte[1].2 := BY_ModbusRef[i].NotReadyInd;
-	Shutter[i].wStatus.VarByte[1].3 := BY_ModbusRef[i].RunningOpen;
-	Shutter[i].wStatus.VarByte[1].4 := BY_ModbusRef[i].RunningClose;
-	Shutter[i].wStatus.VarByte[1].5 := BY_ModbusRef[i].ProhibitLocalAct;
-	Shutter[i].wStatus.VarByte[1].6 := BY_ModbusRef[i].FaultInd;
+	Shutter[i].wStatus.VarByte[1].0 := Shutter[i].xStatusOpen;
+	Shutter[i].wStatus.VarByte[1].1 := Shutter[i].xStatusClosed;
+	Shutter[i].wStatus.VarByte[1].2 := Shutter[i].xStatusKmOpen;
+	Shutter[i].wStatus.VarByte[1].3 := Shutter[i].xStatusKmClose;
+	Shutter[i].wStatus.VarByte[1].4 := Shutter[i].xStatusOpen;
+	Shutter[i].wStatus.VarByte[1].5 := Shutter[i].xStatusOpen;
+	Shutter[i].wStatus.VarByte[1].5 := BY_ModbusRef[i].RemoteMode;
+	Shutter[i].wStatus.VarByte[1].6 := BY_ModbusRef[i].LocalMode;
+	Shutter[i].wStatus.VarByte[1].7 := BY_ModbusRef[i].OpenedPosition;
+	Shutter[i].wStatus.VarByte[0].0 := BY_ModbusRef[i].ClosedPosition;
+	Shutter[i].wStatus.VarByte[0].1 := BY_ModbusRef[i].SetPointReached;
+	Shutter[i].wStatus.VarByte[0].2 := BY_ModbusRef[i].NotReadyInd;
+	Shutter[i].wStatus.VarByte[0].3 := BY_ModbusRef[i].RunningOpen;
+	Shutter[i].wStatus.VarByte[0].4 := BY_ModbusRef[i].RunningClose;
+	Shutter[i].wStatus.VarByte[0].5 := BY_ModbusRef[i].ProhibitLocalAct;
+	Shutter[i].wStatus.VarByte[0].6 := BY_ModbusRef[i].FaultInd;
 	
 	// --- Получение команд по протоколу Modbus ---
-	Shutter[i].Auto_xOpen 		:= 	Shutter[i].autoCmdWord.VarByte[0].0;
-	Shutter[i].Auto_xClose 		:= 	Shutter[i].autoCmdWord.VarByte[0].1;
-	Shutter[i].Auto_xStop 		:= 	Shutter[i].autoCmdWord.VarByte[0].2;
-	Shutter[i].Auto_xReset 		:= 	Shutter[i].autoCmdWord.VarByte[0].3;
+	Shutter[i].Auto_xOpen 		:= 	Shutter[i].autoCmdWord.VarByte[1].0;
+	Shutter[i].Auto_xClose 		:= 	Shutter[i].autoCmdWord.VarByte[1].1;
+	Shutter[i].Auto_xStop 		:= 	Shutter[i].autoCmdWord.VarByte[1].2;
+	Shutter[i].Auto_xReset 		:= 	Shutter[i].autoCmdWord.VarByte[1].3;
 END_FOR;
 </xhtml>
                         </ST>
@@ -7682,65 +7737,6 @@ END_VAR</xhtml>
                     </Method>
                   </data>
                   <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
-                    <Method name="PLC_ConnectionControl" ObjectId="57b343a5-6d32-4a20-976a-6b2dbf1872d0">
-                      <interface>
-                        <documentation>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Контроль связи с ПЛК АСУТП </xhtml>
-                        </documentation>
-                      </interface>
-                      <body>
-                        <ST>
-                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    // Таймеры контроля LifeBit
-    ton_PLC_LifeBit_Control_Off(
-        IN := NOT PLC_LifeBit,
-        PT := LIFEBIT_CONNECTION_TIME
-    );
-    ton_PLC_LifeBit_Control_On(
-        IN := PLC_LifeBit,
-        PT := LIFEBIT_CONNECTION_TIME
-    );
-
-    // SR-триггер для фиксации состояния связи
-    sr_PLC_LifeBit_Control(
-        SET1 := NOT (ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q),
-        RESET := ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q
-    );
-
-    // Если связь потеряна — фиксируем ошибку и переводим ПЛК в режим "Обрыв связи"
-    IF NOT sr_PLC_LifeBit_Control.Q1 THEN
-        PLC_Connection_Fault := TRUE;
-        PLC_Mode := 1;
-    END_IF;
-
-    // Если связь восстановлена — снимаем ошибку и возвращаем режим "Авто"
-    PLC_Connection_Ok := sr_PLC_LifeBit_Control.Q1;
-    IF PLC_Mode = 1 AND PLC_Connection_Ok THEN
-        PLC_Mode := 0;
-    END_IF;
-
-    // Таймер аварийной остановки по потере связи
-    ton_LostConnectionEmergencyStopTimeOut(
-        IN := PLC_Mode = 1,
-        PT := LOST_CONNECTION_EMERGENCY_STOP_TIME
-    );
-
-    // Если таймер аварийной остановки сработал — формируем команду аварийной остановки
-    IF ton_LostConnectionEmergencyStopTimeOut.Q THEN
-        xEmergencyStopCommonLostConnectionTimeOut := TRUE;
-    END_IF;</xhtml>
-                        </ST>
-                      </body>
-                      <InterfaceAsPlainText>
-                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Контроль связи с ПЛК АСУТП *)
-METHOD PLC_ConnectionControl
-VAR_INPUT
-END_VAR
-</xhtml>
-                      </InterfaceAsPlainText>
-                      <addData />
-                    </Method>
-                  </data>
-                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
                     <Method name="ResetAllErrors" ObjectId="b21aa584-9a8b-4eeb-aa8a-7725f7ab0afd">
                       <interface>
                         <localVars>
@@ -7814,6 +7810,147 @@ END_VAR</xhtml>
                       <addData />
                     </Method>
                   </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="PLC_ConnectionControl" ObjectId="57b343a5-6d32-4a20-976a-6b2dbf1872d0">
+                      <interface>
+                        <documentation>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml"> Контроль связи с ПЛК АСУТП </xhtml>
+                        </documentation>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    // Таймеры контроля LifeBit
+    ton_PLC_LifeBit_Control_Off(
+        IN := NOT PLC_LifeBit,
+        PT := LIFEBIT_CONNECTION_TIME
+    );
+    ton_PLC_LifeBit_Control_On(
+        IN := PLC_LifeBit,
+        PT := LIFEBIT_CONNECTION_TIME
+    );
+
+    // SR-триггер для фиксации состояния связи
+    sr_PLC_LifeBit_Control(
+        SET1 := NOT (ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q),
+        RESET := ton_PLC_LifeBit_Control_Off.Q OR ton_PLC_LifeBit_Control_On.Q
+    );
+
+    // Если связь потеряна — фиксируем ошибку и переводим ПЛК в режим "Обрыв связи"
+    IF NOT sr_PLC_LifeBit_Control.Q1 THEN
+        PLC_Connection_Fault := TRUE;
+        PLC_Mode := 1;
+    END_IF;
+
+    // Если связь восстановлена — снимаем ошибку и возвращаем режим "Авто"
+    PLC_Connection_Ok := sr_PLC_LifeBit_Control.Q1;
+    IF PLC_Mode = 1 AND PLC_Connection_Ok THEN
+        PLC_Mode := 0;
+    END_IF;
+
+    // Таймер аварийной остановки по потере связи
+    ton_LostConnectionEmergencyStopTimeOut(
+        IN := PLC_Mode = 1,
+        PT := LOST_CONNECTION_EMERGENCY_STOP_TIME
+    );
+
+    // Если таймер аварийной остановки сработал — формируем команду аварийной остановки
+    IF ton_LostConnectionEmergencyStopTimeOut.Q THEN
+        xEmergencyStopCommonLostConnectionTimeOut := TRUE;
+    END_IF;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(* Контроль связи с ПЛК АСУТП *)
+METHOD PLC_ConnectionControl
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Get_PU_VFD_More" ObjectId="58c796ef-5a7a-4126-ac0d-d2cf3f274cd8">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                        <localVars>
+                          <variable name="i">
+                            <type>
+                              <INT />
+                            </type>
+                          </variable>
+                          <variable name="count">
+                            <type>
+                              <INT />
+                            </type>
+                            <initialValue>
+                              <simpleValue value="0" />
+                            </initialValue>
+                          </variable>
+                          <addData>
+                            <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+                              <InterfaceAsPlainText>
+                                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Get_PU_VFD_More : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i : INT;
+	count : INT := 0;
+END_VAR</xhtml>
+                              </InterfaceAsPlainText>
+                            </data>
+                          </addData>
+                        </localVars>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">    FOR i := 1 TO PU_AMOUNT DO
+        IF PU[i].xStatusEnableVFD THEN
+            count := count + 1;
+            IF count &gt;= 2 THEN
+                Get_PU_VFD_More := TRUE;
+                RETURN;
+            END_IF;
+        END_IF;
+    END_FOR;
+	Get_PU_VFD_More := FALSE;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Get_PU_VFD_More : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i : INT;
+	count : INT := 0;
+END_VAR</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+                    <Method name="Get_VFD_KM8_PowerCommon" ObjectId="39c494c5-4730-4381-b0d5-700105662476">
+                      <interface>
+                        <returnType>
+                          <BOOL />
+                        </returnType>
+                      </interface>
+                      <body>
+                        <ST>
+                          <xhtml xmlns="http://www.w3.org/1999/xhtml">Get_VFD_KM8_PowerCommon := VFD[1].xPower AND VFD[2].xPower;</xhtml>
+                        </ST>
+                      </body>
+                      <InterfaceAsPlainText>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD Get_VFD_KM8_PowerCommon : BOOL
+VAR_INPUT
+END_VAR
+</xhtml>
+                      </InterfaceAsPlainText>
+                      <addData />
+                    </Method>
+                  </data>
                   <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
                     <InterfaceAsPlainText>
                       <xhtml xmlns="http://www.w3.org/1999/xhtml">PROGRAM NEW_MAIN
@@ -7824,7 +7961,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#3S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#6S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -20770,6 +20907,8 @@ END_TYPE
                   <Folder Name="Состояния">
                     <Object Name="Get_PU_VFD_Common" ObjectId="417ba7d4-0a02-4261-afb8-3f27176658b2" />
                     <Object Name="Get_PU_VFD_Number" ObjectId="d210ac15-ad8d-435c-be72-0cba36274a14" />
+                    <Object Name="Get_PU_VFD_More" ObjectId="58c796ef-5a7a-4126-ac0d-d2cf3f274cd8" />
+                    <Object Name="Get_VFD_KM8_PowerCommon" ObjectId="39c494c5-4730-4381-b0d5-700105662476" />
                   </Folder>
                 </Folder>
                 <Folder Name="Команды">
@@ -20780,8 +20919,8 @@ END_TYPE
                 </Folder>
                 <Object Name="LostConnectionStopProcess" ObjectId="e614fb64-33f0-4301-8aa9-9b2efd955751" />
                 <Object Name="EmergencyStopCommon" ObjectId="3ba39ded-43d6-4479-98b1-8047545cbfba" />
-                <Object Name="PLC_ConnectionControl" ObjectId="57b343a5-6d32-4a20-976a-6b2dbf1872d0" />
                 <Object Name="ResetAllErrors" ObjectId="b21aa584-9a8b-4eeb-aa8a-7725f7ab0afd" />
+                <Object Name="PLC_ConnectionControl" ObjectId="57b343a5-6d32-4a20-976a-6b2dbf1872d0" />
               </Object>
               <Object Name="Struct_BY_ModbusRef" ObjectId="0cd6c76f-03f0-414d-9c20-84af308b0a1c" />
               <Object Name="FB_SignalSplit" ObjectId="dfec1159-2787-4f9f-9f39-52cd4cdcc62e" />
