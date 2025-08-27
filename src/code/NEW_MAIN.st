@@ -849,6 +849,20 @@ METHOD Get_PU_VFD_Common : BOOL
     Get_PU_VFD_Common := FALSE;
 END_METHOD
 
+METHOD Get_PU_VFD_Common_Feedback : BOOL
+    VAR
+        i : INT;
+    END_VAR
+
+    FOR i := 1 TO PU_AMOUNT DO
+        IF PU[i].xStatusEnableVFD THEN
+            Get_PU_VFD_Common_Feedback := TRUE;
+            RETURN;
+        END_IF;
+    END_FOR;
+    Get_PU_VFD_Common_Feedback := FALSE;
+END_METHOD
+
 (* Возвращает номер работающего насоса от ЧРП *)
 METHOD GET_PU_VFD_Number : INT
     VAR
@@ -1430,19 +1444,23 @@ METHOD Commands_Pump
         // Выполнение команды СТАРТ БП
         PU[i].xConditionToStartBP :=
             NOT PU[i].Device.Power
+            AND NOT PU[i].xStatusEnableBP
             AND NOT PU[i].xConditionToAutoStop
             AND NOT PU[i].Device.PowerVFD;    
         // Выполнение команды СТАРТ ЧРП                	
         PU[i].xConditionToStartVFD :=
             NOT PU[i].Device.Power
+            AND NOT PU[i].xStatusEnableVFD
             AND NOT PU[i].xConditionToAutoStop
             AND NOT PU[i].Device.PowerVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА БП
         PU[i].xConditionToSwitchToBP :=
-            PU[i].Device.PowerVFD;
+            PU[i].Device.PowerVFD
+            OR PU[i].xStatusEnableVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП
         PU[i].xConditionToSwitchToVFD :=
-            PU[i].Device.Power;
+            PU[i].Device.Power
+            OR PU[i].xStatusEnableBP;
         // Выполнение команды СТОП
         PU[i].xConditionToStop := TRUE;
         // Условия автоматической остановки конкретного насоса
@@ -1455,9 +1473,11 @@ METHOD Commands_Pump
             OR (Get_PU_VFD_More() AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
             OR ((Get_VFD_KM8_PowerCommon()) AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
             OR (PU[i].xStatusEnableBP AND PU[i].xStatusEnableVFD)
+            OR (PU[i].xStatusEnableVFD AND PU[i].Device.Power)
+		    OR (PU[i].xStatusEnableBP AND PU[i].Device.PowerVFD)
             OR PU[i].xStatusDry;
         // Мгновенная задача частоты при переходе на ЧРП (* Размещено здесь из-за конфликта очередности проверок *)
-        IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND NOT Get_PU_VFD_Common() THEN
+        IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND (NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback()) THEN
             VFD[iVFD_Change].Device.Set_Frequency_Manual(VFD_CHANGE_BP_TO_VFD_FREQ);
         END_IF;
         
@@ -1467,11 +1487,11 @@ METHOD Commands_Pump
         // Условие на остановку (одинаково для контакторов ЧРП и БП)															
         PU_CTRL.AccessToStop := TRUE;		
         // Условие на запуск от ЧРП														
-        PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;	
+        PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;	
         // Условие на переключение  с ЧРП на БП									
         PU_CTRL.AccessSwitchToStart := VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP;	
         // Условие на переключение с БП на ЧРП	
-        PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;
+        PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;
 
         // * Описание команд * //
         // Старт БП
