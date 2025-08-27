@@ -184,30 +184,4 @@ METHOD Cancel
     _rtrig_execute(CLK := FALSE);
 END_METHOD
 
-(* Альтернативный метод Cancel с полным сбросом *)
-METHOD CancelWithFullReset
-    // Полный сброс всех переменных
-    _execute := FALSE;
-    _feedback := FALSE;
-    _error := FALSE;
-    _cancel_requested := FALSE;
-    
-    // Сброс SR-триггера
-    _sr_waiting_feedback(SET1 := FALSE, RESET := TRUE);
-    _sr_waiting_feedback.Q1 := FALSE; // Прямой сброс выхода (если доступно)
-    
-    // Полный сброс таймера
-    _ton_waiting_feedback(IN := FALSE, PT := T#0s);
-    _ton_waiting_feedback(IN := FALSE, PT := _timeout);
-    _ton_waiting_feedback.Q := FALSE; // Прямой сброс выхода (если доступно)
-    _ton_waiting_feedback.ET := T#0s; // Сброс накопленного времени (если доступно)
-    
-    // Сброс триггеров
-    _rtrig_execute(CLK := FALSE);
-    _rtrig_execute.Q := FALSE; // Прямой сброс выхода (если доступно)
-    
-    _ftrig_feedback(CLK := FALSE);
-    _ftrig_feedback.Q := FALSE; // Прямой сброс выхода (если доступно)
-END_METHOD
-
 END_FUNCTION_BLOCK
