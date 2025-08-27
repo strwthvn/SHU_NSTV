@@ -865,6 +865,28 @@ METHOD GET_PU_VFD_Number : INT
     Get_PU_VFD_Number := 0;
 END_METHOD
 
+(* Возвращает наличие двух и более насосов, работающих от ЧРП *)
+METHOD Get_PU_VFD_More : BOOL
+    VAR
+        i : INT;
+        count : INT := 0;
+    END_VAR
+
+    FOR i := 1 TO PU_AMOUNT DO
+        IF PU[i].xStatusEnableVFD THEN
+            count := count + 1;
+            IF count >= 2 THEN
+                Get_PU_VFD_More := TRUE;
+                RETURN;
+            END_IF;
+        END_IF;
+    END_FOR;
+
+    Get_PU_VFD_More := FALSE;
+END_METHOD
+
+
+
 METHOD Init_LongTimeExpectation
     VAR_INPUT
         refClass : REFERENCE TO FB_Error_SignalLongExpectation;  // Явная ссылка
