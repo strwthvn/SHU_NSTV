@@ -1444,19 +1444,23 @@ METHOD Commands_Pump
         // Выполнение команды СТАРТ БП
         PU[i].xConditionToStartBP :=
             NOT PU[i].Device.Power
+            AND NOT PU[i].xStatusEnableBP
             AND NOT PU[i].xConditionToAutoStop
             AND NOT PU[i].Device.PowerVFD;    
         // Выполнение команды СТАРТ ЧРП                	
         PU[i].xConditionToStartVFD :=
             NOT PU[i].Device.Power
+            AND NOT PU[i].xStatusEnableVFD
             AND NOT PU[i].xConditionToAutoStop
             AND NOT PU[i].Device.PowerVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА БП
         PU[i].xConditionToSwitchToBP :=
-            PU[i].Device.PowerVFD;
+            PU[i].Device.PowerVFD
+            OR PU[i].xStatusEnableVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП
         PU[i].xConditionToSwitchToVFD :=
-            PU[i].Device.Power;
+            PU[i].Device.Power
+            OR PU[i].xStatusEnableBP;
         // Выполнение команды СТОП
         PU[i].xConditionToStop := TRUE;
         // Условия автоматической остановки конкретного насоса
