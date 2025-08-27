@@ -6,7 +6,7 @@ VAR CONSTANT
 	BY_AMOUNT : INT := 8;				// Количество ЗРА
 	RATTLING_DELAY : TIME := T#100MS; 	// Задержка получения сигнала входов (защита от дребезга)
 	//VFD_CMD_DELAY : TIME := T#10S;				// Время задержки сигнала старт и стоп до его отключения и выхода ошибки долгого ожидания отклика механизма
-	LONG_TIME_EXPECTATION_TIME : TIME := T#60S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
+	LONG_TIME_EXPECTATION_TIME : TIME := T#6S;		// Время до генерации ошибки получения сигнала обратной связи после подачи команды
 	LIFEBIT_CONNECTION_TIME : TIME := T#5S;			// Время получения сигнала LifeBit от ПЛК АСУТП
 	LOST_CONNECTION_EMERGENCY_STOP_TIME : TIME := T#5S; // Тайм-аут аварийной остановки станции после получения сигнала о потери связи с ПЛК АСУТП (константа времени)
 	EMERGENCY_STOP_PU_DELAY_TIME : TIME := T#5S;	// Время задержки отключения насосов для работы аварийной остановки (последовательная остановка насосов)
@@ -21,7 +21,7 @@ VAR
 	PLC_Word : Union_ByteToWord;
 	PLC_cmdWord : Union_ByteToWord;
 	PLC_cmdResetAll : BOOL;
-    rtrig_PLC_cmdResetAll : R_TRIG;
+	rtrig_PLC_cmdResetAll : R_TRIG;
 	PLC_ResetConnectionError : BOOL;
 	PLC_SimulationCommunication : BOOL := TRUE;
 	
@@ -33,6 +33,7 @@ VAR
 	VFD_CYCLE_STEP : REAL := 15;					// Шаг обновления частоты за 1 цикл
 	VFD_FREQ_INACCURANCY : REAL := 0.2;				// Максимальная допустимая погрешность для ЧРП
 	VFD_FREQ_ACCESS_SWITCH_TO_BP : REAL := 48.5;	// Значение допустимой частоты для возможности переключения насоса с ЧРП на БП
+	GIST_FRQ_SWITCH_TO_START : REAL := 2.5;			// Погрешность частоты для проверки переключения на БП 
 	
 	// --- Предпусковая сигнализация ---
 	xSoundSirenOption : BOOL := FALSE; // Опция работы предпусковой звуковой сигнализации
@@ -55,7 +56,6 @@ VAR
 	// --- Насосы и управление ---
 	PU : ARRAY [1..PU_AMOUNT] OF Struct_PU;
 	PU_CTRL : Pump_Control_VFD;
-    PU_i : INT;
 	Auto_xPu_Reset : BOOL;      // Обобщённый ресет на каждый насос (ошибки)
 	Service_xPu_Reset : BOOL;
 	
@@ -69,7 +69,6 @@ VAR
 	// --- ЗРА и управление ---
 	Shutter : ARRAY[1..BY_AMOUNT] OF Struct_BY;
 	Shutter_CTRL : Shutter_Control;
-    Shutter_i : INT;
 	BY_ModbusRef : ARRAY [1..BY_AMOUNT] OF Struct_BY_ModbusRef;
 	
 	// --- Импульсы и обновления ---
@@ -82,94 +81,94 @@ VAR
 	EmergencyStopLostConnection_xDelayRun  : BOOL := FALSE; // Признак ожидания задержки
 	
 	// Дребезг сигналов
-        in_0303_05_1_ixSection1_OverheatAlarm          	: INPUT_OUTPUT;
-        in_0303_05_1_ixSection1_OverheatWarning        	: INPUT_OUTPUT;
-        in_0303_05_1_ixVFD_Failure                     	: INPUT_OUTPUT;
-        in_0303_05_1_ixVFD_InWork                      	: INPUT_OUTPUT;
-        in_0303_05_1_ixVFD_Manual                      	: INPUT_OUTPUT;
-        in_0303_05_1_ixVFD_Ready                       	: INPUT_OUTPUT;
-        in_0303_05_2_ixSection1_OverheatAlarm          	: INPUT_OUTPUT;
-        in_0303_05_2_ixSection1_OverheatWarning        	: INPUT_OUTPUT;
-        in_0303_05_2_ixVFD_Failure                     	: INPUT_OUTPUT;
-        in_0303_05_2_ixVFD_InWork                      	: INPUT_OUTPUT;
-        in_0303_05_2_ixVFD_Manual                      	: INPUT_OUTPUT;
-        in_0303_05_2_ixVFD_Ready                       	: INPUT_OUTPUT;
-        in_0303_05_1KM8_ixStatusOn                     	: INPUT_OUTPUT;
-        in_0303_05_2KM8_ixStatusOn                     	: INPUT_OUTPUT;
-        in_0303_05_BY01_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY01_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY01_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY01_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY01_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY01_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_BY02_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY02_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY02_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY02_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY02_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY02_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_BY03_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY03_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY03_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY03_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY03_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY03_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_BY04_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY04_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY04_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY04_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY04_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY04_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_BY05_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY05_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY05_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY05_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY05_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY05_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_BY07_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY07_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY07_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY07_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY07_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY07_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_BY08_ixKM_PosClosed                 	: INPUT_OUTPUT;
-        in_0303_05_BY08_ixKM_PosOpen                   	: INPUT_OUTPUT;
-        in_0303_05_BY08_ixShutter_PosClosed            	: INPUT_OUTPUT;
-        in_0303_05_BY08_ixShutter_PosOpen              	: INPUT_OUTPUT;
-        in_0303_05_BY08_ixShutter_StatusError          	: INPUT_OUTPUT;
-        in_0303_05_BY08_ixShutter_StatusReady          	: INPUT_OUTPUT;
-        in_0303_05_PU01_ixKM_StatusManualStart         	: INPUT_OUTPUT;
-        in_0303_05_PU01_ixKM_StatusManualStop          	: INPUT_OUTPUT;
-        in_0303_05_PU01_ixKM_StatusOn                  	: INPUT_OUTPUT;
-        in_0303_05_PU01_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
-        in_0303_05_PU01_ixStatusManual                 	: INPUT_OUTPUT;
-        in_0303_05_PU02_ixKM_StatusManualStart         	: INPUT_OUTPUT;
-        in_0303_05_PU02_ixKM_StatusManualStop          	: INPUT_OUTPUT;
-        in_0303_05_PU02_ixKM_StatusOn                  	: INPUT_OUTPUT;
-        in_0303_05_PU02_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
-        in_0303_05_PU02_ixStatusManual                 	: INPUT_OUTPUT;
-        in_0303_05_PU03_ixKM_StatusManualStart         	: INPUT_OUTPUT;
-        in_0303_05_PU03_ixKM_StatusManualStop          	: INPUT_OUTPUT;
-        in_0303_05_PU03_ixKM_StatusOn                  	: INPUT_OUTPUT;
-        in_0303_05_PU03_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
-        in_0303_05_PU03_ixStatusManual                 	: INPUT_OUTPUT;
-        in_0303_05_PU04_ixKM_StatusManualStart         	: INPUT_OUTPUT;
-        in_0303_05_PU04_ixKM_StatusManualStop          	: INPUT_OUTPUT;
-        in_0303_05_PU04_ixKM_StatusOn                  	: INPUT_OUTPUT;
-        in_0303_05_PU04_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
-        in_0303_05_PU04_ixStatusManual                 	: INPUT_OUTPUT;
-        in_0303_05_PU05_ixKM_StatusManualStart         	: INPUT_OUTPUT;
-        in_0303_05_PU05_ixKM_StatusManualStop          	: INPUT_OUTPUT;
-        in_0303_05_PU05_ixKM_StatusOn                  	: INPUT_OUTPUT;
-        in_0303_05_PU05_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
-        in_0303_05_PU05_ixStatusManual                 	: INPUT_OUTPUT;
-        in_0303_05_PU01_qxDryRun                       	: INPUT_OUTPUT;
-        in_0303_05_PU02_qxDryRun                       	: INPUT_OUTPUT;
-        in_0303_05_PU03_qxDryRun                       	: INPUT_OUTPUT;
-        in_0303_05_PU04_qxDryRun                       	: INPUT_OUTPUT;
-        in_0303_05_PU05_qxDryRun                       	: INPUT_OUTPUT;
-        in_PowerSupplyIsOk_1							: INPUT_OUTPUT;
-        in_PowerSupplyIsOk_2							: INPUT_OUTPUT;
+	in_0303_05_1_ixSection1_OverheatAlarm          	: INPUT_OUTPUT;
+	in_0303_05_1_ixSection1_OverheatWarning        	: INPUT_OUTPUT;
+	in_0303_05_1_ixVFD_Failure                     	: INPUT_OUTPUT;
+	in_0303_05_1_ixVFD_InWork                      	: INPUT_OUTPUT;
+	in_0303_05_1_ixVFD_Manual                      	: INPUT_OUTPUT;
+	in_0303_05_1_ixVFD_Ready                       	: INPUT_OUTPUT;
+	in_0303_05_2_ixSection1_OverheatAlarm          	: INPUT_OUTPUT;
+	in_0303_05_2_ixSection1_OverheatWarning        	: INPUT_OUTPUT;
+	in_0303_05_2_ixVFD_Failure                     	: INPUT_OUTPUT;
+	in_0303_05_2_ixVFD_InWork                      	: INPUT_OUTPUT;
+	in_0303_05_2_ixVFD_Manual                      	: INPUT_OUTPUT;
+	in_0303_05_2_ixVFD_Ready                       	: INPUT_OUTPUT;
+	in_0303_05_1KM8_ixStatusOn                     	: INPUT_OUTPUT;
+	in_0303_05_2KM8_ixStatusOn                     	: INPUT_OUTPUT;
+	in_0303_05_BY01_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY01_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY01_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY01_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY01_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY01_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_BY02_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY02_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY02_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY02_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY02_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY02_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_BY03_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY03_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY03_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY03_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY03_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY03_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_BY04_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY04_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY04_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY04_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY04_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY04_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_BY05_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY05_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY05_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY05_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY05_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY05_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_BY07_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY07_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY07_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY07_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY07_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY07_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_BY08_ixKM_PosClosed                 	: INPUT_OUTPUT;
+	in_0303_05_BY08_ixKM_PosOpen                   	: INPUT_OUTPUT;
+	in_0303_05_BY08_ixShutter_PosClosed            	: INPUT_OUTPUT;
+	in_0303_05_BY08_ixShutter_PosOpen              	: INPUT_OUTPUT;
+	in_0303_05_BY08_ixShutter_StatusError          	: INPUT_OUTPUT;
+	in_0303_05_BY08_ixShutter_StatusReady          	: INPUT_OUTPUT;
+	in_0303_05_PU01_ixKM_StatusManualStart         	: INPUT_OUTPUT;
+	in_0303_05_PU01_ixKM_StatusManualStop          	: INPUT_OUTPUT;
+	in_0303_05_PU01_ixKM_StatusOn                  	: INPUT_OUTPUT;
+	in_0303_05_PU01_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
+	in_0303_05_PU01_ixStatusManual                 	: INPUT_OUTPUT;
+	in_0303_05_PU02_ixKM_StatusManualStart         	: INPUT_OUTPUT;
+	in_0303_05_PU02_ixKM_StatusManualStop          	: INPUT_OUTPUT;
+	in_0303_05_PU02_ixKM_StatusOn                  	: INPUT_OUTPUT;
+	in_0303_05_PU02_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
+	in_0303_05_PU02_ixStatusManual                 	: INPUT_OUTPUT;
+	in_0303_05_PU03_ixKM_StatusManualStart         	: INPUT_OUTPUT;
+	in_0303_05_PU03_ixKM_StatusManualStop          	: INPUT_OUTPUT;
+	in_0303_05_PU03_ixKM_StatusOn                  	: INPUT_OUTPUT;
+	in_0303_05_PU03_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
+	in_0303_05_PU03_ixStatusManual                 	: INPUT_OUTPUT;
+	in_0303_05_PU04_ixKM_StatusManualStart         	: INPUT_OUTPUT;
+	in_0303_05_PU04_ixKM_StatusManualStop          	: INPUT_OUTPUT;
+	in_0303_05_PU04_ixKM_StatusOn                  	: INPUT_OUTPUT;
+	in_0303_05_PU04_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
+	in_0303_05_PU04_ixStatusManual                 	: INPUT_OUTPUT;
+	in_0303_05_PU05_ixKM_StatusManualStart         	: INPUT_OUTPUT;
+	in_0303_05_PU05_ixKM_StatusManualStop          	: INPUT_OUTPUT;
+	in_0303_05_PU05_ixKM_StatusOn                  	: INPUT_OUTPUT;
+	in_0303_05_PU05_ixKM_VFD_StatusOn              	: INPUT_OUTPUT;
+	in_0303_05_PU05_ixStatusManual                 	: INPUT_OUTPUT;
+	in_0303_05_PU01_qxDryRun                       	: INPUT_OUTPUT;
+	in_0303_05_PU02_qxDryRun                       	: INPUT_OUTPUT;
+	in_0303_05_PU03_qxDryRun                       	: INPUT_OUTPUT;
+	in_0303_05_PU04_qxDryRun                       	: INPUT_OUTPUT;
+	in_0303_05_PU05_qxDryRun                       	: INPUT_OUTPUT;
+	in_PowerSupplyIsOk_1							: INPUT_OUTPUT;
+	in_PowerSupplyIsOk_2							: INPUT_OUTPUT;
 	
 	// Удалить и перенести в модуль
 	xPowerSupplyIsOk_1 : BOOL;
@@ -1474,7 +1473,7 @@ METHOD Commands_Pump
             OR ((Get_VFD_KM8_PowerCommon()) AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
             OR (PU[i].xStatusEnableBP AND PU[i].xStatusEnableVFD)
             OR (PU[i].xStatusEnableVFD AND PU[i].Device.Power)
-		    OR (PU[i].xStatusEnableBP AND PU[i].Device.PowerVFD)
+            OR (PU[i].xStatusEnableBP AND PU[i].Device.PowerVFD)
             OR PU[i].xStatusDry;
         // Мгновенная задача частоты при переходе на ЧРП (* Размещено здесь из-за конфликта очередности проверок *)
         IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND (NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback()) THEN
@@ -1489,7 +1488,7 @@ METHOD Commands_Pump
         // Условие на запуск от ЧРП														
         PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;	
         // Условие на переключение  с ЧРП на БП									
-        PU_CTRL.AccessSwitchToStart := VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP;	
+        PU_CTRL.AccessSwitchToStart := (VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP - GIST_FRQ_SWITCH_TO_START) AND (VFD[iVFD_Change].Device.Frequency <= VFD_FREQ_ACCESS_SWITCH_TO_BP + GIST_FRQ_SWITCH_TO_START);	
         // Условие на переключение с БП на ЧРП	
         PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;
 
