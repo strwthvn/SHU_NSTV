@@ -1473,6 +1473,8 @@ METHOD Commands_Pump
             OR (Get_PU_VFD_More() AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
             OR ((Get_VFD_KM8_PowerCommon()) AND (PU[i].Device.PowerVFD OR PU[i].xStatusEnableVFD))
             OR (PU[i].xStatusEnableBP AND PU[i].xStatusEnableVFD)
+            OR (PU[i].xStatusEnableVFD AND PU[i].Device.Power)
+		    OR (PU[i].xStatusEnableBP AND PU[i].Device.PowerVFD)
             OR PU[i].xStatusDry;
         // Мгновенная задача частоты при переходе на ЧРП (* Размещено здесь из-за конфликта очередности проверок *)
         IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND (NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback()) THEN
