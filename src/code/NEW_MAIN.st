@@ -1156,11 +1156,11 @@ METHOD Init_Pump
         // Обработка ошибки команды СТОП и получения обратной связи
         PU[i].ErrorxStop.Initialize(PU[i].rtrig_xStop.Q, NOT PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xStop, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА БП и получения обратной связи
-        PU[i].ErrorxSwitchToBP.Initialize(PU[i].rtrig_xSwitchToBP.Q AND PU[i].xConditionToSwitchToBP, PU[i].xStatusEnableBP AND NOT PU[i].xStatusEnableVFD, PU[i].xErrorLongTimeException_xSwitchToBP, LONG_TIME_EXPECTATION_TIME);
+        PU[i].ErrorxSwitchToBP.Initialize(PU[i].xProcessSwitchToBP, NOT PU[i].xProcessSwitchToBP, PU[i].xErrorLongTimeException_xSwitchToBP, LONG_TIME_EXPECTATION_TIME);
         // Обработка ошибки команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП и получения обратной связи
-        PU[i].ErrorxSwitchToVFD.Initialize(PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].xStatusEnableVFD AND NOT PU[i].xStatusEnableBP, PU[i].xErrorLongTimeException_xSwitchToVFD, LONG_TIME_EXPECTATION_TIME);
+        PU[i].ErrorxSwitchToVFD.Initialize(PU[i].xProcessSwitchToVFD, NOT PU[i].xProcessSwitchToVFD, PU[i].xErrorLongTimeException_xSwitchToVFD, LONG_TIME_EXPECTATION_TIME);
         
-    // Генерация состояния насоса в переменную типа INT (для передачи HMI)
+        // Генерация состояния насоса в переменную типа INT (для передачи HMI)
         IF (NOT PU[i].xStatusEnableBP) AND (NOT PU[i].xStatusEnableVFD) AND (PU[i].iStatus <> 4) THEN
             PU[i].iStatus := 1;
         ELSIF (PU[i].xStatusEnableBP) AND (PU[i].xStatusEnableVFD) AND (PU[i].iStatus <> 4) THEN
@@ -1430,11 +1430,13 @@ METHOD Commands_Pump
         PU[i].ton_SwitchToBP(IN:= PU[i].xProcessSwitchToBP AND (VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP - GIST_FRQ_SWITCH_TO_START) AND (VFD[iVFD_Change].Device.Frequency <= VFD_FREQ_ACCESS_SWITCH_TO_BP + GIST_FRQ_SWITCH_TO_START), PT:= PU_TIME_SWITCH_TO_BP);
         
         // Процесс переключения на ЧРП
-        IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power THEN PU[i].xProcessSwitchToVFD := TRUE; END_IF;
-        
-        
-        PU[i].ton_SwitchToVFD(IN:= PU[i].xProcessSwitchToBP, PT:= PU_TIME_SWITCH_TO_BP);
-        
+        IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND (NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback()) THEN PU[i].xProcessSwitchToVFD := TRUE; END_IF;
+        IF PU[i].xProcessSwitchToVFD THEN 
+            PU[i].Device.Set_Power(FALSE);
+            VFD[iVFD_Change].Device.Set_Frequency_Manual(VFD_CHANGE_BP_TO_VFD_FREQ);
+            PU[i].Auto_cmdSetFreqWord.rTag := VFD_CHANGE_BP_TO_VFD_FREQ;
+        END_IF;
+        IF (PU[i].xProcessSwitchToVFD AND (PU[i].Device.PowerVFD AND PU[i].xStatusEnableVFD)) OR PU[i].xErrorLongTimeException_xSwitchToVFD OR PU[i].rtrig_xStop.Q OR PU[i].rtrig_xReset.Q THEN PU[i].xProcessSwitchToVFD := FALSE; END_IF;
         
         // * Индивидуальные условия выполнения команд по каждому насосу * //
         // Выполнение команды СТАРТ БП
@@ -1455,8 +1457,8 @@ METHOD Commands_Pump
             OR NOT PU[i].xStatusEnableVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП
         PU[i].xConditionToSwitchToVFD :=
-            PU[i].Device.Power
-            OR PU[i].xStatusEnableBP;
+            NOT PU[i].Device.Power
+            AND NOT PU[i].xStatusEnableBP;
         // Выполнение команды СТОП
         PU[i].xConditionToStop := TRUE;
         // Условия автоматической остановки конкретного насоса
@@ -1472,10 +1474,6 @@ METHOD Commands_Pump
             OR (PU[i].xStatusEnableVFD AND PU[i].Device.Power)
             OR (PU[i].xStatusEnableBP AND PU[i].Device.PowerVFD)
             OR PU[i].xStatusDry;
-        // Мгновенная задача частоты при переходе на ЧРП (* Размещено здесь из-за конфликта очередности проверок *)
-        IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power AND (NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback()) THEN
-            VFD[iVFD_Change].Device.Set_Frequency_Manual(VFD_CHANGE_BP_TO_VFD_FREQ);
-        END_IF;
         
         // * Общие условия работы команд, не зависящие от выбора конкретного насоса * //
         // Условие на запуск от БП
@@ -1497,7 +1495,7 @@ METHOD Commands_Pump
         // Переключение с ЧРП на БП                             	
         PU_CTRL.SwitchToStart(PU[i].xProcessSwitchToBP AND PU[i].xConditionToSwitchToBP, PU[i].Device);											
         // Переключение с БП на ЧРП                             	
-        PU_CTRL.SwitchToVFD(PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].Device);											
+        PU_CTRL.SwitchToVFD(PU[i].xProcessSwitchToVFD AND PU[i].xConditionToSwitchToVFD, PU[i].Device);											
         // Команда на остановку контактора (БП)
         PU_CTRL.Stop(PU[i].rtrig_xStop.Q AND PU[i].xConditionToStop, PU[i].Device);
         // Команда на остановку контактора (ЧРП)
