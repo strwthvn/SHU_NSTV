@@ -1420,6 +1420,20 @@ METHOD Commands_Pump
                     PU[i].rtrig_xEmergencyStop(CLK:= PU[i].Service_xEmergencyStop);
             END_CASE;
         END_IF;
+        
+        // Процесс переключения на БП
+        IF PU[i].rtrig_xSwitchToBP.Q THEN PU[i].xProcessSwitchToBP := TRUE; PU[i].Auto_cmdSetFreqWord.rTag := VFD_FREQ_ACCESS_SWITCH_TO_BP; END_IF;
+        IF PU[i].ton_SwitchToBP.Q THEN
+            PU[i].Device.Set_Power_VFD(FALSE);
+        END_IF;
+        IF (PU[i].xProcessSwitchToBP AND (PU[i].Device.Power AND PU[i].xStatusEnableBP)) OR PU[i].xErrorLongTimeException_xSwitchToBP THEN PU[i].xProcessSwitchToBP := FALSE; END_IF;
+        PU[i].ton_SwitchToBP(IN:= PU[i].xProcessSwitchToBP AND (VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP - GIST_FRQ_SWITCH_TO_START) AND (VFD[iVFD_Change].Device.Frequency <= VFD_FREQ_ACCESS_SWITCH_TO_BP + GIST_FRQ_SWITCH_TO_START), PT:= PU_TIME_SWITCH_TO_BP);
+        
+        
+        
+        PU[i].ton_SwitchToVFD(IN:= PU[i].xProcessSwitchToBP, PT:= PU_TIME_SWITCH_TO_BP);
+        
+        
         // * Индивидуальные условия выполнения команд по каждому насосу * //
         // Выполнение команды СТАРТ БП
         PU[i].xConditionToStartBP :=
@@ -1435,8 +1449,8 @@ METHOD Commands_Pump
             AND NOT PU[i].Device.PowerVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА БП
         PU[i].xConditionToSwitchToBP :=
-            PU[i].Device.PowerVFD
-            OR PU[i].xStatusEnableVFD;
+            NOT PU[i].Device.PowerVFD
+            OR NOT PU[i].xStatusEnableVFD;
         // Выполнение команды ПЕРЕКЛЮЧЕНИЕ НА ЧРП
         PU[i].xConditionToSwitchToVFD :=
             PU[i].Device.Power
@@ -1469,7 +1483,7 @@ METHOD Commands_Pump
         // Условие на запуск от ЧРП														
         PU_CTRL.AccessToStartVFD := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;	
         // Условие на переключение  с ЧРП на БП									
-        PU_CTRL.AccessSwitchToStart := (VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP - GIST_FRQ_SWITCH_TO_START) AND (VFD[iVFD_Change].Device.Frequency <= VFD_FREQ_ACCESS_SWITCH_TO_BP + GIST_FRQ_SWITCH_TO_START);	
+        PU_CTRL.AccessSwitchToStart := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback();	
         // Условие на переключение с БП на ЧРП	
         PU_CTRL.AccessSwitchToVFD := NOT Get_PU_VFD_Common() AND NOT Get_PU_VFD_Common_Feedback() AND VFD[iVFD_Change].xReady AND NOT VFD[iVFD_Change].xFailure;
 
@@ -1479,7 +1493,7 @@ METHOD Commands_Pump
         // Старт от ЧРП	                                        	
         PU_CTRL.StartVFD((NOT xSoundSirenOption AND PU[i].rtrig_xStartVFD.Q) OR (xSoundSirenOption AND PU[i].cmdStartVFD_StartSound.qxEndSignal) AND PU[i].xConditionToStartVFD,PU[i].Device);											
         // Переключение с ЧРП на БП                             	
-        PU_CTRL.SwitchToStart(PU[i].rtrig_xSwitchToBP.Q AND PU[i].xConditionToSwitchToBP, PU[i].Device);											
+        PU_CTRL.SwitchToStart(PU[i].xProcessSwitchToBP AND PU[i].xConditionToSwitchToBP, PU[i].Device);											
         // Переключение с БП на ЧРП                             	
         PU_CTRL.SwitchToVFD(PU[i].rtrig_xSwitchToVFD.Q AND PU[i].xConditionToSwitchToVFD, PU[i].Device);											
         // Команда на остановку контактора (БП)
