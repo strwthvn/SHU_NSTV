@@ -13,6 +13,9 @@ STRUCT
 	Service_xStartBP, Service_xStartVFD, Service_xStop, Service_xSwitchToBP, Service_xSwitchToVFD, Service_xReset, Service_xEmergencyStop : BOOL;
 	xConditionToStartBP, xConditionToStartVFD, xConditionToSwitchToBP, xConditionToSwitchToVFD, xConditionToStop, xConditionToAutoStop : BOOL; // Условия выполнения команд
 	
+	ton_SwitchToBP, ton_SwitchToVFD : TON;
+	xProcessSwitchToBP, xProcessSwitchToVFD : BOOL;
+
 	rtrig_xStartBP        : R_TRIG;
 	rtrig_xStartVFD       : R_TRIG;
 	rtrig_xStop           : R_TRIG;

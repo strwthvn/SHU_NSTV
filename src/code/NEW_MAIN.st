@@ -56,6 +56,8 @@ VAR
 	// --- Насосы и управление ---
 	PU : ARRAY [1..PU_AMOUNT] OF Struct_PU;
 	PU_CTRL : Pump_Control_VFD;
+    PU_TIME_SWITCH_TO_BP : TIME := T#5S;
+	PU_TIME_SWITCH_TO_VFD : TIME := T#5S;
 	Auto_xPu_Reset : BOOL;      // Обобщённый ресет на каждый насос (ошибки)
 	Service_xPu_Reset : BOOL;
 	
@@ -901,27 +903,6 @@ END_METHOD
 METHOD Get_VFD_KM8_PowerCommon : BOOL
     Get_VFD_KM8_PowerCommon := VFD[1].xPower AND VFD[2].xPower;
 END_METHOD
-
-
-METHOD Init_LongTimeExpectation
-    VAR_INPUT
-        refClass : REFERENCE TO FB_Error_SignalLongExpectation;  // Явная ссылка
-        execute : BOOL;
-        feedback : BOOL;
-        error : REFERENCE TO BOOL;
-    END_VAR
-    VAR_OUTPUT
-        error : BOOL;
-    END_VAR
-
-    IF __ISVALIDREF(refClass) THEN
-        refClass.SetExecute(execute);
-        refClass.SetFeedback(feedback);
-        refClass.SetTimeout(LONG_TIME_EXPECTATION_TIME);
-        error := refClass.GetError();
-    END_IF
-END_METHOD
-
 
 (* Инициализация ЗРА *)
 METHOD Init_BY
