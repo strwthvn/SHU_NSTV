@@ -1422,13 +1422,15 @@ METHOD Commands_Pump
         END_IF;
         
         // Процесс переключения на БП
-        IF PU[i].rtrig_xSwitchToBP.Q THEN PU[i].xProcessSwitchToBP := TRUE; PU[i].Auto_cmdSetFreqWord.rTag := VFD_FREQ_ACCESS_SWITCH_TO_BP; END_IF;
+        IF PU[i].rtrig_xSwitchToBP.Q AND PU[i].Device.PowerVFD THEN PU[i].xProcessSwitchToBP := TRUE; PU[i].Auto_cmdSetFreqWord.rTag := VFD_FREQ_ACCESS_SWITCH_TO_BP; END_IF;
         IF PU[i].ton_SwitchToBP.Q THEN
             PU[i].Device.Set_Power_VFD(FALSE);
         END_IF;
-        IF (PU[i].xProcessSwitchToBP AND (PU[i].Device.Power AND PU[i].xStatusEnableBP)) OR PU[i].xErrorLongTimeException_xSwitchToBP THEN PU[i].xProcessSwitchToBP := FALSE; END_IF;
+        IF (PU[i].xProcessSwitchToBP AND (PU[i].Device.Power AND PU[i].xStatusEnableBP)) OR PU[i].xErrorLongTimeException_xSwitchToBP OR PU[i].rtrig_xStop.Q OR PU[i].rtrig_xReset.Q THEN PU[i].xProcessSwitchToBP := FALSE; END_IF;
         PU[i].ton_SwitchToBP(IN:= PU[i].xProcessSwitchToBP AND (VFD[iVFD_Change].Device.Frequency >= VFD_FREQ_ACCESS_SWITCH_TO_BP - GIST_FRQ_SWITCH_TO_START) AND (VFD[iVFD_Change].Device.Frequency <= VFD_FREQ_ACCESS_SWITCH_TO_BP + GIST_FRQ_SWITCH_TO_START), PT:= PU_TIME_SWITCH_TO_BP);
         
+        // Процесс переключения на ЧРП
+        IF PU[i].rtrig_xSwitchToVFD.Q AND PU[i].Device.Power THEN PU[i].xProcessSwitchToVFD := TRUE; END_IF;
         
         
         PU[i].ton_SwitchToVFD(IN:= PU[i].xProcessSwitchToBP, PT:= PU_TIME_SWITCH_TO_BP);
